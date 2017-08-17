@@ -18,11 +18,16 @@ int pin_keepalive = 12;
 
 void checkShutdown()  {
     if(digitalRead(pin_power_switch) == LOW){
-        logfile.close();
-        delay(100);
-        digitalWrite(pin_grn_led, HIGH);
+        if(logfile) {
+            logfile.close();
+            digitalWrite(pin_grn_led, HIGH);
+            delay(100);
+        }
         delay(100);
         digitalWrite(pin_keepalive, LOW);
+        while(1) {
+            ;
+        }
     }    
     return;
 }
@@ -33,13 +38,13 @@ void error(uint8_t errno) {
         uint8_t i;
         for (i=0; i<errno; i++) {
             digitalWrite(pin_red_led, HIGH);
-            delay(100);
+            delay(50);
             digitalWrite(pin_red_led, LOW);
-            delay(150);
+            delay(450);
         }
-        for (i=errno; i<15; i++) {
-            delay(250);
-        }
+//        for (i=errno; i<15; i++) {
+          delay(2000);
+//        }
         checkShutdown();
     }
 }
@@ -145,10 +150,19 @@ void open_acq_file(){
         error(10);
     }
     logfile.flush();
-    logfile.seek(0);
-}
+    logfile.close();
 
-uint16_t state;
+    if(SD.exists(filename)) {
+        if(!SD.remove(filename)) {
+            error(11);
+        }
+    }    
+    
+    logfile = SD.open(filename, FILE_WRITE);
+    if( ! logfile ) {
+        error(12);
+    }
+}
 
 void setup() {
 
@@ -198,9 +212,8 @@ void loop() {
         margin++;
     }
 
-    checkShutdown();
-
     digitalWrite(pin_red_led, HIGH);
+    checkShutdown();
 
     adc0 = analogRead(A0);
     adc1 = analogRead(A1); 
