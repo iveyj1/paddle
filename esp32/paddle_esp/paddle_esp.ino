@@ -1,7 +1,7 @@
 //#include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
-//#define debug_con
+#define debug_con
 
 volatile unsigned int start_acq = 0;
 volatile unsigned int overrun = 0;
@@ -15,11 +15,51 @@ HardwareSerial Serial1(2);
 File logfile;
 
 int pin_red_led = 13; 
-int pin_grn_led = 8; 
-int pin_power_switch = 6;
-int pin_keepalive = 12; 
+//int pin_grn_led = 8; 
+//int pin_power_switch = 6;
+//int pin_keepalive = 12; 
 
-void checkShutdown()  {
+
+hw_timer_t * timer = NULL;
+volatile SemaphoreHandle_t timerSemaphore;
+portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+
+volatile uint32_t isrCounter = 0;
+volatile uint32_t lastIsrAt = 0;
+
+void IRAM_ATTR onTimer(){
+    // Increment the counter and set the time of ISR
+    portENTER_CRITICAL_ISR(&timerMux);
+    isrCounter++;
+    lastIsrAt = millis();
+    portEXIT_CRITICAL_ISR(&timerMux);
+    // Give a semaphore that we can check in the loop
+    xSemaphoreGiveFromISR(timerSemaphore, NULL);
+    // It is safe to use digitalRead/Write here if you want to toggle an output
+}
+
+void setupTimer() {
+      // Create semaphore to inform us when the timer has fired
+    timerSemaphore = xSemaphoreCreateBinary();
+    
+    // Use 1st timer of 4 (counted from zero).
+    // Set 80 divider for prescaler (see ESP32 Technical Reference Manual for more
+    // info).
+    timer = timerBegin(0, 80, true);
+    
+    // Attach onTimer function to our timer.
+    timerAttachInterrupt(timer, &onTimer, true);
+    
+    // Set alarm to call onTimer function every second (value in microseconds).
+    // Repeat the alarm (third parameter)
+    timerAlarmWrite(timer, 20000, true);
+    
+    // Start an alarm
+    timerAlarmEnable(timer);
+    
+}
+
+/*void checkShutdown()  {
     if(digitalRead(pin_power_switch) == LOW){
         if(logfile) {
             logfile.close();
@@ -33,7 +73,7 @@ void checkShutdown()  {
         }
     }    
     return;
-}
+}*/
 
 // blink out an error code
 void error(uint8_t errno) {
@@ -48,12 +88,12 @@ void error(uint8_t errno) {
 //        for (i=errno; i<15; i++) {
           delay(2000);
 //        }
-        checkShutdown();
+//        checkShutdown();
     }
 }
 
 
-void open_acq_file(){
+void openAcqFile(){
     char testchar;
     char filename[15];
     //see if the card is present and can be initialized:
@@ -130,17 +170,24 @@ void open_acq_file(){
     }
 }
 
-void setup() {
-
+void setupPins() {
     pinMode(pin_red_led, OUTPUT);   
     digitalWrite(pin_red_led, HIGH); 
-    pinMode(pin_grn_led, OUTPUT);   
-    digitalWrite(pin_grn_led, LOW); 
-    pinMode(pin_power_switch, INPUT_PULLUP);
-    pinMode(pin_keepalive, OUTPUT);
-    digitalWrite(pin_keepalive, HIGH);
-    open_acq_file();
-    analogReadResolution(12);
+//    pinMode(pin_grn_led, OUTPUT);   
+//    digitalWrite(pin_grn_led, LOW); 
+//    pinMode(pin_power_switch, INPUT_PULLUP);
+//    pinMode(pin_keepalive, OUTPUT);
+//    digitalWrite(pin_keepalive, HIGH);
+
+}
+
+void setup() {
+
+    setupPins();
+    setupTimer();
+
+//    openAcqFile();
+//    analogReadResolution(12);
     overrun = 0;
     start_acq=0;
 
@@ -169,16 +216,17 @@ void loop() {
     String outstr = "";
 
     digitalWrite(pin_red_led, LOW);
-    if(start_acq == 1){
+    if(xSemaphoreTake(timerSemaphore, 0) == pdTRUE){
         overrun = 1;
-        digitalWrite(pin_grn_led, HIGH);
+//        digitalWrite(pin_grn_led, HIGH);
     }
-    while(start_acq==0) {
+    while(xSemaphoreTake(timerSemaphore, 0) != pdTRUE) {
         margin++;
     }
+    Serial.println(String("Margin: ")+margin);
 
     digitalWrite(pin_red_led, HIGH);
-    checkShutdown();
+//    checkShutdown();
 
 
     while((c = Serial1.read()) != -1) {
@@ -213,7 +261,7 @@ void loop() {
     start_acq = 0;
     overrun = 0;
     margin = 0;
-    digitalWrite(pin_grn_led, LOW);
+//    digitalWrite(pin_grn_led, LOW);
 
 }
 
