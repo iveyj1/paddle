@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      #container {
+        width : 600px;
+        height: 384px;
+        margin: 8px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="/FLOTR2M.JS"> </script>
+    
+    <script type="text/javascript">
+      (function () {
+
+        var
+          container = document.getElementById('container'),
+          data, graph, i;
+
+        // Draw a sine curve
+        function plot () {
+
+          data = [];
+
+          // Sample the sine function
+          for (i = 0; i < 4 * Math.PI; i += 0.2) {
+            data.push([i, Math.sin(i)]);
+          }
+
+          // Draw Graph
+          graph = Flotr.draw(container, [ data ], {
+            yaxis : {
+              max : 1.5,
+              min : -1.5
+            }
+          });
+
+        }
+
+        plot();
+      })();
+    </script>
+  </body>
+</html>
