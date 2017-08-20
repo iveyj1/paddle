@@ -67,7 +67,7 @@ void readFile(fs::FS &fs, const char * path){
 
     File file = fs.open(path);
     if(!file){
-        Serial.println("Failed to open file for reading");
+        Serial.println("Failed to open file for reading in readFile");
         return;
     }
 
@@ -83,7 +83,7 @@ void writeFile(fs::FS &fs, const char * path, const char * message){
 
     File file = fs.open(path, FILE_WRITE);
     if(!file){
-        Serial.println("Failed to open file for writing");
+        Serial.println("Failed to open file for writing in writeFile");
         return;
     }
     if(file.print(message)){
@@ -150,7 +150,7 @@ void testFileIO(fs::FS &fs, const char * path){
         Serial.printf("%u bytes read for %u ms\n", flen, end);
         file.close();
     } else {
-        Serial.println("Failed to open file for reading");
+        Serial.println("Failed to open file for reading in testFileIO");
     }
 
 
