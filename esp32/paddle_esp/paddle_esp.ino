@@ -3,6 +3,9 @@
 #include "SPI.h"
 
 #include <Wire.h>
+#include <Adafruit_ADS1015.h>
+
+Adafruit_ADS1115 ads;  /* Use this for the 16-bit version */
 
 #define pin_red_led 5
 
@@ -51,7 +54,11 @@ void setup(){
         Serial.println("could not open file");
         error(3);
     } 
+
+    ads.setGain(GAIN_SIXTEEN);    // 16x gain  +/- 0.256V  1 bit = 0.125mV  0.0078125mV
+    ads.begin();
 }
+
 uint32_t loopc = 0;
 
 void loop(){

@@ -3,10 +3,10 @@
  *
  * sparkfun SD Card | sparkfun esp32 thing
  *    VCC       3.3
- *    CS        2/CS/GPIO21 
- *    DI        23/MOSI/GPIO23
- *    SCK       SCK
- *    DO        19/MISO/GPIO19
+ *    CS        GPIO5/CS 
+ *    DI        GPIO23/MOSI/DI
+ *    SCK       GPIO18/SCK
+ *    DO        GPIO19/MISO/DO
  *    GND       GND
  */
 #include "FS.h"

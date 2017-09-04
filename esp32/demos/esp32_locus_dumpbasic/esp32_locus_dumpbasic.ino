@@ -10,15 +10,15 @@
 // Pick one up today at the Adafruit electronics shop 
 // and help support open source hardware & software! -ada
 
-#include <Adafruit_GPS.h>
-#if ARDUINO >= 100
- //#include <SoftwareSerial.h>
-#else
+//#include <Adafruit_GPS.h>
+//#if ARDUINO >= 100
+//#include <SoftwareSerial.h>
+//#else
   // Older Arduino IDE requires NewSoftSerial, download from:
   // http://arduiniana.org/libraries/newsoftserial/
 // #include <NewSoftSerial.h>
  // DO NOT install NewSoftSerial if using Arduino 1.0 or later!
-#endif
+//#endif
 #include <HardwareSerial.h>
 // Connect the GPS Power pin to 5V
 // Connect the GPS Ground pin to ground
@@ -41,7 +41,7 @@
 // If using hardware serial (e.g. Arduino Mega), comment
 // out the above six lines and enable this line instead:
 HardwareSerial Serial1(2);
-Adafruit_GPS GPS(&Serial1);
+//Adafruit_GPS GPS(&Serial1);
 
 void setup()  
 {    
@@ -51,18 +51,20 @@ void setup()
   // also spit it out
   Serial.begin(115200);
   Serial.println("Adafruit GPS logging start test!");
+  Serial1.begin(9600);
 
   // 9600 NMEA is the default baud rate for MTK - some use 4800
-  GPS.begin(9600);
+  //GPS.begin(9600);
   
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
+  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
 
   // If using hardware serial (e.g. Arduino Mega), change this to Serial1, etc.
   while (Serial1.available())
      Serial1.read();
 
   delay(1000);
-  //GPS.sendCommand("$PMTK622,1*29");
+  //Serial1.println("$PMTK622,1*29");
+  
   Serial.println("----------------------------------------------------");
 }
 
@@ -73,11 +75,9 @@ void loop()                     // run over and over again
   if (Serial1.available()) {
     char c = Serial1.read();
     if (c) {
-#ifdef UDR0
-      UDR0 = c;  
-#else
+
       Serial.print(c);
-#endif
+
     }
   }
 }
