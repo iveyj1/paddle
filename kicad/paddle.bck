@@ -1,0 +1,68 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP +3.3VA
+K POWER, PWR
+$ENDCMP
+#
+$CMP +3.3VP
+K POWER, PWR
+$ENDCMP
+#
+$CMP 2SD600
+D Vce 100V, Ic 1A, High Voltage Power Transistor, TO-126
+K High Voltage Power Transistor
+$ENDCMP
+#
+$CMP ADS1115
+D 16-bit I2C A/D
+$ENDCMP
+#
+$CMP AP2112K-3.3
+D Low dropout regulator
+$ENDCMP
+#
+$CMP BME280
+D Barometric pressure/temperature/humidity sensor
+$ENDCMP
+#
+$CMP CONN_01X04_FEMALE
+D Generic Female Connector, Single Row, 01x04, socket header
+K Connector, Female, Generic
+$ENDCMP
+#
+$CMP CONN_01X06_FEMALE
+D Generic Female Connector, Single Row, 01x04, socket header
+K Connector, Female, Generic
+$ENDCMP
+#
+$CMP NPN_BEC_SOT-23
+D Vce 100V, Ic 1A, High Voltage Power Transistor, TO-126
+K High Voltage Power Transistor
+$ENDCMP
+#
+$CMP SP3003-04
+D Diode Zener clamp - 4-channel
+K ESD protection diode zener clamp
+$ENDCMP
+#
+$CMP SPST_SOLDER_BR
+D Switch, dual pole double throw, separate symbols
+K switch dual-pole double-throw DPDT spdt ON-ON
+$ENDCMP
+#
+$CMP SW_DPDT_x2
+D Switch, dual pole double throw, separate symbols
+K switch dual-pole double-throw DPDT spdt ON-ON
+$ENDCMP
+#
+$CMP Schottky
+D Schottky diode
+K diode Schottky
+$ENDCMP
+#
+$CMP TLVH431-ref-cathode-anode
+D TLV431 family shunt reference
+K Shunt reference adjustable zener
+$ENDCMP
+#
+#End Doc Library
