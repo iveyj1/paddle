@@ -230,6 +230,9 @@ void ADS1015_async::startADC_SingleEnded(uint8_t channel) {
     // Set 'start single-conversion' bit
     config |= ADS1015_REG_CONFIG_OS_SINGLE;
 
+    writeRegister(m_i2cAddress, ADS1015_REG_POINTER_HITHRESH, 0xFFFF);
+    writeRegister(m_i2cAddress, ADS1015_REG_POINTER_LOWTHRESH, 0x0000);
+
     // Write config register to the ADC
     writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
 
