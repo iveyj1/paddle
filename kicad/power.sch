@@ -37,7 +37,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
-Sheet 7 7
+Sheet 7 9
 Title ""
 Date ""
 Rev ""
@@ -508,7 +508,7 @@ Wire Wire Line
 Wire Wire Line
 	6250 4900 6150 4900
 Wire Wire Line
-	6150 4650 6150 4900
+	6150 4900 6150 4650
 Wire Wire Line
 	5000 4650 6250 4650
 Wire Wire Line
@@ -833,4 +833,60 @@ F 3 "" H 6750 6000 60  0000 C CNN
 $EndComp
 Wire Wire Line
 	6100 6100 6100 5850
+$Comp
+L Battery_Cell BT?
+U 1 1 59CDC31D
+P 2500 2850
+F 0 "BT?" H 2600 2950 50  0000 L CNN
+F 1 "Battery_Cell" H 2600 2850 50  0000 L CNN
+F 2 "" V 2500 2910 50  0001 C CNN
+F 3 "" V 2500 2910 50  0001 C CNN
+	1    2500 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59CDCA14
+P 2500 3100
+F 0 "#PWR?" H 2500 2850 50  0001 C CNN
+F 1 "GND" H 2500 2950 50  0000 C CNN
+F 2 "" H 2500 3100 50  0001 C CNN
+F 3 "" H 2500 3100 50  0001 C CNN
+	1    2500 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2500 2950 2500 3100
+Wire Wire Line
+	2500 2650 2500 2450
+Text HLabel 2500 2450 0    60   Input ~ 0
+Vbackup
+$Comp
+L C_Small C?
+U 1 1 59CE3B46
+P 2200 2950
+F 0 "C?" H 2210 3020 50  0000 L CNN
+F 1 "1uF" H 2210 2870 50  0000 L CNN
+F 2 "paddle:SMD_1206" H 2200 2950 50  0001 C CNN
+F 3 "" H 2200 2950 50  0001 C CNN
+	1    2200 2950
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59CE3B4C
+P 2200 3100
+F 0 "#PWR?" H 2200 2850 50  0001 C CNN
+F 1 "GND" H 2200 2950 50  0000 C CNN
+F 2 "" H 2200 3100 50  0001 C CNN
+F 3 "" H 2200 3100 50  0001 C CNN
+	1    2200 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2200 3050 2200 3100
+Wire Wire Line
+	2200 2650 2200 2850
+Wire Wire Line
+	2200 2650 2500 2650
 $EndSCHEMATC

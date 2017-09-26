@@ -1,0 +1,275 @@
+EESchema Schematic File Version 2
+LIBS:paddle
+LIBS:adafruit
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:diode
+LIBS:switches
+LIBS:paddle-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 9 9
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L OPA333 U?
+U 1 1 59CEDDF0
+P 6000 3550
+F 0 "U?" H 6000 3800 60  0000 L CNN
+F 1 "OPA333" H 6000 3700 60  0000 L CNN
+F 2 "paddle:sot23-5" H 6000 3400 30  0001 L CNN
+F 3 "" H 6000 3550 60  0000 C CNN
+	1    6000 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_US R?
+U 1 1 59CEDDF7
+P 4600 3100
+F 0 "R?" H 4625 3200 60  0000 C CNN
+F 1 "10k" H 4625 3000 60  0000 C CNN
+F 2 "paddle:SMD_0805" H 4600 2750 60  0001 C CNN
+F 3 "" H 4625 3200 60  0000 C CNN
+	1    4600 3100
+	0    1    1    0   
+$EndComp
+$Comp
+L R_US R?
+U 1 1 59CEDDFE
+P 4600 3650
+F 0 "R?" H 4625 3750 60  0000 C CNN
+F 1 "0" H 4625 3550 60  0000 C CNN
+F 2 "paddle:SMD_0805" H 4600 3300 60  0001 C CNN
+F 3 "" H 4625 3750 60  0000 C CNN
+	1    4600 3650
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59CEDE05
+P 4600 3850
+F 0 "#PWR?" H 4600 3600 50  0001 C CNN
+F 1 "GND" H 4600 3700 50  0000 C CNN
+F 2 "" H 4600 3850 50  0001 C CNN
+F 3 "" H 4600 3850 50  0001 C CNN
+	1    4600 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L C_Small C?
+U 1 1 59CEDE0B
+P 6400 3000
+F 0 "C?" H 6410 3070 50  0000 L CNN
+F 1 "0.1uF" H 6410 2920 50  0000 L CNN
+F 2 "paddle:SMD_0805" H 6400 3000 50  0001 C CNN
+F 3 "" H 6400 3000 50  0001 C CNN
+	1    6400 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59CEDE12
+P 6400 3250
+F 0 "#PWR?" H 6400 3000 50  0001 C CNN
+F 1 "GND" H 6400 3100 50  0000 C CNN
+F 2 "" H 6400 3250 50  0001 C CNN
+F 3 "" H 6400 3250 50  0001 C CNN
+	1    6400 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59CEDE18
+P 5950 3900
+F 0 "#PWR?" H 5950 3650 50  0001 C CNN
+F 1 "GND" H 5950 3750 50  0000 C CNN
+F 2 "" H 5950 3900 50  0001 C CNN
+F 3 "" H 5950 3900 50  0001 C CNN
+	1    5950 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L TEST TP?
+U 1 1 59CEDE1E
+P 6800 3450
+F 0 "TP?" H 6800 3750 50  0000 C BNN
+F 1 "AN1" H 6800 3700 50  0000 C CNN
+F 2 "paddle:tp_th_1mm" H 6800 3450 50  0001 C CNN
+F 3 "" H 6800 3450 50  0001 C CNN
+	1    6800 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L TLVH431* U?
+U 1 1 59CEDE25
+P 5200 3450
+F 0 "U?" H 5500 3500 60  0000 C CNN
+F 1 "DNP TLVH431" H 5550 3100 60  0000 C CNN
+F 2 "paddle:SOT-23" H 5200 2450 60  0001 C CNN
+F 3 "" H 5200 2450 60  0001 C CNN
+	1    5200 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59CEDE2C
+P 5200 3950
+F 0 "#PWR?" H 5200 3700 50  0001 C CNN
+F 1 "GND" H 5200 3800 50  0000 C CNN
+F 2 "" H 5200 3950 50  0001 C CNN
+F 3 "" H 5200 3950 50  0001 C CNN
+	1    5200 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L R_US R?
+U 1 1 59CEDE32
+P 5200 2650
+F 0 "R?" H 5225 2750 60  0000 C CNN
+F 1 "10k" H 5225 2550 60  0000 C CNN
+F 2 "paddle:SMD_0805" H 5200 2300 60  0001 C CNN
+F 3 "" H 5225 2750 60  0000 C CNN
+	1    5200 2650
+	0    1    1    0   
+$EndComp
+$Comp
+L C_Small C?
+U 1 1 59CEDE39
+P 4200 3500
+F 0 "C?" H 4210 3570 50  0000 L CNN
+F 1 "DNP 0.1uF" H 4210 3420 50  0000 L CNN
+F 2 "paddle:SMD_0805" H 4200 3500 50  0001 C CNN
+F 3 "" H 4200 3500 50  0001 C CNN
+	1    4200 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59CEDE40
+P 4200 3750
+F 0 "#PWR?" H 4200 3500 50  0001 C CNN
+F 1 "GND" H 4200 3600 50  0000 C CNN
+F 2 "" H 4200 3750 50  0001 C CNN
+F 3 "" H 4200 3750 50  0001 C CNN
+	1    4200 3750
+	1    0    0    -1  
+$EndComp
+Text Label 6850 3550 0    60   ~ 0
+VREF
+$Comp
+L +3.3VA #PWR?
+U 1 1 59CEDE47
+P 5950 2550
+F 0 "#PWR?" H 5950 2350 50  0001 C CNN
+F 1 "+3.3VA" H 5950 2750 50  0000 C CNN
+F 2 "" H 5950 2550 50  0001 C CNN
+F 3 "" H 5950 2550 50  0001 C CNN
+	1    5950 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3.3VA #PWR?
+U 1 1 59CEDE4D
+P 5200 2400
+F 0 "#PWR?" H 5200 2200 50  0001 C CNN
+F 1 "+3.3VA" H 5200 2600 50  0000 C CNN
+F 2 "" H 5200 2400 50  0001 C CNN
+F 3 "" H 5200 2400 50  0001 C CNN
+	1    5200 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5200 2450 5200 2400
+Wire Wire Line
+	6350 3550 6800 3550
+Wire Wire Line
+	6800 3550 6850 3550
+Connection ~ 6350 3550
+Connection ~ 5950 2800
+Wire Wire Line
+	5950 3850 5950 3900
+Wire Wire Line
+	4600 3850 4600 3850
+Wire Wire Line
+	5950 2800 6400 2800
+Wire Wire Line
+	6400 2800 6400 2900
+Wire Wire Line
+	6400 3100 6400 3250
+Wire Wire Line
+	5950 2550 5950 2800
+Wire Wire Line
+	5950 2800 5950 3250
+Wire Wire Line
+	6350 4150 6350 3550
+Wire Wire Line
+	5650 4150 6350 4150
+Wire Wire Line
+	5650 3650 5650 4150
+Connection ~ 4600 3450
+Wire Wire Line
+	4600 3450 4850 3450
+Wire Wire Line
+	4600 3300 4600 3450
+Wire Wire Line
+	6800 3550 6800 3450
+Wire Wire Line
+	5200 3850 5200 3950
+Wire Wire Line
+	5200 2850 5200 2900
+Wire Wire Line
+	5200 2900 5200 3050
+Wire Wire Line
+	4200 2900 4600 2900
+Wire Wire Line
+	4600 2900 5200 2900
+Wire Wire Line
+	5200 2900 5500 2900
+Connection ~ 5200 2900
+Wire Wire Line
+	5500 2900 5500 3450
+Wire Wire Line
+	5500 3450 5650 3450
+Wire Wire Line
+	4200 3600 4200 3750
+Wire Wire Line
+	4200 3400 4200 2900
+Connection ~ 4600 2900
+Connection ~ 6800 3550
+$EndSCHEMATC
