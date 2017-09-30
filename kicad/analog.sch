@@ -1,0 +1,443 @@
+EESchema Schematic File Version 2
+LIBS:paddle
+LIBS:adafruit
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:diode
+LIBS:switches
+LIBS:paddle-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 6 12
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Sheet
+S 4750 850  950  1250
+U 59CF60C9
+F0 "amp_ad0" 60
+F1 "amp_ad.sch" 60
+F2 "Vref" I L 4750 1650 60 
+F3 "Analog_in" I L 4750 1150 60 
+F4 "ADDR" I R 5700 1050 60 
+F5 "SCK" B R 5700 1300 60 
+F6 "SDA" B R 5700 1600 60 
+F7 "Aux_in" I L 4750 1400 60 
+F8 "ALERT" T R 5700 1900 60 
+$EndSheet
+$Comp
+L GND #PWR063
+U 1 1 59CF60E4
+P 6100 1050
+F 0 "#PWR063" H 6100 800 60  0001 C CNN
+F 1 "GND" H 6100 900 60  0000 C CNN
+F 2 "" H 6100 1050 50  0001 C CNN
+F 3 "" H 6100 1050 50  0001 C CNN
+	1    6100 1050
+	1    0    0    -1  
+$EndComp
+Text Label 5850 4650 0    60   ~ 0
+SCK
+Text Label 5850 6300 0    60   ~ 0
+SCK
+Text Label 5850 6600 0    60   ~ 0
+SDA
+Text Label 5850 4950 0    60   ~ 0
+SDA
+Text Label 5800 3250 0    60   ~ 0
+SDA
+Text Label 5800 2950 0    60   ~ 0
+SCK
+Text Label 5800 1900 0    60   ~ 0
+ALERT0
+Text Label 4550 1150 2    60   ~ 0
+IN_0
+Text Label 4550 1400 2    60   ~ 0
+AUX_IN_0
+Text Label 4550 1650 2    60   ~ 0
+VREF
+Text Label 4550 3050 2    60   ~ 0
+AUX_IN_1
+Text Label 4550 3300 2    60   ~ 0
+VREF
+Text Label 4550 4500 2    60   ~ 0
+IN_2
+Text Label 4550 4750 2    60   ~ 0
+AUX_IN_2
+Text Label 4550 5000 2    60   ~ 0
+VREF
+Text Label 4550 6150 2    60   ~ 0
+IN_3
+Text Label 4550 6400 2    60   ~ 0
+AUX_IN_3
+Text Label 4550 6650 2    60   ~ 0
+VREF
+Text Label 5800 1600 0    60   ~ 0
+SDA
+Text Label 5800 1300 0    60   ~ 0
+SCK
+Text Label 5800 3550 0    60   ~ 0
+ALERT0
+Text Label 5800 5250 0    60   ~ 0
+ALERT0
+Text Label 5800 6900 0    60   ~ 0
+ALERT0
+Text Label 4550 2800 2    60   ~ 0
+IN_1
+Wire Wire Line
+	5700 3250 5800 3250
+Wire Wire Line
+	5800 2950 5700 2950
+Wire Wire Line
+	5850 4650 5700 4650
+Connection ~ 5800 6300
+Connection ~ 5800 4950
+Wire Wire Line
+	5850 6600 5700 6600
+Wire Wire Line
+	5700 4950 5850 4950
+Wire Wire Line
+	5800 4400 5800 4950
+Wire Wire Line
+	5700 4400 5800 4400
+Wire Wire Line
+	5700 6300 5850 6300
+Wire Wire Line
+	5800 6050 5800 6300
+Wire Wire Line
+	5700 6050 5800 6050
+Wire Wire Line
+	5900 2600 5900 2700
+Wire Wire Line
+	5700 1050 6100 1050
+Wire Wire Line
+	5900 2700 5700 2700
+Wire Wire Line
+	5700 1900 5800 1900
+Wire Wire Line
+	5700 3550 5800 3550
+Wire Wire Line
+	5700 5250 5800 5250
+Wire Wire Line
+	5700 6900 5800 6900
+Wire Wire Line
+	4550 1650 4750 1650
+Wire Wire Line
+	4750 1400 4550 1400
+Wire Wire Line
+	4550 1150 4750 1150
+Wire Wire Line
+	4550 3300 4750 3300
+Wire Wire Line
+	4750 3050 4550 3050
+Wire Wire Line
+	4550 2800 4750 2800
+Wire Wire Line
+	4550 5000 4750 5000
+Wire Wire Line
+	4750 4750 4550 4750
+Wire Wire Line
+	4550 4500 4750 4500
+Wire Wire Line
+	4550 6650 4750 6650
+Wire Wire Line
+	4750 6400 4550 6400
+Wire Wire Line
+	4550 6150 4750 6150
+Wire Wire Line
+	5700 1600 5800 1600
+Wire Wire Line
+	5800 1300 5700 1300
+$Sheet
+S 4750 2500 950  1250
+U 59CF612C
+F0 "amp_ad1" 60
+F1 "amp_ad.sch" 60
+F2 "Vref" I L 4750 3300 60 
+F3 "Analog_in" I L 4750 2800 60 
+F4 "ADDR" I R 5700 2700 60 
+F5 "SCK" B R 5700 2950 60 
+F6 "SDA" B R 5700 3250 60 
+F7 "Aux_in" I L 4750 3050 60 
+F8 "ALERT" T R 5700 3550 60 
+$EndSheet
+$Sheet
+S 4750 4200 950  1250
+U 59CF614A
+F0 "amp_ad2" 60
+F1 "amp_ad.sch" 60
+F2 "Vref" I L 4750 5000 60 
+F3 "Analog_in" I L 4750 4500 60 
+F4 "ADDR" I R 5700 4400 60 
+F5 "SCK" B R 5700 4650 60 
+F6 "SDA" B R 5700 4950 60 
+F7 "Aux_in" I L 4750 4750 60 
+F8 "ALERT" T R 5700 5250 60 
+$EndSheet
+$Sheet
+S 4750 5850 950  1250
+U 59CF6168
+F0 "amp_ad3" 60
+F1 "amp_ad.sch" 60
+F2 "Vref" I L 4750 6650 60 
+F3 "Analog_in" I L 4750 6150 60 
+F4 "ADDR" I R 5700 6050 60 
+F5 "SCK" B R 5700 6300 60 
+F6 "SDA" B R 5700 6600 60 
+F7 "Aux_in" I L 4750 6400 60 
+F8 "ALERT" T R 5700 6900 60 
+$EndSheet
+$Sheet
+S 2450 2150 850  1350
+U 59CF67CB
+F0 "sheet59CF67C1" 60
+F1 "input.sch" 60
+F2 "IN_0" I R 3300 2300 60 
+F3 "IN_1" I R 3300 2450 60 
+F4 "IN_2" I R 3300 2600 60 
+F5 "IN_3" I R 3300 2750 60 
+F6 "AUX_IN_0" I R 3300 2900 60 
+F7 "AUX_IN_1" I R 3300 3050 60 
+F8 "AUX_IN_2" I R 3300 3200 60 
+F9 "AUX_IN_3" I R 3300 3350 60 
+$EndSheet
+Text Label 3450 2300 0    60   ~ 0
+IN_0
+Wire Wire Line
+	3450 2300 3300 2300
+Text Label 3450 2450 0    60   ~ 0
+IN_1
+Wire Wire Line
+	3450 2450 3300 2450
+Text Label 3450 2600 0    60   ~ 0
+IN_2
+Wire Wire Line
+	3450 2600 3300 2600
+Text Label 3450 2750 0    60   ~ 0
+IN_3
+Wire Wire Line
+	3450 2750 3300 2750
+Text Label 3450 2900 0    60   ~ 0
+AUX_IN_0
+Wire Wire Line
+	3300 2900 3450 2900
+Text Label 3450 3050 0    60   ~ 0
+AUX_IN_1
+Wire Wire Line
+	3300 3050 3450 3050
+Text Label 3450 3200 0    60   ~ 0
+AUX_IN_2
+Wire Wire Line
+	3300 3200 3450 3200
+Text Label 3450 3350 0    60   ~ 0
+AUX_IN_3
+Wire Wire Line
+	3300 3350 3450 3350
+$Sheet
+S 2550 4900 550  850 
+U 59CF7E8A
+F0 "reference" 60
+F1 "reference.sch" 60
+F2 "VREF" I R 3100 5300 60 
+$EndSheet
+Text Label 3400 5300 2    60   ~ 0
+VREF
+Wire Wire Line
+	3100 5300 3400 5300
+$Comp
+L C_Small C601
+U 1 1 59CFCD12
+P 8050 4100
+F 0 "C601" H 8060 4170 50  0000 L CNN
+F 1 "10uF" H 8060 4020 50  0000 L CNN
+F 2 "paddle:SMD_1206" H 8050 4100 50  0001 C CNN
+F 3 "" H 8050 4100 50  0001 C CNN
+	1    8050 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR064
+U 1 1 59CFCD19
+P 8050 4250
+F 0 "#PWR064" H 8050 4000 50  0001 C CNN
+F 1 "GND" H 8050 4100 50  0000 C CNN
+F 2 "" H 8050 4250 50  0001 C CNN
+F 3 "" H 8050 4250 50  0001 C CNN
+	1    8050 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8050 4200 8050 4250
+Wire Wire Line
+	8050 4000 8050 3950
+Connection ~ 8050 3950
+Wire Wire Line
+	7850 3950 8600 3950
+Wire Wire Line
+	8300 4200 8600 4200
+$Comp
+L GND #PWR065
+U 1 1 59CFCD24
+P 8450 4550
+F 0 "#PWR065" H 8450 4300 50  0001 C CNN
+F 1 "GND" H 8450 4400 50  0000 C CNN
+F 2 "" H 8450 4550 50  0001 C CNN
+F 3 "" H 8450 4550 50  0001 C CNN
+	1    8450 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8450 4550 8450 4450
+Wire Wire Line
+	8450 4450 8600 4450
+$Comp
+L C_Small C602
+U 1 1 59CFCD2C
+P 9750 4100
+F 0 "C602" H 9760 4170 50  0000 L CNN
+F 1 "10uF" H 9760 4020 50  0000 L CNN
+F 2 "paddle:SMD_1206" H 9750 4100 50  0001 C CNN
+F 3 "" H 9750 4100 50  0001 C CNN
+	1    9750 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR066
+U 1 1 59CFCD33
+P 9750 4250
+F 0 "#PWR066" H 9750 4000 50  0001 C CNN
+F 1 "GND" H 9750 4100 50  0000 C CNN
+F 2 "" H 9750 4250 50  0001 C CNN
+F 3 "" H 9750 4250 50  0001 C CNN
+	1    9750 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9750 4200 9750 4250
+Wire Wire Line
+	9600 3950 10250 3950
+Wire Wire Line
+	9750 3950 9750 4000
+Connection ~ 9750 3950
+$Comp
+L NCP694-3.3 U601
+U 1 1 59CFCD3E
+P 9100 4100
+F 0 "U601" H 9050 3600 60  0000 L CNN
+F 1 "NCP694-3.3" H 8800 3500 60  0000 L CNN
+F 2 "paddle:SOT89-5" H 9200 4000 30  0001 L CNN
+F 3 "" H 9100 4100 60  0000 C CNN
+	1    9100 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8300 4200 8300 5000
+Wire Wire Line
+	8300 4900 8750 4900
+Text HLabel 8750 4900 2    60   Input ~ 0
++3.3VA_ENABLE
+$Comp
+L R_US R601
+U 1 1 59CFCD48
+P 8300 5200
+F 0 "R601" H 8325 5300 60  0000 C CNN
+F 1 "100k" H 8250 5100 60  0000 C CNN
+F 2 "paddle:SMD_0805" H 8300 4850 60  0001 C CNN
+F 3 "" H 8325 5300 60  0000 C CNN
+	1    8300 5200
+	0    -1   -1   0   
+$EndComp
+Connection ~ 8300 4900
+$Comp
+L GND #PWR067
+U 1 1 59CFCD50
+P 8300 5500
+F 0 "#PWR067" H 8300 5250 50  0001 C CNN
+F 1 "GND" H 8300 5350 50  0000 C CNN
+F 2 "" H 8300 5500 50  0001 C CNN
+F 3 "" H 8300 5500 50  0001 C CNN
+	1    8300 5500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8300 5500 8300 5400
+$Comp
+L +3.3VA #PWR068
+U 1 1 59D03303
+P 5900 2600
+F 0 "#PWR068" H 5900 2400 50  0001 C CNN
+F 1 "+3.3VA" H 5900 2800 50  0000 C CNN
+F 2 "" H 5900 2600 50  0001 C CNN
+F 3 "" H 5900 2600 50  0001 C CNN
+	1    5900 2600
+	1    0    0    -1  
+$EndComp
+Text HLabel 7850 3950 0    60   Input ~ 0
++V_UNREG_SW
+Text HLabel 8600 1600 2    60   BiDi ~ 0
+SCK
+Text HLabel 8600 2000 2    60   BiDi ~ 0
+SDA
+Text HLabel 8600 2400 2    60   3State ~ 0
+ALERT0
+Text Label 8350 1600 2    60   ~ 0
+SCK
+Text Label 8350 2000 2    60   ~ 0
+SDA
+Text Label 8350 2400 2    60   ~ 0
+SDA
+Wire Wire Line
+	8600 2400 8350 2400
+Wire Wire Line
+	8350 2000 8600 2000
+Wire Wire Line
+	8350 1600 8600 1600
+$Comp
+L +3.3VA #PWR069
+U 1 1 59D18927
+P 10250 3900
+F 0 "#PWR069" H 10250 3700 50  0001 C CNN
+F 1 "+3.3VA" H 10250 4100 50  0000 C CNN
+F 2 "" H 10250 3900 50  0001 C CNN
+F 3 "" H 10250 3900 50  0001 C CNN
+	1    10250 3900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10250 3950 10250 3900
+$EndSCHEMATC
