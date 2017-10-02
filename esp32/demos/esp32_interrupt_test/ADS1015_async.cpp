@@ -200,9 +200,9 @@ void ADS1015_async::startADC_SingleEnded(uint8_t channel) {
     }
 
     // Start with default values
-    uint16_t config = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
+    uint16_t config = ADS1015_REG_CONFIG_CQUE_1CONV    | // Enable the comparator only for alert functionality
     ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
-    ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
+    ADS1015_REG_CONFIG_CPOL_ACTVHI | // Alert/Rdy active low   (default val)
     ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
     ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
     ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
@@ -273,6 +273,9 @@ int16_t ADS1015_async::readADC_Differential_0_1() {
 
     // Set 'start single-conversion' bit
     config |= ADS1015_REG_CONFIG_OS_SINGLE;
+
+    writeRegister(m_i2cAddress, ADS1015_REG_POINTER_HITHRESH, 0x8000);
+    writeRegister(m_i2cAddress, ADS1015_REG_POINTER_LOWTHRESH, 0x0000);
 
     // Write config register to the ADC
     writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);

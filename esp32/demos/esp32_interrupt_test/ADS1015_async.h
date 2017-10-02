@@ -15,6 +15,7 @@
 
     v1.0  - First release
     v1.1  - Added ADS1115 support - W. Earl
+    v1.2  - Added asynchronous read support for esp32
 */
 /**************************************************************************/
 

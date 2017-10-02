@@ -35,14 +35,17 @@ void setup(void)
     ads.begin();
 
     pinMode(33, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(33), int_subr, RISING);
+    pinMode(27, OUTPUT);
+    attachInterrupt(digitalPinToInterrupt(33), int_subr, FALLING);
     
 }
 void loop(void)
 {
     int16_t adc0, adc1, adc2, adc3;
 
+    digitalWrite(27, HIGH);
     ads.startADC_SingleEnded(0);
+    digitalWrite(27, LOW);
     while (a == 0) 
     {
         Serial.println("not interrupted");
@@ -54,7 +57,7 @@ void loop(void)
     Serial.print("AIN0: "); Serial.println(adc0);
     Serial.println(" ");
 
-    delay(1000);
+    delay(100);
 
 
 }
