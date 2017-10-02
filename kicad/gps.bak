@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:paddle-rescue
 LIBS:paddle
 LIBS:adafruit
 LIBS:power
@@ -252,11 +253,11 @@ Wire Wire Line
 Connection ~ 3000 3350
 Wire Wire Line
 	3000 2850 3350 2850
-Text HLabel 7100 4450 2    60   Input ~ 0
+Text HLabel 7100 4450 2    60   Output ~ 0
 1PPS
 Text HLabel 3650 4850 0    60   Input ~ 0
 GPS_RXD
-Text HLabel 3650 4550 0    60   Input ~ 0
+Text HLabel 3650 4550 0    60   Output ~ 0
 GPS_TXD
 $Comp
 L GND #PWR054
@@ -278,17 +279,6 @@ F 1 "GND" H 5200 4300 50  0000 C CNN
 F 2 "" H 5200 4450 50  0001 C CNN
 F 3 "" H 5200 4450 50  0001 C CNN
 	1    5200 4450
-	1    0    0    -1  
-$EndComp
-$Comp
-L Battery_Cell BT401
-U 1 1 59CB3239
-P 5050 5400
-F 0 "BT401" H 5150 5500 50  0000 L CNN
-F 1 "Battery_Cell" H 5150 5400 50  0000 L CNN
-F 2 "" V 5050 5460 50  0001 C CNN
-F 3 "" V 5050 5460 50  0001 C CNN
-	1    5050 5400
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -385,4 +375,15 @@ Wire Wire Line
 	3550 3750 3350 3750
 Wire Wire Line
 	3750 3750 5300 3750
+$Comp
+L Battery_single-cell BT401
+U 1 1 59D0200B
+P 5050 5400
+F 0 "BT401" H 5150 5500 50  0000 L CNN
+F 1 "CR1025" H 5150 5400 50  0000 L CNN
+F 2 "paddle:CR1025_holder" V 5050 5460 50  0001 C CNN
+F 3 "" V 5050 5460 50  0001 C CNN
+	1    5050 5400
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
