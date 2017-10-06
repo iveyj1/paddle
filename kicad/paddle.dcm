@@ -40,6 +40,54 @@ D Generic Female Connector, Single Row, 01x04, socket header
 K Connector, Female, Generic
 $ENDCMP
 #
+$CMP LF155
+D JFET Input Operational Amplifiers
+K Ampliop JFET OpAMP
+F http://www.ti.com/lit/ds/symlink/lf357.pdf
+$ENDCMP
+#
+$CMP LF156
+D JFET Input Operational Amplifiers
+K Ampliop JFET OpAMP
+F http://www.ti.com/lit/ds/symlink/lf357.pdf
+$ENDCMP
+#
+$CMP LF256
+D JFET Input Operational Amplifiers
+K Ampliop JFET OpAMP
+F http://www.ti.com/lit/ds/symlink/lf357.pdf
+$ENDCMP
+#
+$CMP LF257
+D JFET Input Operational Amplifiers
+K Ampliop JFET OpAMP
+F http://www.ti.com/lit/ds/symlink/lf357.pdf
+$ENDCMP
+#
+$CMP LF355
+D JFET Input Operational Amplifiers
+K Ampliop JFET OpAMP
+F http://www.ti.com/lit/ds/symlink/lf357.pdf
+$ENDCMP
+#
+$CMP LF356
+D JFET Input Operational Amplifiers
+K Ampliop JFET OpAMP
+F http://www.ti.com/lit/ds/symlink/lf357.pdf
+$ENDCMP
+#
+$CMP LF357
+D JFET Input Operational Amplifiers
+K Ampliop JFET OpAMP
+F http://www.ti.com/lit/ds/symlink/lf357.pdf
+$ENDCMP
+#
+$CMP LM741
+D Op amp
+K Ampliop
+F http://www.ti.com/lit/ds/symlink/lm741.pdf
+$ENDCMP
+#
 $CMP NPN_BEC_SOT-23
 D Vce 100V, Ic 1A, High Voltage Power Transistor, TO-126
 K High Voltage Power Transistor
@@ -63,6 +111,24 @@ $ENDCMP
 $CMP Schottky
 D Schottky diode
 K diode Schottky
+$ENDCMP
+#
+$CMP TL061
+D Low-Power JFET-Input Operational Amplifier, Very Low Power
+K AmpliOp
+F http://www.ti.com/lit/ds/symlink/tl064.pdf
+$ENDCMP
+#
+$CMP TL071
+D Low-Noise JFET-Input Operational Amplifiers, Low Power
+K AmpliOp
+F http://www.ti.com/lit/ds/symlink/tl072a.pdf
+$ENDCMP
+#
+$CMP TL081
+D JFET-Input Operational Amplifiers
+K AmpliOp
+F http://www.ti.com/lit/ds/symlink/tl082.pdf
 $ENDCMP
 #
 $CMP TLVH431-ref-cathode-anode

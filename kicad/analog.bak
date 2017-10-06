@@ -53,39 +53,7 @@ S 4750 850  950  1250
 U 59CF60C9
 F0 "amp_ad0" 60
 F1 "amp_ad.sch" 60
-F2 "Vref" I L 4750 1650 60 
-F3 "Analog_in" I L 4750 1150 60 
-F4 "ADDR" I R 5700 1050 60 
-F5 "SCK" B R 5700 1300 60 
-F6 "SDA" B R 5700 1600 60 
-F7 "Aux_in" I L 4750 1400 60 
-F8 "ALERT" T R 5700 1900 60 
 $EndSheet
-$Comp
-L GND #PWR602
-U 1 1 59CF60E4
-P 6100 1050
-F 0 "#PWR602" H 6100 800 60  0001 C CNN
-F 1 "GND" H 6100 900 60  0000 C CNN
-F 2 "" H 6100 1050 50  0001 C CNN
-F 3 "" H 6100 1050 50  0001 C CNN
-	1    6100 1050
-	1    0    0    -1  
-$EndComp
-Text Label 5850 4650 0    60   ~ 0
-SCK
-Text Label 5850 6300 0    60   ~ 0
-SCK
-Text Label 5850 6600 0    60   ~ 0
-SDA
-Text Label 5850 4950 0    60   ~ 0
-SDA
-Text Label 5800 3250 0    60   ~ 0
-SDA
-Text Label 5800 2950 0    60   ~ 0
-SCK
-Text Label 5800 1900 0    60   ~ 0
-ALERT0
 Text Label 4550 1150 2    60   ~ 0
 IN_0
 Text Label 4550 1400 2    60   ~ 0
@@ -106,16 +74,6 @@ Text Label 4550 6400 2    60   ~ 0
 AUX_IN_3
 Text Label 4550 6650 2    60   ~ 0
 VREF
-Text Label 5800 1600 0    60   ~ 0
-SDA
-Text Label 5800 1300 0    60   ~ 0
-SCK
-Text Label 5800 3550 0    60   ~ 0
-ALERT0
-Text Label 5800 5250 0    60   ~ 0
-ALERT0
-Text Label 5800 6900 0    60   ~ 0
-ALERT0
 Text Label 4550 2800 2    60   ~ 0
 IN_1
 $Sheet
@@ -123,39 +81,18 @@ S 4750 2500 950  1250
 U 59CF612C
 F0 "amp_ad1" 60
 F1 "amp_ad.sch" 60
-F2 "Vref" I L 4750 3300 60 
-F3 "Analog_in" I L 4750 2800 60 
-F4 "ADDR" I R 5700 2700 60 
-F5 "SCK" B R 5700 2950 60 
-F6 "SDA" B R 5700 3250 60 
-F7 "Aux_in" I L 4750 3050 60 
-F8 "ALERT" T R 5700 3550 60 
 $EndSheet
 $Sheet
 S 4750 4200 950  1250
 U 59CF614A
 F0 "amp_ad2" 60
 F1 "amp_ad.sch" 60
-F2 "Vref" I L 4750 5000 60 
-F3 "Analog_in" I L 4750 4500 60 
-F4 "ADDR" I R 5700 4400 60 
-F5 "SCK" B R 5700 4650 60 
-F6 "SDA" B R 5700 4950 60 
-F7 "Aux_in" I L 4750 4750 60 
-F8 "ALERT" T R 5700 5250 60 
 $EndSheet
 $Sheet
 S 4750 5850 950  1250
 U 59CF6168
 F0 "amp_ad3" 60
 F1 "amp_ad.sch" 60
-F2 "Vref" I L 4750 6650 60 
-F3 "Analog_in" I L 4750 6150 60 
-F4 "ADDR" I R 5700 6050 60 
-F5 "SCK" B R 5700 6300 60 
-F6 "SDA" B R 5700 6600 60 
-F7 "Aux_in" I L 4750 6400 60 
-F8 "ALERT" T R 5700 6900 60 
 $EndSheet
 $Sheet
 S 1250 2000 850  1350
@@ -282,29 +219,8 @@ F 3 "" H 8300 5500 50  0001 C CNN
 	1    8300 5500
 	1    0    0    -1  
 $EndComp
-$Comp
-L +3.3VA #PWR601
-U 1 1 59D03303
-P 5900 2600
-F 0 "#PWR601" H 5900 2400 50  0001 C CNN
-F 1 "+3.3VA" H 5900 2800 50  0000 C CNN
-F 2 "" H 5900 2600 50  0001 C CNN
-F 3 "" H 5900 2600 50  0001 C CNN
-	1    5900 2600
-	1    0    0    -1  
-$EndComp
 Text HLabel 7850 3950 0    60   Input ~ 0
 +V_UNREG_SW
-Text HLabel 8600 1600 2    60   BiDi ~ 0
-SCK
-Text HLabel 8600 2000 2    60   BiDi ~ 0
-SDA
-Text HLabel 8600 2400 2    60   3State ~ 0
-ALERT0
-Text Label 8350 1600 2    60   ~ 0
-SCK
-Text Label 8350 2000 2    60   ~ 0
-SDA
 $Comp
 L +3.3VA #PWR607
 U 1 1 59D18927
@@ -316,8 +232,6 @@ F 3 "" H 10250 3900 50  0001 C CNN
 	1    10250 3900
 	1    0    0    -1  
 $EndComp
-Text Label 8350 2400 2    60   ~ 0
-ALERT0
 $Comp
 L Schottky D601
 U 1 1 59D18A85
@@ -331,42 +245,6 @@ F 3 "" H 9100 3600 50  0001 C CNN
 $EndComp
 Text Label 4550 5000 2    60   ~ 0
 VREF
-Wire Wire Line
-	5700 3250 5800 3250
-Wire Wire Line
-	5800 2950 5700 2950
-Wire Wire Line
-	5850 4650 5700 4650
-Connection ~ 5800 6300
-Connection ~ 5800 4950
-Wire Wire Line
-	5850 6600 5700 6600
-Wire Wire Line
-	5700 4950 5850 4950
-Wire Wire Line
-	5800 4400 5800 4950
-Wire Wire Line
-	5700 4400 5800 4400
-Wire Wire Line
-	5700 6300 5850 6300
-Wire Wire Line
-	5800 6050 5800 6300
-Wire Wire Line
-	5700 6050 5800 6050
-Wire Wire Line
-	5900 2600 5900 2700
-Wire Wire Line
-	5700 1050 6100 1050
-Wire Wire Line
-	5900 2700 5700 2700
-Wire Wire Line
-	5700 1900 5800 1900
-Wire Wire Line
-	5700 3550 5800 3550
-Wire Wire Line
-	5700 5250 5800 5250
-Wire Wire Line
-	5700 6900 5800 6900
 Wire Wire Line
 	4550 1650 4750 1650
 Wire Wire Line
@@ -391,10 +269,6 @@ Wire Wire Line
 	4750 6400 4550 6400
 Wire Wire Line
 	4550 6150 4750 6150
-Wire Wire Line
-	5700 1600 5800 1600
-Wire Wire Line
-	5800 1300 5700 1300
 Wire Wire Line
 	2250 2150 2100 2150
 Wire Wire Line
@@ -436,12 +310,6 @@ Wire Wire Line
 Connection ~ 8300 4900
 Wire Wire Line
 	8300 5500 8300 5400
-Wire Wire Line
-	8600 2400 8350 2400
-Wire Wire Line
-	8350 2000 8600 2000
-Wire Wire Line
-	8350 1600 8600 1600
 Wire Wire Line
 	10250 3950 10250 3900
 Wire Wire Line

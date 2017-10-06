@@ -140,8 +140,6 @@ Wire Wire Line
 Wire Wire Line
 	5200 4450 5300 4450
 Wire Wire Line
-	5300 3850 5250 3850
-Wire Wire Line
 	4550 5200 4550 5250
 Wire Wire Line
 	4550 5550 4550 5600
@@ -234,7 +232,7 @@ Wire Wire Line
 Wire Wire Line
 	3350 3750 3350 3550
 Text HLabel 2950 3350 0    60   Input ~ 0
-GPS_EN*
+GPS_ENABLE*
 Wire Wire Line
 	2950 3350 3050 3350
 $Comp
@@ -324,8 +322,6 @@ Wire Wire Line
 	4850 5200 4850 5400
 Wire Wire Line
 	5050 5200 4850 5200
-Text HLabel 5250 3850 0    60   Input ~ 0
-GPS_RESET*
 $Comp
 L R_US R402
 U 1 1 59CB67E4
@@ -386,4 +382,5 @@ F 3 "" V 5050 5460 50  0001 C CNN
 	1    5050 5400
 	1    0    0    -1  
 $EndComp
+NoConn ~ 5300 3850
 $EndSCHEMATC
