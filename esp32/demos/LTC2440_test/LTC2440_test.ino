@@ -3,7 +3,7 @@
 
     sparkfun SD Card | sparkfun esp32 thing
       VCC       3.3
-      CS        GPIO5/CS
+      CS        GPIO13/CS
       DI        GPIO23/MOSI/DI
       SCK       GPIO18/SCK
       DO        GPIO19/MISO/DO
@@ -58,11 +58,10 @@ void loop() {
 
     if ((a & 0x20) == 0)  {
         sign = -1;
-        a = a | 0xe0;
     } else {
         sign = 1;
-        a = a & 0x1f;
     }
+    a = a & 0x1f;
     e = ((a) << 24) | (b << 16) | (c << 8) | d;
     f = sign*e;
 
