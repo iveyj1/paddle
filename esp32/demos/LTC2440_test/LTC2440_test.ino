@@ -45,36 +45,36 @@ uint32_t e;
 int32_t f;
 String msg;
 char cmsg[256];
-uint8_t sign = 1;
+int8_t sign = 1;
+float v;
 void loop() {
     SPI.beginTransaction(SPISettings(400000, MSBFIRST, SPI_MODE0));
     digitalWrite(CS, LOW);
-    a = SPI.transfer(0x55);
-    b = SPI.transfer(0x55);
-    c = SPI.transfer(0x55);
-    d = SPI.transfer(0x55);
+    a = SPI.transfer(0x00);
+    b = SPI.transfer(0x00);
+    c = SPI.transfer(0x00);
+    d = SPI.transfer(0x00);
     digitalWrite(CS, HIGH);
     SPI.endTransaction();
 
-    if ((a & 0x20) == 0)  {
-        sign = -1;
-    } else {
-        sign = 1;
-    }
-    a = a & 0x1f;
+    //PrintHex83(&a,1);
+    //PrintHex83(&b,1);
+    //PrintHex83(&c,1);
+    //PrintHex83(&d,1);
+    //Serial.println();
     e = ((a) << 24) | (b << 16) | (c << 8) | d;
-    f = sign*e;
-
-    //msg = String(a, HEX) + " " + String(b, HEX) + " " + String(c, HEX) + " " + String(d, HEX) + " " + String(e, HEX) + " " + f;
-
-    //Serial.println(msg);
-
-    PrintHex83(&a,1);
-    PrintHex83(&b,1);
-    PrintHex83(&c,1);
-    PrintHex83(&d,1);
-    sprintf(cmsg," %12ld",f);
+    f = e;
+    if ((a & 0x20) == 0)  {
+        f = f | 0xe0000000;  // sign extend if negative
+    } else {
+        f = f & 0x1fffffff;  // get rid of sign bit if positive
+    }
+    f = f >> 5;  // discard low order bits to leave 24-bit result
+ 
+    //Serial.println(f);
+    v = (f * 3.3)/16777215.0;
+    sprintf(cmsg, "%10.8f", v);
     Serial.println(cmsg);
-    delay(200);
+    delay(250);
 
 }
