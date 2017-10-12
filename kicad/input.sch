@@ -38,7 +38,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 11 12
+Sheet 8 12
 Title ""
 Date ""
 Rev ""
@@ -57,39 +57,6 @@ F 1 "CONN_02X05" H 5300 2750 50  0000 C CNN
 F 2 "paddle:header-0.050-10-pin-through-hole" H 5300 1850 50  0001 C CNN
 F 3 "" H 5300 1850 50  0001 C CNN
 	1    5300 3050
-	1    0    0    -1  
-$EndComp
-$Comp
-L SP3003-04 U1101
-U 1 1 59CECF18
-P 2600 4250
-F 0 "U1101" H 2350 4800 60  0000 C CNN
-F 1 "SP3003-04" H 2750 4800 60  0000 C CNN
-F 2 "paddle:SMD_SC70-6" H 2600 3300 60  0001 C CNN
-F 3 "" H 2600 3300 60  0001 C CNN
-	1    2600 4250
-	-1   0    0    1   
-$EndComp
-$Comp
-L +3.3V #PWR1101
-U 1 1 59CECF1F
-P 2000 3950
-F 0 "#PWR1101" H 2000 3800 50  0001 C CNN
-F 1 "+3.3V" H 2000 4090 50  0000 C CNN
-F 2 "" H 2000 3950 50  0001 C CNN
-F 3 "" H 2000 3950 50  0001 C CNN
-	1    2000 3950
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR1102
-U 1 1 59CECF25
-P 2000 4500
-F 0 "#PWR1102" H 2000 4250 50  0001 C CNN
-F 1 "GND" H 2000 4350 50  0000 C CNN
-F 2 "" H 2000 4500 50  0001 C CNN
-F 3 "" H 2000 4500 50  0001 C CNN
-	1    2000 4500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -191,28 +158,6 @@ F 3 "" H 6075 3250 60  0000 C CNN
 	1    6050 3150
 	1    0    0    -1  
 $EndComp
-$Comp
-L R_US R1101
-U 1 1 59CF15ED
-P 4450 2950
-F 0 "R1101" H 4050 3350 60  0000 C CNN
-F 1 "10k 0.1%" H 4450 3350 60  0000 C CNN
-F 2 "paddle:R_0805" H 4450 2600 60  0001 C CNN
-F 3 "" H 4475 3050 60  0000 C CNN
-	1    4450 2950
-	1    0    0    -1  
-$EndComp
-$Comp
-L R_US R1102
-U 1 1 59CF15F3
-P 4450 3050
-F 0 "R1102" H 4050 3450 60  0000 C CNN
-F 1 "10k 0.1%" H 4450 3450 60  0000 C CNN
-F 2 "paddle:R_0805" H 4450 2700 60  0001 C CNN
-F 3 "" H 4475 3150 60  0000 C CNN
-	1    4450 3050
-	1    0    0    -1  
-$EndComp
 Text HLabel 7800 2850 2    60   Input ~ 0
 IN_0
 Text HLabel 7800 2950 2    60   Input ~ 0
@@ -221,10 +166,6 @@ Text HLabel 7800 3050 2    60   Input ~ 0
 IN_2
 Text HLabel 7800 3150 2    60   Input ~ 0
 IN_3
-Text HLabel 2750 2950 0    60   Input ~ 0
-AUX_IN_0
-Text HLabel 2750 3050 0    60   Input ~ 0
-AUX_IN_1
 Wire Wire Line
 	4900 2850 5050 2850
 Wire Wire Line
@@ -238,19 +179,9 @@ Wire Wire Line
 Wire Wire Line
 	5550 2850 5850 2850
 Wire Wire Line
-	2100 4050 2000 4050
-Wire Wire Line
-	2000 4050 2000 3950
-Wire Wire Line
-	2100 4500 2000 4500
-Wire Wire Line
 	4900 2800 4900 2850
 Wire Wire Line
 	5700 3250 5700 3350
-Wire Wire Line
-	4650 2950 5050 2950
-Wire Wire Line
-	4650 3050 5050 3050
 Wire Wire Line
 	5550 4150 5450 4150
 Wire Wire Line
@@ -274,12 +205,6 @@ Wire Wire Line
 Wire Wire Line
 	6250 3150 7800 3150
 Wire Wire Line
-	2750 3050 4250 3050
-Wire Wire Line
-	2750 2950 4250 2950
-Connection ~ 3250 2950
-Connection ~ 3400 3050
-Wire Wire Line
 	6900 4050 6900 2850
 Connection ~ 6900 2850
 Wire Wire Line
@@ -291,56 +216,8 @@ Connection ~ 7200 3050
 Wire Wire Line
 	7350 4650 7350 3150
 Connection ~ 7350 3150
-Wire Wire Line
-	3100 4550 3700 4550
-Wire Wire Line
-	3100 4350 3550 4350
-Wire Wire Line
-	3700 4550 3700 3250
-Wire Wire Line
-	3550 4350 3550 3150
-Connection ~ 3700 3250
-Connection ~ 3550 3150
-Wire Wire Line
-	3100 4150 3400 4150
-Wire Wire Line
-	3100 3950 3250 3950
-Wire Wire Line
-	3250 3950 3250 2950
-Wire Wire Line
-	3400 4150 3400 3050
-Wire Wire Line
-	4650 3150 5050 3150
-$Comp
-L R_US R1103
-U 1 1 59CF15F9
-P 4450 3150
-F 0 "R1103" H 4050 3550 60  0000 C CNN
-F 1 "10k 0.1%" H 4450 3550 60  0000 C CNN
-F 2 "paddle:R_0805" H 4450 2800 60  0001 C CNN
-F 3 "" H 4475 3250 60  0000 C CNN
-	1    4450 3150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2750 3150 4250 3150
-Text HLabel 2750 3150 0    60   Input ~ 0
-AUX_IN_2
-Text HLabel 2750 3250 0    60   Input ~ 0
-AUX_IN_3
-Wire Wire Line
-	2750 3250 4250 3250
-$Comp
-L R_US R1104
-U 1 1 59CF15FF
-P 4450 3250
-F 0 "R1104" H 4050 3650 60  0000 C CNN
-F 1 "10k 0.1%" H 4450 3650 60  0000 C CNN
-F 2 "paddle:R_0805" H 4450 2900 60  0001 C CNN
-F 3 "" H 4475 3350 60  0000 C CNN
-	1    4450 3250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4650 3250 5050 3250
+NoConn ~ 5050 2950
+NoConn ~ 5050 3050
+NoConn ~ 5050 3150
+NoConn ~ 5050 3250
 $EndSCHEMATC
