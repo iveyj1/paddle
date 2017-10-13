@@ -165,9 +165,9 @@ NoConn ~ 6150 3100
 NoConn ~ 6150 2500
 NoConn ~ 6150 2350
 Text HLabel 9450 3900 2    60   Input ~ 0
-TXD
+TXD_USB
 Text HLabel 9250 4050 2    60   Input ~ 0
-RXD
+RXD_USB
 Text HLabel 8050 3100 2    60   Input ~ 0
 RESET*
 Text HLabel 8000 4700 2    60   Input ~ 0

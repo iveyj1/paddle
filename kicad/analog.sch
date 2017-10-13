@@ -61,19 +61,19 @@ F6 "CS*" I R 5750 2000 60
 F7 "BUSY*" O R 5750 1000 60 
 F8 "ANALOG_IN" I L 4800 1100 60 
 $EndSheet
-Text Label 4550 1100 2    60   ~ 0
+Text Label 4750 1100 2    60   ~ 0
 IN_0
-Text Label 4550 1700 2    60   ~ 0
+Text Label 4750 1700 2    60   ~ 0
 VREF
-Text Label 4600 3500 2    60   ~ 0
+Text Label 4750 3500 2    60   ~ 0
 VREF
-Text Label 4600 4700 2    60   ~ 0
+Text Label 4750 4700 2    60   ~ 0
 IN_2
-Text Label 4600 6450 2    60   ~ 0
+Text Label 4750 6450 2    60   ~ 0
 IN_3
-Text Label 4600 7050 2    60   ~ 0
+Text Label 4750 7050 2    60   ~ 0
 VREF
-Text Label 4600 2900 2    60   ~ 0
+Text Label 4750 2900 2    60   ~ 0
 IN_1
 $Sheet
 S 1250 2000 850  1350
@@ -217,24 +217,24 @@ F 3 "" H 9000 3000 50  0001 C CNN
 	1    9000 3000
 	-1   0    0    1   
 $EndComp
-Text Label 4600 5300 2    60   ~ 0
+Text Label 4750 5300 2    60   ~ 0
 VREF
 Wire Wire Line
-	4550 1700 4800 1700
+	4750 1700 4800 1700
 Wire Wire Line
-	4550 1100 4800 1100
+	4750 1100 4800 1100
 Wire Wire Line
-	4600 3500 4800 3500
+	4750 3500 4800 3500
 Wire Wire Line
-	4600 2900 4800 2900
+	4750 2900 4800 2900
 Wire Wire Line
-	4600 5300 4800 5300
+	4750 5300 4800 5300
 Wire Wire Line
-	4600 4700 4800 4700
+	4750 4700 4800 4700
 Wire Wire Line
-	4600 7050 4800 7050
+	4750 7050 4800 7050
 Wire Wire Line
-	4600 6450 4800 6450
+	4750 6450 4800 6450
 Wire Wire Line
 	2250 2150 2100 2150
 Wire Wire Line
@@ -249,11 +249,7 @@ Wire Wire Line
 	7950 3400 7950 3350
 Connection ~ 7950 3350
 Wire Wire Line
-	7750 3350 7950 3350
-Wire Wire Line
-	7950 3350 8400 3350
-Wire Wire Line
-	8400 3350 8500 3350
+	7750 3350 8500 3350
 Wire Wire Line
 	8200 3600 8500 3600
 Wire Wire Line
@@ -263,18 +259,12 @@ Wire Wire Line
 Wire Wire Line
 	9650 3600 9650 3650
 Wire Wire Line
-	9500 3350 9550 3350
-Wire Wire Line
-	9550 3350 9650 3350
-Wire Wire Line
-	9650 3350 10150 3350
+	9500 3350 10150 3350
 Wire Wire Line
 	9650 3350 9650 3400
 Connection ~ 9650 3350
 Wire Wire Line
-	8200 3600 8200 4300
-Wire Wire Line
-	8200 4300 8200 4400
+	8200 3600 8200 4400
 Wire Wire Line
 	8200 4300 8650 4300
 Connection ~ 8200 4300
@@ -335,7 +325,7 @@ Wire Wire Line
 	3100 5250 3450 5250
 Text HLabel 7300 1400 2    60   Input ~ 0
 SCLK
-Text HLabel 7300 1550 2    60   Input ~ 0
+Text HLabel 7300 1550 2    60   Output ~ 0
 SDO
 Text HLabel 7300 1700 2    60   Input ~ 0
 SDI
@@ -347,7 +337,7 @@ Text HLabel 5750 5600 2    60   Input ~ 0
 CS2*
 Text HLabel 5750 7350 2    60   Input ~ 0
 CS3*
-Text HLabel 7300 1250 2    60   Input ~ 0
+Text HLabel 7300 1250 2    60   Output ~ 0
 BUSY*
 Text Label 7150 1250 2    60   ~ 0
 BUSY*
@@ -429,4 +419,8 @@ Wire Wire Line
 	5750 1250 5900 1250
 Wire Wire Line
 	5900 1000 5750 1000
+Text HLabel 2050 5250 0    60   Input ~ 0
+AN_REFSEL
+Wire Wire Line
+	2050 5250 2250 5250
 $EndSCHEMATC
