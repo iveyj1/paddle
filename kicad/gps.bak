@@ -38,7 +38,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 12
+Sheet 3 12
 Title ""
 Date ""
 Rev ""
@@ -232,11 +232,9 @@ Wire Wire Line
 Wire Wire Line
 	3350 3750 3350 3550
 Text HLabel 2950 3350 0    60   Input ~ 0
-GPS_ENABLE*
+ENABLE*
 Wire Wire Line
-	2950 3350 3000 3350
-Wire Wire Line
-	3000 3350 3050 3350
+	2950 3350 3050 3350
 $Comp
 L R_US R401
 U 1 1 59CB0CA3
@@ -256,9 +254,9 @@ Wire Wire Line
 Text HLabel 7100 4450 2    60   Output ~ 0
 1PPS
 Text HLabel 3650 4850 0    60   Input ~ 0
-GPS_RXD
+RXD
 Text HLabel 3650 4550 0    60   Output ~ 0
-GPS_TXD
+TXD
 $Comp
 L GND #PWR406
 U 1 1 59CB0DB1
@@ -372,11 +370,7 @@ $EndComp
 Wire Wire Line
 	3550 3750 3350 3750
 Wire Wire Line
-	3750 3750 4000 3750
-Wire Wire Line
-	4000 3750 4250 3750
-Wire Wire Line
-	4250 3750 5300 3750
+	3750 3750 5300 3750
 $Comp
 L Battery_single-cell BT401
 U 1 1 59D0200B

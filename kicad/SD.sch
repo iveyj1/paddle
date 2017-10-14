@@ -38,7 +38,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 12
+Sheet 4 12
 Title ""
 Date ""
 Rev ""
@@ -200,7 +200,7 @@ Wire Wire Line
 	4450 3600 4800 3600
 Connection ~ 4650 3600
 Text HLabel 4450 3600 0    60   Input ~ 0
-SD_ENABLE*
+ENABLE*
 Wire Wire Line
 	5950 3100 6100 3100
 Wire Wire Line

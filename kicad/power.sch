@@ -248,7 +248,7 @@ F 3 "" H 4550 1900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text HLabel 7650 3400 2    60   Output ~ 0
-SHUTDOWN
+SHUTDOWN*
 Text HLabel 4000 4300 0    60   Input ~ 0
 KEEPALIVE
 $Comp
