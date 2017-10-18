@@ -76,32 +76,32 @@ VREF
 Text Label 4750 2900 2    60   ~ 0
 IN_1
 $Sheet
-S 1250 2000 850  1350
+S 1250 1150 850  1350
 U 59CF67CB
 F0 "sheet59CF67C1" 60
 F1 "input.sch" 60
-F2 "IN_0" I R 2100 2150 60 
-F3 "IN_1" I R 2100 2300 60 
-F4 "IN_2" I R 2100 2450 60 
-F5 "IN_3" I R 2100 2600 60 
+F2 "IN_0" I R 2100 1300 60 
+F3 "IN_1" I R 2100 1450 60 
+F4 "IN_2" I R 2100 1600 60 
+F5 "IN_3" I R 2100 1750 60 
 $EndSheet
-Text Label 2250 2150 0    60   ~ 0
+Text Label 2250 1300 0    60   ~ 0
 IN_0
-Text Label 2250 2300 0    60   ~ 0
+Text Label 2250 1450 0    60   ~ 0
 IN_1
-Text Label 2250 2450 0    60   ~ 0
+Text Label 2250 1600 0    60   ~ 0
 IN_2
-Text Label 2250 2600 0    60   ~ 0
+Text Label 2250 1750 0    60   ~ 0
 IN_3
 $Sheet
-S 2250 4750 850  1000
+S 1300 4050 850  1000
 U 59CF7E8A
 F0 "reference" 60
 F1 "reference.sch" 60
-F2 "VREF" O R 3100 5250 60 
-F3 "REFSEL" I L 2250 5250 60 
+F2 "VREF" O R 2150 4550 60 
+F3 "REFSEL" I L 1300 4550 60 
 $EndSheet
-Text Label 3450 5250 2    60   ~ 0
+Text Label 2500 4550 2    60   ~ 0
 VREF
 $Comp
 L C_Small C601
@@ -115,10 +115,10 @@ F 3 "" H 7950 3500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR054
+L GND #PWR501
 U 1 1 59CFCD19
 P 7950 3650
-F 0 "#PWR054" H 7950 3400 50  0001 C CNN
+F 0 "#PWR501" H 7950 3400 50  0001 C CNN
 F 1 "GND" H 7950 3500 50  0000 C CNN
 F 2 "" H 7950 3650 50  0001 C CNN
 F 3 "" H 7950 3650 50  0001 C CNN
@@ -126,10 +126,10 @@ F 3 "" H 7950 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR055
+L GND #PWR503
 U 1 1 59CFCD24
 P 8350 3950
-F 0 "#PWR055" H 8350 3700 50  0001 C CNN
+F 0 "#PWR503" H 8350 3700 50  0001 C CNN
 F 1 "GND" H 8350 3800 50  0000 C CNN
 F 2 "" H 8350 3950 50  0001 C CNN
 F 3 "" H 8350 3950 50  0001 C CNN
@@ -148,10 +148,10 @@ F 3 "" H 9650 3500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR056
+L GND #PWR504
 U 1 1 59CFCD33
 P 9650 3650
-F 0 "#PWR056" H 9650 3400 50  0001 C CNN
+F 0 "#PWR504" H 9650 3400 50  0001 C CNN
 F 1 "GND" H 9650 3500 50  0000 C CNN
 F 2 "" H 9650 3650 50  0001 C CNN
 F 3 "" H 9650 3650 50  0001 C CNN
@@ -183,10 +183,10 @@ F 3 "" H 8225 4700 60  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L GND #PWR057
+L GND #PWR502
 U 1 1 59CFCD50
 P 8200 4900
-F 0 "#PWR057" H 8200 4650 50  0001 C CNN
+F 0 "#PWR502" H 8200 4650 50  0001 C CNN
 F 1 "GND" H 8200 4750 50  0000 C CNN
 F 2 "" H 8200 4900 50  0001 C CNN
 F 3 "" H 8200 4900 50  0001 C CNN
@@ -196,10 +196,10 @@ $EndComp
 Text HLabel 7750 3350 0    60   Input ~ 0
 +V_UNREG_SW
 $Comp
-L +3.3VA #PWR058
+L +3.3VA #PWR505
 U 1 1 59D18927
 P 10150 3300
-F 0 "#PWR058" H 10150 3100 50  0001 C CNN
+F 0 "#PWR505" H 10150 3100 50  0001 C CNN
 F 1 "+3.3VA" H 10150 3500 50  0000 C CNN
 F 2 "" H 10150 3300 50  0001 C CNN
 F 3 "" H 10150 3300 50  0001 C CNN
@@ -219,69 +219,6 @@ F 3 "" H 9000 3000 50  0001 C CNN
 $EndComp
 Text Label 4750 5300 2    60   ~ 0
 VREF
-Wire Wire Line
-	4750 1700 4800 1700
-Wire Wire Line
-	4750 1100 4800 1100
-Wire Wire Line
-	4750 3500 4800 3500
-Wire Wire Line
-	4750 2900 4800 2900
-Wire Wire Line
-	4750 5300 4800 5300
-Wire Wire Line
-	4750 4700 4800 4700
-Wire Wire Line
-	4750 7050 4800 7050
-Wire Wire Line
-	4750 6450 4800 6450
-Wire Wire Line
-	2250 2150 2100 2150
-Wire Wire Line
-	2250 2300 2100 2300
-Wire Wire Line
-	2250 2450 2100 2450
-Wire Wire Line
-	2250 2600 2100 2600
-Wire Wire Line
-	7950 3600 7950 3650
-Wire Wire Line
-	7950 3400 7950 3350
-Connection ~ 7950 3350
-Wire Wire Line
-	7750 3350 8500 3350
-Wire Wire Line
-	8200 3600 8500 3600
-Wire Wire Line
-	8350 3950 8350 3850
-Wire Wire Line
-	8350 3850 8500 3850
-Wire Wire Line
-	9650 3600 9650 3650
-Wire Wire Line
-	9500 3350 10150 3350
-Wire Wire Line
-	9650 3350 9650 3400
-Connection ~ 9650 3350
-Wire Wire Line
-	8200 3600 8200 4400
-Wire Wire Line
-	8200 4300 8650 4300
-Connection ~ 8200 4300
-Wire Wire Line
-	8200 4900 8200 4800
-Wire Wire Line
-	10150 3350 10150 3300
-Wire Wire Line
-	9550 3000 9150 3000
-Wire Wire Line
-	8850 3000 8400 3000
-Wire Wire Line
-	9550 3000 9550 3350
-Connection ~ 9550 3350
-Wire Wire Line
-	8400 3000 8400 3350
-Connection ~ 8400 3350
 $Sheet
 S 4800 2550 950  1450
 U 59DF91A9
@@ -321,43 +258,29 @@ F6 "BUSY*" O R 5750 6350 60
 F7 "ANALOG_IN" I L 4800 6450 60 
 F8 "SCLK" I R 5750 6600 60 
 $EndSheet
-Wire Wire Line
-	3100 5250 3450 5250
-Text HLabel 7300 1400 2    60   Input ~ 0
+Text HLabel 9800 1650 2    60   Input ~ 0
 SCLK
-Text HLabel 7300 1550 2    60   Output ~ 0
+Text HLabel 9800 1750 2    60   Output ~ 0
 SDO
-Text HLabel 7300 1700 2    60   Input ~ 0
+Text HLabel 9800 1850 2    60   Input ~ 0
 SDI
-Text HLabel 5750 2000 2    60   Input ~ 0
-CS0*
 Text HLabel 5750 3800 2    60   Input ~ 0
 CS1*
 Text HLabel 5750 5600 2    60   Input ~ 0
 CS2*
 Text HLabel 5750 7350 2    60   Input ~ 0
 CS3*
-Text HLabel 7300 1250 2    60   Output ~ 0
+Text HLabel 9800 1550 2    60   Output ~ 0
 BUSY*
-Text Label 7150 1250 2    60   ~ 0
+Text Label 9450 1550 0    60   ~ 0
 BUSY*
-Wire Wire Line
-	7150 1250 7300 1250
-Wire Wire Line
-	7300 1400 7150 1400
-Text Label 7150 1400 2    60   ~ 0
+Text Label 9450 1650 0    60   ~ 0
 SCK
-Text Label 7150 1550 2    60   ~ 0
+Text Label 9450 1750 0    60   ~ 0
 SDO
-Text Label 7150 1700 2    60   ~ 0
+Text Label 9450 1850 0    60   ~ 0
 SDI
-Wire Wire Line
-	7150 1550 7300 1550
-Wire Wire Line
-	7300 1700 7150 1700
 Text Label 5900 1250 0    60   ~ 0
-SCK
-Text Label 5900 3050 0    60   ~ 0
 SCK
 Text Label 5850 4850 0    60   ~ 0
 SCK
@@ -365,34 +288,137 @@ Text Label 5850 6600 0    60   ~ 0
 SCK
 Text Label 5900 1500 0    60   ~ 0
 SDO
-Text Label 5900 3300 0    60   ~ 0
-SDO
 Text Label 5850 6850 0    60   ~ 0
 SDO
 Text Label 5850 5100 0    60   ~ 0
 SDO
 Text Label 5900 1750 0    60   ~ 0
 SDI
-Text Label 5900 3550 0    60   ~ 0
-SDI
 Text Label 5850 5350 0    60   ~ 0
 SDI
 Text Label 5850 7100 0    60   ~ 0
 SDI
+Text Label 5900 1000 0    60   ~ 0
+BUSY*
+Text Label 5850 4600 0    60   ~ 0
+BUSY*
+Text Label 5850 6350 0    60   ~ 0
+BUSY*
+Text HLabel 1100 4550 0    60   Input ~ 0
+AN_REFSEL
+$Comp
+L CONN_02X05 J?
+U 1 1 59E306A5
+P 9150 1750
+F 0 "J?" H 9150 2050 50  0000 C CNN
+F 1 "CONN_02X05" H 9150 1450 50  0000 C CNN
+F 2 "" H 9150 550 50  0001 C CNN
+F 3 "" H 9150 550 50  0001 C CNN
+	1    9150 1750
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 59E334FA
+P 8100 1600
+F 0 "#PWR?" H 8100 1350 50  0001 C CNN
+F 1 "GND" H 8100 1450 50  0000 C CNN
+F 2 "" H 8100 1600 50  0001 C CNN
+F 3 "" H 8100 1600 50  0001 C CNN
+	1    8100 1600
+	1    0    0    -1  
+$EndComp
+Text HLabel 9450 1950 2    60   Input ~ 0
+CS0*
+Text HLabel 8850 1950 0    60   Input ~ 0
+CS1*
+Text HLabel 8850 1850 0    60   Input ~ 0
+CS2*
+Text HLabel 8850 1750 0    60   Input ~ 0
+CS3*
+Text HLabel 8850 1650 0    60   Input ~ 0
+AN_REFSEL
+Text HLabel 5750 2000 2    60   Input ~ 0
+CS0*
+Wire Wire Line
+	4750 1700 4800 1700
+Wire Wire Line
+	4750 1100 4800 1100
+Wire Wire Line
+	4750 3500 4800 3500
+Wire Wire Line
+	4750 2900 4800 2900
+Wire Wire Line
+	4750 5300 4800 5300
+Wire Wire Line
+	4750 4700 4800 4700
+Wire Wire Line
+	4750 7050 4800 7050
+Wire Wire Line
+	4750 6450 4800 6450
+Wire Wire Line
+	2250 1300 2100 1300
+Wire Wire Line
+	2250 1450 2100 1450
+Wire Wire Line
+	2250 1600 2100 1600
+Wire Wire Line
+	2250 1750 2100 1750
+Wire Wire Line
+	7950 3600 7950 3650
+Wire Wire Line
+	7950 3400 7950 3350
+Connection ~ 7950 3350
+Wire Wire Line
+	7750 3350 8500 3350
+Wire Wire Line
+	8200 3600 8500 3600
+Wire Wire Line
+	8350 3950 8350 3850
+Wire Wire Line
+	8350 3850 8500 3850
+Wire Wire Line
+	9650 3600 9650 3650
+Wire Wire Line
+	9500 3350 10150 3350
+Wire Wire Line
+	9650 3350 9650 3400
+Connection ~ 9650 3350
+Wire Wire Line
+	8200 3600 8200 4400
+Wire Wire Line
+	8200 4300 8650 4300
+Connection ~ 8200 4300
+Wire Wire Line
+	8200 4900 8200 4800
+Wire Wire Line
+	10150 3350 10150 3300
+Wire Wire Line
+	9550 3000 9150 3000
+Wire Wire Line
+	8850 3000 8400 3000
+Wire Wire Line
+	9550 3000 9550 3350
+Connection ~ 9550 3350
+Wire Wire Line
+	8400 3000 8400 3350
+Connection ~ 8400 3350
+Wire Wire Line
+	2150 4550 2500 4550
+Wire Wire Line
+	9400 1550 9800 1550
+Wire Wire Line
+	9400 1650 9800 1650
+Wire Wire Line
+	9400 1750 9800 1750
+Wire Wire Line
+	9400 1850 9800 1850
 Wire Wire Line
 	5850 7100 5750 7100
 Wire Wire Line
 	5750 6850 5850 6850
 Wire Wire Line
 	5750 6600 5850 6600
-Text Label 5900 1000 0    60   ~ 0
-BUSY*
-Text Label 5900 2800 0    60   ~ 0
-BUSY*
-Text Label 5850 4600 0    60   ~ 0
-BUSY*
-Text Label 5850 6350 0    60   ~ 0
-BUSY*
 Wire Wire Line
 	5850 6350 5750 6350
 Wire Wire Line
@@ -419,8 +445,28 @@ Wire Wire Line
 	5750 1250 5900 1250
 Wire Wire Line
 	5900 1000 5750 1000
-Text HLabel 2050 5250 0    60   Input ~ 0
-AN_REFSEL
 Wire Wire Line
-	2050 5250 2250 5250
+	1100 4550 1300 4550
+Wire Wire Line
+	8900 1550 8100 1550
+Wire Wire Line
+	8100 1550 8100 1600
+Wire Wire Line
+	8850 1650 8900 1650
+Wire Wire Line
+	8900 1750 8850 1750
+Wire Wire Line
+	8850 1850 8900 1850
+Wire Wire Line
+	8900 1950 8850 1950
+Wire Wire Line
+	9400 1950 9450 1950
+Text Label 5900 2800 0    60   ~ 0
+BUSY*
+Text Label 5900 3050 0    60   ~ 0
+SCK
+Text Label 5900 3300 0    60   ~ 0
+SDO
+Text Label 5900 3550 0    60   ~ 0
+SDI
 $EndSCHEMATC
