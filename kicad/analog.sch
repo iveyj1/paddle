@@ -53,7 +53,7 @@ S 4800 750  950  1450
 U 59CF60C9
 F0 "amp_ad0" 60
 F1 "amp_ad.sch" 60
-F2 "VREF" I L 4800 1700 60 
+F2 "VC" I L 4800 1700 60 
 F3 "SCLK" I R 5750 1250 60 
 F4 "SDO" O R 5750 1500 60 
 F5 "SDI" I R 5750 1750 60 
@@ -64,15 +64,15 @@ $EndSheet
 Text Label 4750 1100 2    60   ~ 0
 IN_0
 Text Label 4750 1700 2    60   ~ 0
-VREF
+VC
 Text Label 4750 3500 2    60   ~ 0
-VREF
+VC
 Text Label 4750 4700 2    60   ~ 0
 IN_2
 Text Label 4750 6450 2    60   ~ 0
 IN_3
 Text Label 4750 7050 2    60   ~ 0
-VREF
+VC
 Text Label 4750 2900 2    60   ~ 0
 IN_1
 $Sheet
@@ -98,11 +98,11 @@ S 1300 4050 850  1000
 U 59CF7E8A
 F0 "reference" 60
 F1 "reference.sch" 60
-F2 "VREF" O R 2150 4550 60 
+F2 "VC" O R 2150 4550 60 
 F3 "REFSEL" I L 1300 4550 60 
 $EndSheet
 Text Label 2500 4550 2    60   ~ 0
-VREF
+VC
 $Comp
 L C_Small C601
 U 1 1 59CFCD12
@@ -218,13 +218,13 @@ F 3 "" H 9000 3000 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Text Label 4750 5300 2    60   ~ 0
-VREF
+VC
 $Sheet
 S 4800 2550 950  1450
 U 59DF91A9
 F0 "amp_ad1" 60
 F1 "amp_ad.sch" 60
-F2 "VREF" I L 4800 3500 60 
+F2 "VC" I L 4800 3500 60 
 F3 "SCLK" I R 5750 3050 60 
 F4 "SDO" O R 5750 3300 60 
 F5 "SDI" I R 5750 3550 60 
@@ -237,7 +237,7 @@ S 4800 4350 950  1450
 U 59DF9675
 F0 "amp_ad2" 60
 F1 "amp_ad.sch" 60
-F2 "VREF" I L 4800 5300 60 
+F2 "VC" I L 4800 5300 60 
 F3 "SDO" O R 5750 5100 60 
 F4 "SDI" I R 5750 5350 60 
 F5 "CS*" I R 5750 5600 60 
@@ -250,7 +250,7 @@ S 4800 6100 950  1450
 U 59DF9B38
 F0 "amp_ad3" 60
 F1 "amp_ad.sch" 60
-F2 "VREF" I L 4800 7050 60 
+F2 "VC" I L 4800 7050 60 
 F3 "SDO" O R 5750 6850 60 
 F4 "SDI" I R 5750 7100 60 
 F5 "CS*" I R 5750 7350 60 
@@ -370,7 +370,11 @@ Wire Wire Line
 	7950 3400 7950 3350
 Connection ~ 7950 3350
 Wire Wire Line
-	7750 3350 8500 3350
+	7750 3350 7950 3350
+Wire Wire Line
+	7950 3350 8400 3350
+Wire Wire Line
+	8400 3350 8500 3350
 Wire Wire Line
 	8200 3600 8500 3600
 Wire Wire Line
@@ -380,12 +384,18 @@ Wire Wire Line
 Wire Wire Line
 	9650 3600 9650 3650
 Wire Wire Line
-	9500 3350 10150 3350
+	9500 3350 9550 3350
+Wire Wire Line
+	9550 3350 9650 3350
+Wire Wire Line
+	9650 3350 10150 3350
 Wire Wire Line
 	9650 3350 9650 3400
 Connection ~ 9650 3350
 Wire Wire Line
-	8200 3600 8200 4400
+	8200 3600 8200 4300
+Wire Wire Line
+	8200 4300 8200 4400
 Wire Wire Line
 	8200 4300 8650 4300
 Connection ~ 8200 4300

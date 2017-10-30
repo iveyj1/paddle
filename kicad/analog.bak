@@ -38,7 +38,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 12
+Sheet 5 20
 Title ""
 Date ""
 Rev ""
@@ -370,11 +370,7 @@ Wire Wire Line
 	7950 3400 7950 3350
 Connection ~ 7950 3350
 Wire Wire Line
-	7750 3350 7950 3350
-Wire Wire Line
-	7950 3350 8400 3350
-Wire Wire Line
-	8400 3350 8500 3350
+	7750 3350 8500 3350
 Wire Wire Line
 	8200 3600 8500 3600
 Wire Wire Line
@@ -384,18 +380,12 @@ Wire Wire Line
 Wire Wire Line
 	9650 3600 9650 3650
 Wire Wire Line
-	9500 3350 9550 3350
-Wire Wire Line
-	9550 3350 9650 3350
-Wire Wire Line
-	9650 3350 10150 3350
+	9500 3350 10150 3350
 Wire Wire Line
 	9650 3350 9650 3400
 Connection ~ 9650 3350
 Wire Wire Line
-	8200 3600 8200 4300
-Wire Wire Line
-	8200 4300 8200 4400
+	8200 3600 8200 4400
 Wire Wire Line
 	8200 4300 8650 4300
 Connection ~ 8200 4300

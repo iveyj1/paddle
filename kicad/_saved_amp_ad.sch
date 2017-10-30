@@ -150,7 +150,7 @@ F 3 "" H 8100 3300 50  0001 C CNN
 $EndComp
 Text HLabel 8300 2750 2    60   Output ~ 0
 BUSY*
-Text HLabel 3700 4250 0    60   Input ~ 0
+Text HLabel 2400 3800 0    60   Input ~ 0
 ANALOG_IN
 $Comp
 L +3.3VA #PWR606
@@ -356,8 +356,6 @@ F 3 "" H 2625 3900 60  0000 C CNN
 	1    2600 3800
 	-1   0    0    1   
 $EndComp
-Text HLabel 2400 3800 0    60   Input ~ 0
-IN
 $Comp
 L +3.3VA #PWR?
 U 1 1 59F5CAD5
