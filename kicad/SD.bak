@@ -38,7 +38,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 12
+Sheet 4 13
 Title ""
 Date ""
 Rev ""
@@ -140,7 +140,11 @@ Wire Wire Line
 Wire Wire Line
 	5300 3800 5300 3900
 Wire Wire Line
-	5100 3800 6100 3800
+	5100 3800 5300 3800
+Wire Wire Line
+	5300 3800 5750 3800
+Wire Wire Line
+	5750 3800 6100 3800
 Connection ~ 6000 4100
 Wire Wire Line
 	6100 3900 6000 3900
@@ -148,7 +152,11 @@ Connection ~ 6000 4200
 Wire Wire Line
 	6100 4100 6000 4100
 Wire Wire Line
-	6000 3900 6000 4300
+	6000 3900 6000 4100
+Wire Wire Line
+	6000 4100 6000 4200
+Wire Wire Line
+	6000 4200 6000 4300
 Wire Wire Line
 	6000 4200 6100 4200
 Text HLabel 5950 3100 0    60   Output ~ 0
@@ -197,7 +205,9 @@ $EndComp
 Wire Wire Line
 	4650 3150 4650 3200
 Wire Wire Line
-	4450 3600 4800 3600
+	4450 3600 4650 3600
+Wire Wire Line
+	4650 3600 4800 3600
 Connection ~ 4650 3600
 Text HLabel 4450 3600 0    60   Input ~ 0
 ENABLE*

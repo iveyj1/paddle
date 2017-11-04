@@ -38,7 +38,7 @@ EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 12
+Sheet 7 13
 Title ""
 Date ""
 Rev ""
@@ -53,7 +53,7 @@ S 4800 750  950  1450
 U 59CF60C9
 F0 "amp_ad0" 60
 F1 "amp_ad.sch" 60
-F2 "VC" I L 4800 1700 60 
+F2 "VREF" I L 4800 1700 60 
 F3 "SCLK" I R 5750 1250 60 
 F4 "SDO" O R 5750 1500 60 
 F5 "SDI" I R 5750 1750 60 
@@ -64,15 +64,15 @@ $EndSheet
 Text Label 4750 1100 2    60   ~ 0
 IN_0
 Text Label 4750 1700 2    60   ~ 0
-VC
+VREF
 Text Label 4750 3500 2    60   ~ 0
-VC
+VREF
 Text Label 4750 4700 2    60   ~ 0
 IN_2
 Text Label 4750 6450 2    60   ~ 0
 IN_3
 Text Label 4750 7050 2    60   ~ 0
-VC
+VREF
 Text Label 4750 2900 2    60   ~ 0
 IN_1
 $Sheet
@@ -98,11 +98,11 @@ S 1300 4050 850  1000
 U 59CF7E8A
 F0 "reference" 60
 F1 "reference.sch" 60
-F2 "VC" O R 2150 4550 60 
+F2 "VREF" O R 2150 4550 60 
 F3 "REFSEL" I L 1300 4550 60 
 $EndSheet
 Text Label 2500 4550 2    60   ~ 0
-VC
+VREF
 $Comp
 L C_Small C601
 U 1 1 59CFCD12
@@ -218,13 +218,13 @@ F 3 "" H 9000 3000 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 Text Label 4750 5300 2    60   ~ 0
-VC
+VREF
 $Sheet
 S 4800 2550 950  1450
 U 59DF91A9
 F0 "amp_ad1" 60
 F1 "amp_ad.sch" 60
-F2 "VC" I L 4800 3500 60 
+F2 "VREF" I L 4800 3500 60 
 F3 "SCLK" I R 5750 3050 60 
 F4 "SDO" O R 5750 3300 60 
 F5 "SDI" I R 5750 3550 60 
@@ -237,7 +237,7 @@ S 4800 4350 950  1450
 U 59DF9675
 F0 "amp_ad2" 60
 F1 "amp_ad.sch" 60
-F2 "VC" I L 4800 5300 60 
+F2 "VREF" I L 4800 5300 60 
 F3 "SDO" O R 5750 5100 60 
 F4 "SDI" I R 5750 5350 60 
 F5 "CS*" I R 5750 5600 60 
@@ -250,7 +250,7 @@ S 4800 6100 950  1450
 U 59DF9B38
 F0 "amp_ad3" 60
 F1 "amp_ad.sch" 60
-F2 "VC" I L 4800 7050 60 
+F2 "VREF" I L 4800 7050 60 
 F3 "SDO" O R 5750 6850 60 
 F4 "SDI" I R 5750 7100 60 
 F5 "CS*" I R 5750 7350 60 
@@ -258,28 +258,12 @@ F6 "BUSY*" O R 5750 6350 60
 F7 "ANALOG_IN" I L 4800 6450 60 
 F8 "SCLK" I R 5750 6600 60 
 $EndSheet
-Text HLabel 9800 1650 2    60   Input ~ 0
-SCLK
-Text HLabel 9800 1750 2    60   Output ~ 0
-SDO
-Text HLabel 9800 1850 2    60   Input ~ 0
-SDI
 Text HLabel 5750 3800 2    60   Input ~ 0
 CS1*
 Text HLabel 5750 5600 2    60   Input ~ 0
 CS2*
 Text HLabel 5750 7350 2    60   Input ~ 0
 CS3*
-Text HLabel 9800 1550 2    60   Output ~ 0
-BUSY*
-Text Label 9450 1550 0    60   ~ 0
-BUSY*
-Text Label 9450 1650 0    60   ~ 0
-SCK
-Text Label 9450 1750 0    60   ~ 0
-SDO
-Text Label 9450 1850 0    60   ~ 0
-SDI
 Text Label 5900 1250 0    60   ~ 0
 SCK
 Text Label 5850 4850 0    60   ~ 0
@@ -305,38 +289,6 @@ BUSY*
 Text Label 5850 6350 0    60   ~ 0
 BUSY*
 Text HLabel 1100 4550 0    60   Input ~ 0
-AN_REFSEL
-$Comp
-L CONN_02X05 J?
-U 1 1 59E306A5
-P 9150 1750
-F 0 "J?" H 9150 2050 50  0000 C CNN
-F 1 "CONN_02X05" H 9150 1450 50  0000 C CNN
-F 2 "" H 9150 550 50  0001 C CNN
-F 3 "" H 9150 550 50  0001 C CNN
-	1    9150 1750
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR?
-U 1 1 59E334FA
-P 8100 1600
-F 0 "#PWR?" H 8100 1350 50  0001 C CNN
-F 1 "GND" H 8100 1450 50  0000 C CNN
-F 2 "" H 8100 1600 50  0001 C CNN
-F 3 "" H 8100 1600 50  0001 C CNN
-	1    8100 1600
-	1    0    0    -1  
-$EndComp
-Text HLabel 9450 1950 2    60   Input ~ 0
-CS0*
-Text HLabel 8850 1950 0    60   Input ~ 0
-CS1*
-Text HLabel 8850 1850 0    60   Input ~ 0
-CS2*
-Text HLabel 8850 1750 0    60   Input ~ 0
-CS3*
-Text HLabel 8850 1650 0    60   Input ~ 0
 AN_REFSEL
 Text HLabel 5750 2000 2    60   Input ~ 0
 CS0*
@@ -370,11 +322,7 @@ Wire Wire Line
 	7950 3400 7950 3350
 Connection ~ 7950 3350
 Wire Wire Line
-	7750 3350 7950 3350
-Wire Wire Line
-	7950 3350 8400 3350
-Wire Wire Line
-	8400 3350 8500 3350
+	7750 3350 8500 3350
 Wire Wire Line
 	8200 3600 8500 3600
 Wire Wire Line
@@ -384,18 +332,12 @@ Wire Wire Line
 Wire Wire Line
 	9650 3600 9650 3650
 Wire Wire Line
-	9500 3350 9550 3350
-Wire Wire Line
-	9550 3350 9650 3350
-Wire Wire Line
-	9650 3350 10150 3350
+	9500 3350 10150 3350
 Wire Wire Line
 	9650 3350 9650 3400
 Connection ~ 9650 3350
 Wire Wire Line
-	8200 3600 8200 4300
-Wire Wire Line
-	8200 4300 8200 4400
+	8200 3600 8200 4400
 Wire Wire Line
 	8200 4300 8650 4300
 Connection ~ 8200 4300
@@ -415,14 +357,6 @@ Wire Wire Line
 Connection ~ 8400 3350
 Wire Wire Line
 	2150 4550 2500 4550
-Wire Wire Line
-	9400 1550 9800 1550
-Wire Wire Line
-	9400 1650 9800 1650
-Wire Wire Line
-	9400 1750 9800 1750
-Wire Wire Line
-	9400 1850 9800 1850
 Wire Wire Line
 	5850 7100 5750 7100
 Wire Wire Line
@@ -457,20 +391,6 @@ Wire Wire Line
 	5900 1000 5750 1000
 Wire Wire Line
 	1100 4550 1300 4550
-Wire Wire Line
-	8900 1550 8100 1550
-Wire Wire Line
-	8100 1550 8100 1600
-Wire Wire Line
-	8850 1650 8900 1650
-Wire Wire Line
-	8900 1750 8850 1750
-Wire Wire Line
-	8850 1850 8900 1850
-Wire Wire Line
-	8900 1950 8850 1950
-Wire Wire Line
-	9400 1950 9450 1950
 Text Label 5900 2800 0    60   ~ 0
 BUSY*
 Text Label 5900 3050 0    60   ~ 0
