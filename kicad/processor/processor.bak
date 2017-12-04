@@ -47,26 +47,26 @@ Text Label 4300 2900 0    60   ~ 0
 BUSY*
 Wire Wire Line
 	4300 2900 4300 2750
-Text Label 4700 600  0    60   ~ 0
+Text Label 4700 1000 0    60   ~ 0
 BUSY*
-Text Label 4700 700  0    60   ~ 0
+Text Label 4100 1000 2    60   ~ 0
 SPI_SCLK
-Text Label 4700 800  0    60   ~ 0
+Text Label 4150 600  2    60   ~ 0
 SPI_SDO
-Text Label 4700 900  0    60   ~ 0
+Text Label 4100 900  2    60   ~ 0
 SPI_SDI
 $Comp
 L GND #PWR02
 U 1 1 59FE79CA
-P 3500 650
-F 0 "#PWR02" H 3500 400 50  0001 C CNN
-F 1 "GND" H 3500 500 50  0000 C CNN
-F 2 "" H 3500 650 50  0001 C CNN
-F 3 "" H 3500 650 50  0001 C CNN
-	1    3500 650 
+P 4700 1200
+F 0 "#PWR02" H 4700 950 50  0001 C CNN
+F 1 "GND" H 4700 1050 50  0000 C CNN
+F 2 "" H 4700 1200 50  0001 C CNN
+F 3 "" H 4700 1200 50  0001 C CNN
+	1    4700 1200
 	1    0    0    -1  
 $EndComp
-Text Label 4100 700  2    60   ~ 0
+Text Label 4700 600  0    60   ~ 0
 +3.3VA_ENABLE
 Wire Wire Line
 	4650 600  4700 600 
@@ -74,12 +74,6 @@ Wire Wire Line
 	4650 700  4700 700 
 Wire Wire Line
 	4650 800  4700 800 
-Wire Wire Line
-	4650 900  4700 900 
-Wire Wire Line
-	4150 600  3500 600 
-Wire Wire Line
-	3500 600  3500 650 
 Wire Wire Line
 	4100 700  4150 700 
 Wire Wire Line
@@ -93,7 +87,7 @@ Wire Wire Line
 Text Label 4100 1200 2    60   ~ 0
 +V_UNREG_SW
 Wire Wire Line
-	4650 1100 4700 1100
+	4650 1000 4700 1000
 $Comp
 L CONN_02X07 J101
 U 1 1 59FE79E2
@@ -931,13 +925,13 @@ NoConn ~ 1150 5050
 NoConn ~ 1150 5150
 Text Label 1150 4750 2    60   ~ 0
 BUSY*
-Text Label 4700 1000 0    60   ~ 0
+Text Label 4700 900  0    60   ~ 0
 AN_REFSEL
 Wire Wire Line
-	4700 1000 4650 1000
-Text Label 4700 1100 0    60   ~ 0
+	4700 900  4650 900 
+Text Label 4100 800  2    60   ~ 0
 I2C_SDA
-Text Label 4700 1200 0    60   ~ 0
+Text Label 4100 700  2    60   ~ 0
 I2C_SCK
 Text Label 3200 4650 0    60   ~ 0
 SPI_SCLK
@@ -945,17 +939,15 @@ Text Label 7350 5350 0    60   ~ 0
 CON_RXD
 Text Label 7350 5600 0    60   ~ 0
 CON_TXD
-Text Label 4100 800  2    60   ~ 0
-AN3_CS*
-Text Label 4100 900  2    60   ~ 0
-AN2_CS*
 Text Label 4100 1100 2    60   ~ 0
+AN3_CS*
+Text Label 4550 1600 2    60   ~ 0
 AN0_CS*
 Text Label 5750 1450 2    60   ~ 0
 GPS_ENABLE*
 Text Label 2550 5500 3    60   ~ 0
 AN3_CS*
-Text Label 4100 1000 2    60   ~ 0
+Text Label 4700 700  0    60   ~ 0
 AN1_CS*
 Text Label 1150 4950 2    60   ~ 0
 AN0_CS*
@@ -999,4 +991,10 @@ NoConn ~ 1150 4350
 NoConn ~ 2450 5500
 NoConn ~ 1150 4850
 NoConn ~ 6600 1700
+Text Label 4700 1100 0    60   ~ 0
+AN0_CS*
+Text Label 4700 800  0    60   ~ 0
+AN2_CS*
+Wire Wire Line
+	4700 1100 4650 1100
 $EndSCHEMATC

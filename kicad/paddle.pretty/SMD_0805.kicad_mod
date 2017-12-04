@@ -1,4 +1,4 @@
-(module SMD_0805 placed (layer F.Cu) (tedit 59BDC1FA)
+(module SMD_0805 placed (layer F.Cu) (tedit 5A1AD188)
   (descr "Resistor SMD 0805, hand soldering")
   (tags "SMD 0805")
   (attr smd)
@@ -21,8 +21,8 @@
   (fp_line (start -1.6 -1) (end -1.6 1) (layer F.CrtYd) (width 0.05))
   (fp_line (start 1.6 1) (end 1.6 -1) (layer F.CrtYd) (width 0.05))
   (fp_line (start 1.6 1) (end -1.6 1) (layer F.CrtYd) (width 0.05))
-  (pad 1 smd rect (at -0.95 0) (size 1 1.5) (layers F.Cu F.Mask))
-  (pad 2 smd rect (at 0.95 0) (size 1 1.5) (layers F.Cu F.Mask))
+  (pad 1 smd rect (at -1 0) (size 1 1.5) (layers F.Cu F.Mask))
+  (pad 2 smd rect (at 1 0) (size 1 1.5) (layers F.Cu F.Mask))
   (model ${KISYS3DMOD}/Resistors_SMD.3dshapes/R_0805.wrl
     (at (xyz 0 0 0))
     (scale (xyz 1 1 1))
