@@ -1,5 +1,5 @@
 Drill report for C:\dev\paddle\kicad\processor\processor.kicad_pcb
-Created on 12/3/2017 11:21:09 PM
+Created on 12/9/2017 3:07:18 PM
 
 Copper Layer Stackup:
     =============================================================
@@ -13,10 +13,10 @@ Drill file 'processor.drl' contains
     plated through holes:
     =============================================================
     T1  0.40mm  0.016"  (55 holes)
-    T2  0.50mm  0.020"  (76 holes)
+    T2  0.50mm  0.020"  (75 holes)
     T3  1.00mm  0.039"  (4 holes)
 
-    Total plated holes count 135
+    Total plated holes count 134
 
 
 Drill file 'processor-NPTH.drl' contains
