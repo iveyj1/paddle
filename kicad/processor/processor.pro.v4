@@ -1,4 +1,4 @@
-update=12/10/2017 5:50:00 PM
+update=12/10/2017 5:49:34 PM
 version=1
 last_client=kicad
 [cvpcb]
@@ -29,4 +29,13 @@ BoardOutlineThickness=0.15
 ModuleOutlineThickness=0.15
 [eeschema]
 version=1
-LibDir=
+LibDir=../
+[eeschema/libraries]
+LibName1=processor-rescue
+LibName2=power
+LibName3=device
+LibName4=transistors
+LibName5=conn
+LibName6=linear
+LibName7=regul
+LibName8=paddle

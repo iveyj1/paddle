@@ -1,13 +1,6 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:paddle
+EESchema Schematic File Version 4
 LIBS:processor-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -22,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L CP2104 U503
+L paddle:CP2104 U503
 U 1 1 59C7A894
 P 5400 3300
 F 0 "U503" H 5400 2000 60  0000 C CNN
@@ -33,7 +26,7 @@ F 3 "" H 5450 2350 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR064
+L power:GND #PWR064
 U 1 1 59C7A89B
 P 4500 2850
 F 0 "#PWR064" H 4500 2600 50  0001 C CNN
@@ -44,7 +37,7 @@ F 3 "" H 4500 2850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C502
+L device:C_Small C502
 U 1 1 59C7A8A4
 P 4400 2350
 F 0 "C502" H 4410 2420 50  0000 L CNN
@@ -55,7 +48,7 @@ F 3 "" H 4400 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR065
+L power:GND #PWR065
 U 1 1 59C7A8AB
 P 4400 2500
 F 0 "#PWR065" H 4400 2250 50  0001 C CNN
@@ -66,7 +59,7 @@ F 3 "" H 4400 2500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C501
+L device:C_Small C501
 U 1 1 59C7A8B1
 P 4150 2350
 F 0 "C501" H 4160 2420 50  0000 L CNN
@@ -77,7 +70,7 @@ F 3 "" H 4150 2350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR066
+L power:GND #PWR066
 U 1 1 59C7A8B8
 P 4150 2500
 F 0 "#PWR066" H 4150 2250 50  0001 C CNN
@@ -90,7 +83,7 @@ $EndComp
 NoConn ~ 4650 4050
 NoConn ~ 4650 4200
 $Comp
-L NPN_BEC_SOT-23 Q501
+L paddle:NPN_BEC_SOT-23 Q501
 U 1 1 59C7A8C7
 P 7900 5150
 F 0 "Q501" H 8100 5225 50  0000 L CNN
@@ -101,7 +94,7 @@ F 3 "" H 7900 5150 50  0001 L CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L NPN_BEC_SOT-23 Q502
+L paddle:NPN_BEC_SOT-23 Q502
 U 1 1 59C7A8CE
 P 7950 3600
 F 0 "Q502" H 8150 3675 50  0000 L CNN
@@ -112,7 +105,7 @@ F 3 "" H 7950 3600 50  0001 L CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R505
+L paddle:R_US R505
 U 1 1 59C7A8D5
 P 7300 5150
 F 0 "R505" H 7325 5250 60  0000 C CNN
@@ -123,7 +116,7 @@ F 3 "" H 7325 5250 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R504
+L paddle:R_US R504
 U 1 1 59C7A8DC
 P 7250 3600
 F 0 "R504" H 7275 3700 60  0000 C CNN
@@ -148,7 +141,7 @@ BOOTLOAD*
 Text HLabel 3950 3250 2    60   Input ~ 0
 +VBUS
 $Comp
-L LED LED502
+L device:LED LED502
 U 1 1 59C748D3
 P 7300 2950
 F 0 "LED502" H 7250 2750 45  0000 L BNN
@@ -159,7 +152,7 @@ F 3 "" V 7250 2950 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_US R503
+L paddle:R_US R503
 U 1 1 59C74976
 P 6800 2950
 F 0 "R503" H 6825 3050 60  0000 C CNN
@@ -170,7 +163,7 @@ F 3 "" H 6825 3050 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L LED LED501
+L device:LED LED501
 U 1 1 59C74B26
 P 7300 2650
 F 0 "LED501" H 7250 2450 45  0000 L BNN
@@ -181,7 +174,7 @@ F 3 "" V 7250 2650 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_US R502
+L paddle:R_US R502
 U 1 1 59C74B2C
 P 6800 2650
 F 0 "R502" H 6825 2750 60  0000 C CNN
@@ -192,7 +185,7 @@ F 3 "" H 6825 2750 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR067
+L power:GND #PWR067
 U 1 1 59C74BF4
 P 7650 2750
 F 0 "#PWR067" H 7650 2500 50  0001 C CNN
@@ -203,7 +196,7 @@ F 3 "" H 7650 2750 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR068
+L power:GND #PWR068
 U 1 1 59C74C20
 P 7600 3050
 F 0 "#PWR068" H 7600 2800 50  0001 C CNN
@@ -214,7 +207,7 @@ F 3 "" H 7600 3050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R501
+L paddle:R_US R501
 U 1 1 59C74D40
 P 6500 2200
 F 0 "R501" H 6525 2300 60  0000 C CNN
@@ -225,7 +218,7 @@ F 3 "" H 6525 2300 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR069
+L power:+3.3V #PWR069
 U 1 1 59C74D81
 P 3900 2100
 F 0 "#PWR069" H 3900 1950 50  0001 C CNN
@@ -236,7 +229,7 @@ F 3 "" H 3900 2100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR070
+L power:+3.3V #PWR070
 U 1 1 59C74E3F
 P 6900 2100
 F 0 "#PWR070" H 6900 1950 50  0001 C CNN
@@ -247,7 +240,7 @@ F 3 "" H 6900 2100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR071
+L power:GND #PWR071
 U 1 1 59CE40B1
 P 2500 4350
 F 0 "#PWR071" H 2500 4100 50  0001 C CNN
@@ -258,7 +251,7 @@ F 3 "" H 2500 4350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L USB_B_Socket U501
+L paddle:USB_B_Socket U501
 U 1 1 59CE57D2
 P 1750 3800
 F 0 "U501" H 1700 3150 60  0000 C CNN
@@ -270,7 +263,7 @@ F 3 "" H 1700 3150 60  0001 C CNN
 $EndComp
 NoConn ~ 2150 3900
 $Comp
-L SP3003-04 U502
+L paddle:SP3003-04 U502
 U 1 1 59CE7D75
 P 3500 4850
 F 0 "U502" V 3500 4250 60  0000 C CNN
@@ -281,7 +274,7 @@ F 3 "" H 3500 3900 60  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR072
+L power:GND #PWR072
 U 1 1 59CE8429
 P 3750 5450
 F 0 "#PWR072" H 3750 5200 50  0001 C CNN
@@ -292,9 +285,11 @@ F 3 "" H 3750 5450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L TEST TP502
+L processor-rescue:TEST-RESCUE-processor TP502
 U 1 1 59D07069
 P 9300 3900
+AR Path="/59D07069" Ref="TP502"  Part="1" 
+AR Path="/59FFAD44/59D07069" Ref="TP502"  Part="1" 
 F 0 "TP502" H 9300 4200 50  0000 C BNN
 F 1 "TXD" H 9300 4150 50  0000 C CNN
 F 2 "paddle:tp_th_1mm" H 9300 3900 50  0001 C CNN
@@ -303,9 +298,11 @@ F 3 "" H 9300 3900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L TEST TP501
+L processor-rescue:TEST-RESCUE-processor TP501
 U 1 1 59D07090
 P 9000 4050
+AR Path="/59D07090" Ref="TP501"  Part="1" 
+AR Path="/59FFAD44/59D07090" Ref="TP501"  Part="1" 
 F 0 "TP501" H 9000 4350 50  0000 C BNN
 F 1 "RXD" H 9000 4300 50  0000 C CNN
 F 2 "paddle:tp_th_1mm" H 9000 4050 50  0001 C CNN
@@ -423,7 +420,7 @@ Wire Wire Line
 Wire Wire Line
 	9200 4900 9200 5000
 $Comp
-L GND #PWR073
+L power:GND #PWR073
 U 1 1 59CC74B7
 P 9200 5000
 F 0 "#PWR073" H 9200 4750 50  0001 C CNN
@@ -434,7 +431,7 @@ F 3 "" H 9200 5000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR074
+L power:GND #PWR074
 U 1 1 59CC74F8
 P 9150 3400
 F 0 "#PWR074" H 9150 3150 50  0001 C CNN
@@ -471,7 +468,7 @@ Wire Wire Line
 Wire Wire Line
 	2850 3600 4650 3600
 $Comp
-L SWITCH_PUSHBUTTON SW?
+L paddle:SWITCH_PUSHBUTTON SW?
 U 1 1 59D20095
 P 8800 3300
 AR Path="/59C7A5C1/59D20095" Ref="SW?"  Part="1" 
@@ -485,7 +482,7 @@ F 3 "" H 8800 3300 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L SWITCH_PUSHBUTTON SW?
+L paddle:SWITCH_PUSHBUTTON SW?
 U 1 1 59D200ED
 P 8850 4900
 AR Path="/59C7A5C1/59D200ED" Ref="SW?"  Part="1" 
