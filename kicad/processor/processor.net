@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source C:\dev\paddle\kicad\processor\processor.sch)
-    (date "12/10/2017 9:10:16 PM")
+    (date "12/10/2017 9:58:02 PM")
     (tool "Eeschema (2017-11-24 revision a01d81e4b)-makepkg")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -67,7 +67,7 @@
       (tstamp 59CCA424))
     (comp (ref J101)
       (value CONN_02X07)
-      (footprint paddle:conn_FCI_14)
+      (footprint paddle:conn_FCI_14_NH)
       (libsource (lib paddle) (part CONN_02X07))
       (sheetpath (names /) (tstamps /))
       (tstamp 59FE79E2))

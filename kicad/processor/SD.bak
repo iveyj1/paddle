@@ -1,13 +1,6 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:paddle
+EESchema Schematic File Version 4
 LIBS:processor-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -22,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L MICROSD M401
+L paddle:MICROSD M401
 U 1 1 59CAB903
 P 6800 3400
 F 0 "M401" H 6800 3400 45  0001 C CNN
@@ -33,7 +26,7 @@ F 3 "" H 6800 3400 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR058
+L power:GND #PWR058
 U 1 1 59CAB909
 P 6000 4300
 F 0 "#PWR058" H 6000 4050 50  0001 C CNN
@@ -44,7 +37,7 @@ F 3 "" H 6000 4300 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR059
+L power:+3.3V #PWR059
 U 1 1 59CAB90F
 P 5100 3350
 F 0 "#PWR059" H 5100 3200 50  0001 C CNN
@@ -59,7 +52,7 @@ NoConn ~ 6100 2800
 NoConn ~ 6100 3500
 NoConn ~ 6100 3600
 $Comp
-L C_Small C402
+L device:C_Small C402
 U 1 1 59CAB919
 P 5750 4000
 F 0 "C402" H 5760 4070 50  0000 L CNN
@@ -70,7 +63,7 @@ F 3 "" H 5750 4000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR060
+L power:GND #PWR060
 U 1 1 59CAB920
 P 5750 4150
 F 0 "#PWR060" H 5750 3900 50  0001 C CNN
@@ -81,7 +74,7 @@ F 3 "" H 5750 4150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C401
+L device:C_Small C401
 U 1 1 59CAB926
 P 5300 4000
 F 0 "C401" H 5310 4070 50  0000 L CNN
@@ -92,7 +85,7 @@ F 3 "" H 5300 4000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR061
+L power:GND #PWR061
 U 1 1 59CAB92D
 P 5300 4150
 F 0 "#PWR061" H 5300 3900 50  0001 C CNN
@@ -135,7 +128,7 @@ CS
 Wire Wire Line
 	5100 3350 5100 3400
 $Comp
-L Q_PMOS_GSD Q401
+L device:Q_PMOS_GSD Q401
 U 1 1 59CAC052
 P 5000 3600
 F 0 "Q401" H 5200 3650 50  0000 L CNN
@@ -146,7 +139,7 @@ F 3 "" H 5000 3600 50  0001 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L R_US R401
+L paddle:R_US R401
 U 1 1 59CAC2F3
 P 4650 3400
 F 0 "R401" H 4675 3500 60  0000 C CNN
@@ -157,7 +150,7 @@ F 3 "" H 4675 3500 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L +3.3V #PWR062
+L power:+3.3V #PWR062
 U 1 1 59CAC2FA
 P 4650 3150
 F 0 "#PWR062" H 4650 3000 50  0001 C CNN
@@ -183,7 +176,7 @@ Wire Wire Line
 Wire Wire Line
 	6100 3400 5950 3400
 $Comp
-L PWR_FLAG #FLG063
+L power:PWR_FLAG #FLG063
 U 1 1 59FFCAED
 P 5600 3800
 F 0 "#FLG063" H 5600 3875 50  0001 C CNN
