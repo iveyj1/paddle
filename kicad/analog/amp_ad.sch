@@ -1,13 +1,6 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:paddle
+EESchema Schematic File Version 4
 LIBS:analog-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -22,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L GND #PWR212
+L power:GND #PWR212
 U 1 1 59DEB50B
 P 6700 4650
 AR Path="/59CF60C9/59DEB50B" Ref="#PWR212"  Part="1" 
@@ -37,7 +30,7 @@ F 3 "" H 6700 4650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR211
+L power:GND #PWR211
 U 1 1 59DEB5C9
 P 6050 3450
 AR Path="/59CF60C9/59DEB5C9" Ref="#PWR211"  Part="1" 
@@ -52,7 +45,7 @@ F 3 "" H 6050 3450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR214
+L power:GND #PWR214
 U 1 1 59DEB702
 P 7050 4050
 AR Path="/59CF60C9/59DEB702" Ref="#PWR214"  Part="1" 
@@ -67,7 +60,7 @@ F 3 "" H 7050 4050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR213
+L power:GND #PWR213
 U 1 1 59DEC1A6
 P 7050 3200
 AR Path="/59CF60C9/59DEC1A6" Ref="#PWR213"  Part="1" 
@@ -90,7 +83,7 @@ SDI
 Text HLabel 7250 3750 2    60   Input ~ 0
 CS*
 $Comp
-L Q_NMOS_GSD Q201
+L device:Q_NMOS_GSD Q201
 U 1 1 59DECDAE
 P 8000 3100
 AR Path="/59CF60C9/59DECDAE" Ref="Q201"  Part="1" 
@@ -105,7 +98,7 @@ F 3 "" H 8000 3100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR215
+L power:GND #PWR215
 U 1 1 59DECF72
 P 8100 3300
 AR Path="/59CF60C9/59DECF72" Ref="#PWR215"  Part="1" 
@@ -124,7 +117,7 @@ BUSY*
 Text HLabel 2250 3800 0    60   Input ~ 0
 ANALOG_IN
 $Comp
-L +3.3VA #PWR207
+L power:+3.3VA #PWR207
 U 1 1 59DED17B
 P 5700 2550
 AR Path="/59CF60C9/59DED17B" Ref="#PWR207"  Part="1" 
@@ -139,7 +132,7 @@ F 3 "" H 5700 2550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C206
+L device:C_Small C206
 U 1 1 59DED524
 P 5900 2700
 AR Path="/59CF60C9/59DED524" Ref="C206"  Part="1" 
@@ -154,7 +147,7 @@ F 3 "" H 5900 2700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR210
+L power:GND #PWR210
 U 1 1 59DED543
 P 5900 2850
 AR Path="/59CF60C9/59DED543" Ref="#PWR210"  Part="1" 
@@ -169,7 +162,7 @@ F 3 "" H 5900 2850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C205
+L device:C_Small C205
 U 1 1 59DED56F
 P 5700 2700
 AR Path="/59CF60C9/59DED56F" Ref="C205"  Part="1" 
@@ -184,7 +177,7 @@ F 3 "" H 5700 2700 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR208
+L power:GND #PWR208
 U 1 1 59DED6A0
 P 5700 2850
 AR Path="/59CF60C9/59DED6A0" Ref="#PWR208"  Part="1" 
@@ -199,7 +192,7 @@ F 3 "" H 5700 2850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L LTC2440 U202
+L paddle:LTC2440 U202
 U 1 1 59DEE409
 P 6550 3650
 AR Path="/59CF60C9/59DEE409" Ref="U202"  Part="1" 
@@ -251,7 +244,7 @@ Wire Wire Line
 Wire Wire Line
 	4900 3300 6050 3300
 $Comp
-L R_US R203
+L paddle:R_US R203
 U 1 1 59F5CA97
 P 4700 3300
 AR Path="/59CF60C9/59F5CA97" Ref="R203"  Part="1" 
@@ -266,7 +259,7 @@ F 3 "" H 4725 3400 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C204
+L device:C_Small C204
 U 1 1 59F5CA9E
 P 5050 3550
 AR Path="/59CF60C9/59F5CA9E" Ref="C204"  Part="1" 
@@ -281,7 +274,7 @@ F 3 "" H 5050 3550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR206
+L power:GND #PWR206
 U 1 1 59F5CAA5
 P 5050 3700
 AR Path="/59CF60C9/59F5CAA5" Ref="#PWR206"  Part="1" 
@@ -296,7 +289,7 @@ F 3 "" H 5050 3700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR201
+L power:GND #PWR201
 U 1 1 59F5CAB9
 P 3050 4200
 AR Path="/59CF60C9/59F5CAB9" Ref="#PWR201"  Part="1" 
@@ -311,7 +304,7 @@ F 3 "" H 3050 4200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C201
+L device:C_Small C201
 U 1 1 59F5CABF
 P 3050 4050
 AR Path="/59CF60C9/59F5CABF" Ref="C201"  Part="1" 
@@ -326,7 +319,7 @@ F 3 "" H 3050 4050 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR204
+L power:GND #PWR204
 U 1 1 59F5CAC6
 P 3800 4200
 AR Path="/59CF60C9/59F5CAC6" Ref="#PWR204"  Part="1" 
@@ -341,7 +334,7 @@ F 3 "" H 3800 4200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R201
+L paddle:R_US R201
 U 1 1 59F5CACC
 P 2550 3800
 AR Path="/59CF60C9/59F5CACC" Ref="R201"  Part="1" 
@@ -356,7 +349,7 @@ F 3 "" H 2575 3900 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L +3.3VA #PWR203
+L power:+3.3VA #PWR203
 U 1 1 59F5CAD5
 P 3800 3100
 AR Path="/59CF60C9/59F5CAD5" Ref="#PWR203"  Part="1" 
@@ -371,7 +364,7 @@ F 3 "" H 3800 3100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C202
+L device:C_Small C202
 U 1 1 59F5CADB
 P 3600 3350
 AR Path="/59CF60C9/59F5CADB" Ref="C202"  Part="1" 
@@ -386,7 +379,7 @@ F 3 "" H 3600 3350 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR202
+L power:GND #PWR202
 U 1 1 59F5CAE2
 P 3600 3500
 AR Path="/59CF60C9/59F5CAE2" Ref="#PWR202"  Part="1" 
@@ -401,7 +394,7 @@ F 3 "" H 3600 3500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L LTC2052 U201
+L paddle:LTC2052 U201
 U 1 1 59F5CAE8
 P 3800 3900
 AR Path="/59CF60C9/59F5CAE8" Ref="U201"  Part="1" 
@@ -454,7 +447,7 @@ Wire Wire Line
 Wire Wire Line
 	4750 3900 5450 3900
 $Comp
-L R_US R202
+L paddle:R_US R202
 U 1 1 59F675EB
 P 4550 3900
 AR Path="/59CF60C9/59F675EB" Ref="R202"  Part="1" 
@@ -469,7 +462,7 @@ F 3 "" H 4575 4000 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C203
+L device:C_Small C203
 U 1 1 59F675F1
 P 4900 4150
 AR Path="/59CF60C9/59F675F1" Ref="C203"  Part="1" 
@@ -484,7 +477,7 @@ F 3 "" H 4900 4150 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR205
+L power:GND #PWR205
 U 1 1 59F675F7
 P 4900 4300
 AR Path="/59CF60C9/59F675F7" Ref="#PWR205"  Part="1" 
@@ -510,7 +503,7 @@ Wire Wire Line
 Wire Wire Line
 	6050 3900 5700 3900
 $Comp
-L GND #PWR209
+L power:GND #PWR209
 U 1 1 59F93A49
 P 5700 4050
 AR Path="/59CF60C9/59F93A49" Ref="#PWR209"  Part="1" 

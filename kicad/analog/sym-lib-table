@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name analog-rescue)(type Legacy)(uri ${KIPRJMOD}/analog-rescue.lib)(options "")(descr ""))
+  (lib (name paddle)(type Legacy)(uri C:/dev/paddle/kicad/paddle.lib)(options "")(descr ""))
+)

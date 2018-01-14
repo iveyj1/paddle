@@ -1,13 +1,6 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:paddle
+EESchema Schematic File Version 4
 LIBS:analog-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A 11000 8500
 encoding utf-8
@@ -77,7 +70,7 @@ $EndSheet
 Text Label 2300 4700 2    60   ~ 0
 VREF
 $Comp
-L C_Small C101
+L device:C_Small C101
 U 1 1 59CFCD12
 P 7750 3650
 F 0 "C101" H 7760 3720 50  0000 L CNN
@@ -88,7 +81,7 @@ F 3 "" H 7750 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR101
+L power:GND #PWR101
 U 1 1 59CFCD19
 P 7750 3800
 F 0 "#PWR101" H 7750 3550 50  0001 C CNN
@@ -99,7 +92,7 @@ F 3 "" H 7750 3800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR103
+L power:GND #PWR103
 U 1 1 59CFCD24
 P 8150 4100
 F 0 "#PWR103" H 8150 3850 50  0001 C CNN
@@ -110,7 +103,7 @@ F 3 "" H 8150 4100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C102
+L device:C_Small C102
 U 1 1 59CFCD2C
 P 9450 3650
 F 0 "C102" H 9460 3720 50  0000 L CNN
@@ -121,7 +114,7 @@ F 3 "" H 9450 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR105
+L power:GND #PWR105
 U 1 1 59CFCD33
 P 9450 3800
 F 0 "#PWR105" H 9450 3550 50  0001 C CNN
@@ -132,7 +125,7 @@ F 3 "" H 9450 3800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L NCP694-3.3 U101
+L paddle:NCP694-3.3 U101
 U 1 1 59CFCD3E
 P 8800 3650
 F 0 "U101" H 8750 3150 60  0000 L CNN
@@ -145,7 +138,7 @@ $EndComp
 Text HLabel 8450 4450 2    60   Input ~ 0
 +3.3VA_ENABLE
 $Comp
-L R_US R101
+L paddle:R_US R101
 U 1 1 59CFCD48
 P 8000 4750
 F 0 "R101" H 8025 4850 60  0000 C CNN
@@ -156,7 +149,7 @@ F 3 "" H 8025 4850 60  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L GND #PWR102
+L power:GND #PWR102
 U 1 1 59CFCD50
 P 8000 5050
 F 0 "#PWR102" H 8000 4800 50  0001 C CNN
@@ -169,7 +162,7 @@ $EndComp
 Text HLabel 7550 3500 0    60   Input ~ 0
 +V_UNREG_SW
 $Comp
-L +3.3VA #PWR106
+L power:+3.3VA #PWR106
 U 1 1 59D18927
 P 9950 3450
 F 0 "#PWR106" H 9950 3250 50  0001 C CNN
@@ -180,7 +173,7 @@ F 3 "" H 9950 3450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Schottky D101
+L paddle:Schottky D101
 U 1 1 59D18A85
 P 8800 3150
 F 0 "D101" H 8800 3250 50  0000 C CNN
@@ -372,15 +365,7 @@ Text Label 5700 3450 0    60   ~ 0
 SDO
 Text Label 5700 3700 0    60   ~ 0
 SDI
-Text HLabel 9950 1500 2    60   Input ~ 0
-SCLK
-Text HLabel 9950 1600 2    60   Output ~ 0
-SDO
-Text HLabel 9950 1700 2    60   Input ~ 0
-SDI
-Text HLabel 9950 1400 2    60   Output ~ 0
-BUSY*
-Text Label 9600 1400 0    60   ~ 0
+Text Label 9700 1200 0    60   ~ 0
 BUSY*
 Text Label 9600 1500 0    60   ~ 0
 SCLK
@@ -389,7 +374,7 @@ SDO
 Text Label 9600 1700 0    60   ~ 0
 SDI
 $Comp
-L GND #PWR104
+L power:GND #PWR104
 U 1 1 59FF8EC4
 P 8250 1450
 F 0 "#PWR104" H 8250 1200 50  0001 C CNN
@@ -407,8 +392,6 @@ Text HLabel 9000 1700 0    60   Input ~ 0
 CS2*
 Text HLabel 9000 1600 0    60   Input ~ 0
 CS3*
-Text HLabel 9000 1500 0    60   Input ~ 0
-AN_REFSEL
 Wire Wire Line
 	9550 1400 9950 1400
 Wire Wire Line
@@ -436,7 +419,7 @@ Text HLabel 9650 1900 2    60   Input ~ 0
 Wire Wire Line
 	9550 1900 9650 1900
 $Comp
-L CONN_02X07 J101
+L paddle:CONN_02X07 J101
 U 1 1 59FF8EC5
 P 9300 1700
 F 0 "J101" H 9300 2100 50  0000 C CNN
@@ -454,4 +437,6 @@ Text HLabel 9600 2000 2    60   BiDi ~ 0
 SDA
 Wire Wire Line
 	9600 2000 9550 2000
+Text Label 8900 1100 2    60   ~ 0
+AN_REFSEL
 $EndSCHEMATC

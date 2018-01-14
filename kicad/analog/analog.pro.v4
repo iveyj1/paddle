@@ -1,4 +1,4 @@
-update=12/29/2017 2:45:04 PM
+update=12/29/2017 2:44:46 PM
 version=1
 last_client=kicad
 [general]
@@ -29,5 +29,14 @@ version=1
 NetIExt=net
 [eeschema]
 version=1
-LibDir=
+LibDir=../
+[eeschema/libraries]
+LibName1=analog-rescue
+LibName2=power
+LibName3=device
+LibName4=transistors
+LibName5=conn
+LibName6=linear
+LibName7=regul
+LibName8=paddle
 
