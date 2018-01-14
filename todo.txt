@@ -1,0 +1,11 @@
+Change USB to bus powered
+Fix divider on usb
+Fix diode symbol directions
+Diagnose LEDs for usb
+More current for green LEDs
+Why is expander address wrong?
+Voltage drop on SD card FET
+Add +3.3V bulk capacitor
+R205 pulldown for power switch 1M -> 100k
+
+
