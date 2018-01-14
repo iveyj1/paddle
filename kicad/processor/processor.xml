@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>C:\dev\paddle\kicad\processor\processor.sch</source>
-    <date>12/10/2017 9:10:48 PM</date>
+    <date>12/28/2017 11:06:46 AM</date>
     <tool>Eeschema (2017-11-24 revision a01d81e4b)-makepkg</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -80,7 +80,7 @@
     </comp>
     <comp ref="J101">
       <value>CONN_02X07</value>
-      <footprint>paddle:conn_FCI_14</footprint>
+      <footprint>paddle:conn_FCI_14_NH</footprint>
       <libsource lib="paddle" part="CONN_02X07"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>59FE79E2</tstamp>

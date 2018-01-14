@@ -1,6 +1,6 @@
 Reference, Value, Footprint, Datasheet
 "R104","10k","paddle:R_0603",""
-"J101","CONN_02X07","paddle:conn_FCI_14",""
+"J101","CONN_02X07","paddle:conn_FCI_14_NH",""
 "C103","0.1uF","paddle:SMD_0805",""
 "C102","10uF","paddle:SMD_0805",""
 "R102","4.7k","paddle:R_0603",""
