@@ -1,3 +1,10 @@
+
+void setupGPS()
+{
+    bsetExpander(GPS_ENABLE, 0);
+    Serial1.begin(9600);
+}
+
 void setupGPS(HardwareSerial &ser) {
     ser.println("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29"); // RMS message only
     ser.println("$PMTK220,100*2F"); // 100ms position solutions

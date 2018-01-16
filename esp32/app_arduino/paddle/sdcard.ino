@@ -3,14 +3,18 @@
  *
  * sparkfun SD Card | sparkfun esp32 thing
  *    VCC       3.3
- *    CS        2/CS/GPIO21 
- *    DI        23/MOSI/GPIO23
- *    SCK       SCK
- *    DO        19/MISO/GPIO19
+ *    CS        GPIO5/CS 
+ *    DI        GPIO23/MOSI/DI
+ *    SCK       GPIO18/SCK
+ *    DO        GPIO19/MISO/DO
  *    GND       GND
  */
 
-
+ #include <Wire.h>
+#include <HardwareSerial.h>
+#include "FS.h"
+#include "SD.h"
+#include "SPI.h"
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     Serial.printf("Listing directory: %s\n", dirname);
@@ -28,15 +32,15 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     File file = root.openNextFile();
     while(file){
         if(file.isDirectory()){
-            Serial.print("  DIR : ");
-            Serial.println(file.name());
+            Serial.print(file.name());
+            Serial.println("/");
             if(levels){
                 listDir(fs, file.name(), levels -1);
             }
         } else {
-            Serial.print("  FILE: ");
+            Serial.print("");
             Serial.print(file.name());
-            Serial.print("  SIZE: ");
+            Serial.print(" ");
             Serial.println(file.size());
         }
         file = root.openNextFile();
@@ -169,12 +173,20 @@ void testFileIO(fs::FS &fs, const char * path){
     file.close();
 }
 
-void testFile() {
+void setupSD(){
+    pinMode(12, INPUT);
+    Serial.begin(115200);
+    if(!SD.begin()){
+        if(!SD.begin()){
+            Serial.println("Card Mount Failed");
+            error(2);
+        }
+    }
     uint8_t cardType = SD.cardType();
 
     if(cardType == CARD_NONE){
         Serial.println("No SD card attached");
-        return;
+        error(2);
     }
 
     Serial.print("SD Card Type: ");
@@ -190,7 +202,8 @@ void testFile() {
 
     uint64_t cardSize = SD.cardSize() / (1024 * 1024);
     Serial.printf("SD Card Size: %lluMB\n", cardSize);
-
+    listDir(SD, "/", 0);
+#if 0
     listDir(SD, "/", 0);
     createDir(SD, "/mydir");
     listDir(SD, "/", 0);
@@ -202,5 +215,65 @@ void testFile() {
     deleteFile(SD, "/foo.txt");
     renameFile(SD, "/hello.txt", "/foo.txt");
     readFile(SD, "/foo.txt");
-    testFileIO(SD, "/test.txt");
+    //testFileIO(SD, "/test.txt");
+#endif
 }
+
+void openAcqFile(){
+    char testchar;
+    char filename[15];
+
+    strcpy(filename, "/ANALOG00.TXT");
+
+    for (uint8_t i = 0; i < 100; i++) {
+        filename[7] = '0' + i/10;
+        filename[8] = '0' + i%10;
+        // create next file that does not exist, do not open existing
+        if (! SD.exists(filename)) {
+            break;
+        }
+    }
+
+    if(SD.exists(filename)) {
+        error(3);
+    }
+
+    logfile = SD.open(filename, FILE_WRITE);
+    if(!logfile) {
+        error(4);
+    }
+    
+    logfile.seek(0);
+    if(logfile.write('t') != 1) {
+        error(5);
+    }
+    
+    logfile.flush();
+    logfile.close();
+
+    logfile = SD.open(filename);
+    if(!logfile){
+        error(6);
+    }
+    
+    logfile.seek(0);
+    testchar = 0;
+    testchar = logfile.read();
+    if(testchar != 't'){
+        error(7);
+    }
+    logfile.close();
+
+    if(SD.exists(filename)) {
+        if(!SD.remove(filename)) {
+            error(8);
+        }
+    }    
+    
+    logfile = SD.open(filename, FILE_WRITE);
+    if( ! logfile ) {
+        error(9);
+    }
+    bsetExpander(LED3, HIGH);
+}
+

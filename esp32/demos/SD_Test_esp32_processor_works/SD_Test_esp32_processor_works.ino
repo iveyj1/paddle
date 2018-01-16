@@ -260,9 +260,9 @@ void loop(){
                 delay(100);
                 digitalWrite(BLINK, LOW);         
             }
-            digitalWrite(KEEPALIVE, LOW);
-            while(1)
-                ;
+            //digitalWrite(KEEPALIVE, LOW);
+            //while(1)
+             //   ;
         }
     };
 }
