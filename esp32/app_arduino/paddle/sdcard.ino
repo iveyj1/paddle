@@ -10,7 +10,7 @@
  *    GND       GND
  */
 
- #include <Wire.h>
+#include <Wire.h>
 #include <HardwareSerial.h>
 #include "FS.h"
 #include "SD.h"
@@ -179,14 +179,14 @@ void setupSD(){
     if(!SD.begin()){
         if(!SD.begin()){
             Serial.println("Card Mount Failed");
-            error(2);
+            showError(2);
         }
     }
     uint8_t cardType = SD.cardType();
 
     if(cardType == CARD_NONE){
         Serial.println("No SD card attached");
-        error(2);
+        showError(2);
     }
 
     Serial.print("SD Card Type: ");
@@ -203,7 +203,7 @@ void setupSD(){
     uint64_t cardSize = SD.cardSize() / (1024 * 1024);
     Serial.printf("SD Card Size: %lluMB\n", cardSize);
     listDir(SD, "/", 0);
-#if 0
+
     listDir(SD, "/", 0);
     createDir(SD, "/mydir");
     listDir(SD, "/", 0);
@@ -216,7 +216,7 @@ void setupSD(){
     renameFile(SD, "/hello.txt", "/foo.txt");
     readFile(SD, "/foo.txt");
     //testFileIO(SD, "/test.txt");
-#endif
+
 }
 
 void openAcqFile(){
@@ -235,17 +235,17 @@ void openAcqFile(){
     }
 
     if(SD.exists(filename)) {
-        error(3);
+        showError(3);
     }
 
     logfile = SD.open(filename, FILE_WRITE);
     if(!logfile) {
-        error(4);
+        showError(4);
     }
     
     logfile.seek(0);
     if(logfile.write('t') != 1) {
-        error(5);
+        showError(5);
     }
     
     logfile.flush();
@@ -253,26 +253,26 @@ void openAcqFile(){
 
     logfile = SD.open(filename);
     if(!logfile){
-        error(6);
+        showError(6);
     }
     
     logfile.seek(0);
     testchar = 0;
     testchar = logfile.read();
     if(testchar != 't'){
-        error(7);
+        showError(7);
     }
     logfile.close();
 
     if(SD.exists(filename)) {
         if(!SD.remove(filename)) {
-            error(8);
+            showError(8);
         }
     }    
     
     logfile = SD.open(filename, FILE_WRITE);
     if( ! logfile ) {
-        error(9);
+        showError(9);
     }
     bsetExpander(LED3, HIGH);
 }

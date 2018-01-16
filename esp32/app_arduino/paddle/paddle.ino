@@ -4,6 +4,7 @@
 #include <FS.h>
 #include "SD.h"
 #include "SPI.h"
+#include <WiFi.h>
 
 // No idea why this address - should be 0x20 (or possibly 0x40) but scanner found it here
 #define EXPANDER_ADDR 0x38 
@@ -30,12 +31,17 @@
 #define TCA9534_DIR_PORT 0x03
 
 #define bmask(mask) (1 << (mask))
+#define cardSelect 5
+
+//WiFi globals
+const char* ssid     = "NETGEAR12";
+const char* password = "widephoenix967";
+WiFiServer server(80);
 
 
 // Globals
 HardwareSerial Serial1(2); // GPS serial port
 File logfile;
-#define cardSelect 5
 
 //timer variables
 hw_timer_t * timer = NULL;
@@ -55,22 +61,38 @@ void setup() {
     setupGPS();
     setupSD();
     openAcqFile();
-    //testFile();
+    setupTimer();
+    setupWifi();
 
 }
 
+//int overrun = false;
+unsigned long int startloop = 0;
+unsigned long int temp;
 void loop() 
 {
     while (Serial1.available()) 
     {
         char c = Serial1.read();
-        if (c) {
+        if (c) 
+        {
             ;//Serial.print(c);
         }
     }
+
   // If Timer has fired
-#if 0
     if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
+    { // blown loop time     
+       overrun = true; 
+       bsetExpander(LED0, HIGH);
+    }
+    margin = 0;
+    
+    while (xSemaphoreTake(timerSemaphore, 0) != pdTRUE)
+    {
+        margin++;
+    }
+    
     {
         uint32_t isrCount = 0, isrTime = 0;
         // Read the interrupt count and time
@@ -78,9 +100,18 @@ void loop()
         isrCount = isrCounter;
         isrTime = lastIsrAt;
         portEXIT_CRITICAL(&timerMux);
-        digitalWrite(BLINK, ((isrCounter % 2) == 1));
+        //digitalWrite(BLINK, ((isrCounter % 2) == 1));
+        Serial.print(isrCount);
+        Serial.print(" ");
+        Serial.print(isrTime);
+        Serial.print(" ");
+        Serial.print(micros());
+        Serial.print(" ");
+        temp = micros();
+        Serial.println(temp-startloop);
     }
-#endif
+    startloop = temp;
+    processWifi();
     checkPowerSwitch();
     
     //digitalWrite(BLINK, digitalRead(LOW));

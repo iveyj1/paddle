@@ -24,7 +24,7 @@ void setupTimer() {
     
     // Set alarm to call onTimer function every second (value in microseconds).
     // Repeat the alarm (third parameter)
-    timerAlarmWrite(timer, 100000, true);
+    timerAlarmWrite(timer, 20000, true);
     
     // Start an alarm
     timerAlarmEnable(timer);
