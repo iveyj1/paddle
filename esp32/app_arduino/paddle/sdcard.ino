@@ -274,6 +274,7 @@ void openAcqFile(){
     if( ! logfile ) {
         showError(9);
     }
-    bsetExpander(LED3, HIGH);
+    //bsetExpander(LED3, HIGH);
 }
+
 

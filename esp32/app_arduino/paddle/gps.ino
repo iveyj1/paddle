@@ -1,7 +1,7 @@
 
 void setupGPS()
 {
-    bsetExpander(GPS_ENABLE, 0);
+    //bsetExpander(GPS_ENABLE, 0);
     Serial1.begin(9600);
 }
 
@@ -41,3 +41,4 @@ void processGPS(HardwareSerial &uart, String &str) {
         str = "";
     }
 }
+

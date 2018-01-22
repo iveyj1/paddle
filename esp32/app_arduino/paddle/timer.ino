@@ -1,6 +1,6 @@
 
 void IRAM_ATTR onTimer() {
-    // Increment the counter and set the time of ISR
+    // Increment the counter and set the time of ISR 
     portENTER_CRITICAL_ISR(&timerMux);
     isrCounter++;
     lastIsrAt = millis();
@@ -24,10 +24,11 @@ void setupTimer() {
     
     // Set alarm to call onTimer function every second (value in microseconds).
     // Repeat the alarm (third parameter)
-    timerAlarmWrite(timer, 20000, true);
+    timerAlarmWrite(timer, 5000, true);
     
     // Start an alarm
     timerAlarmEnable(timer);
     
 }
+
 

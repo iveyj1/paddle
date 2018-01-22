@@ -57,18 +57,20 @@ void setup() {
     Wire.begin();
     Serial.begin(115200);
     setupPower();
-    setupExpander();
+    //setupExpander();
     setupGPS();
     setupSD();
     openAcqFile();
     setupTimer();
-    setupWifi();
+    //setupWifi();
 
 }
 
 //int overrun = false;
+int i=0;
 unsigned long int startloop = 0;
 unsigned long int temp;
+int error;
 void loop() 
 {
     while (Serial1.available()) 
@@ -84,7 +86,7 @@ void loop()
     if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
     { // blown loop time     
        overrun = true; 
-       bsetExpander(LED0, HIGH);
+       //bsetExpander(LED0, HIGH);
     }
     margin = 0;
     
@@ -101,6 +103,7 @@ void loop()
         isrTime = lastIsrAt;
         portEXIT_CRITICAL(&timerMux);
         //digitalWrite(BLINK, ((isrCounter % 2) == 1));
+#if 0
         Serial.print(isrCount);
         Serial.print(" ");
         Serial.print(isrTime);
@@ -109,13 +112,21 @@ void loop()
         Serial.print(" ");
         temp = micros();
         Serial.println(temp-startloop);
+#endif
     }
     startloop = temp;
-    processWifi();
+    //processWifi();
     checkPowerSwitch();
+    i = 1-i;
+    error = testWire(0x38);
+    Serial.println(error);
+
+    
+    //bsetExpander(0,i);
     
     //digitalWrite(BLINK, digitalRead(LOW));
     //delay(1000);
     //digitalWrite(BLINK, HIGH);
     //delay(1000);
 }
+

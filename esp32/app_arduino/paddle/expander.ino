@@ -4,9 +4,9 @@ void setupExpander()
 {
     int address = EXPANDER_ADDR;
     int error;
-    error = writeWire(address, TCA9534_DIR_PORT, 0x00);  // set direction all outs
-    error = writeWire(address, TCA9534_POL_PORT, 0x00);  // set initial polarity all noninverting
-    error = writeWire(address, TCA9534_OUT_PORT, 0x60);  // set initial all power and LEDs off
+   // error = writeWire(address, TCA9534_DIR_PORT, 0x00);  // set direction all outs
+  //  error = writeWire(address, TCA9534_POL_PORT, 0x00);  // set initial polarity all noninverting
+  //  error = writeWire(address, TCA9534_OUT_PORT, 0x60);  // set initial all power and LEDs off
 }
 
 uint8_t testWire(uint8_t address)
@@ -60,4 +60,5 @@ void bsetExpander(uint8_t bit, uint8_t val)
         }
     }
 }
+
 
