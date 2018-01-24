@@ -12,7 +12,7 @@ void showError(int errnum)
         }
 
         delay(2000);
-    //        checkShutdown();
+        //        checkShutdown();
     }
 }
 

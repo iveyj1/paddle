@@ -1,14 +1,14 @@
 /*
- * Connect the SD card to the following pins:
- *
- * sparkfun SD Card | sparkfun esp32 thing
- *    VCC       3.3
- *    CS        GPIO5/CS 
- *    DI        GPIO23/MOSI/DI
- *    SCK       GPIO18/SCK
- *    DO        GPIO19/MISO/DO
- *    GND       GND
- */
+* Connect the SD card to the following pins:
+*
+* sparkfun SD Card | sparkfun esp32 thing
+*    VCC       3.3
+*    CS        GPIO5/CS 
+*    DI        GPIO23/MOSI/DI
+*    SCK       GPIO18/SCK
+*    DO        GPIO19/MISO/DO
+*    GND       GND
+*/
 
 #include <Wire.h>
 #include <HardwareSerial.h>
@@ -274,7 +274,7 @@ void openAcqFile(){
     if( ! logfile ) {
         showError(9);
     }
-    //bsetExpander(LED3, HIGH);
+
 }
 
 

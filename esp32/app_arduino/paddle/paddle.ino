@@ -1,4 +1,4 @@
- 
+
 #include <Wire.h>
 #include <HardwareSerial.h>
 #include <FS.h>
@@ -6,8 +6,7 @@
 #include "SPI.h"
 #include <WiFi.h>
 
-// No idea why this address - should be 0x20 (or possibly 0x40) but scanner found it here
-#define EXPANDER_ADDR 0x38 
+#define EXPANDER_ADDR 0x38
 
 // IO ports
 #define KEEPALIVE 4
@@ -34,7 +33,7 @@
 #define cardSelect 5
 
 //WiFi globals
-const char* ssid     = "NETGEAR12";
+const char* ssid     = "Cold Comfort Farm";
 const char* password = "widephoenix967";
 WiFiServer server(80);
 
@@ -51,82 +50,91 @@ volatile uint32_t isrCounter = 0;
 volatile uint32_t lastIsrAt = 0;
 volatile int margin = 0;
 volatile int overrun;
+long int overrun_time;
+
+int i = 0;
+unsigned long int lastloop = 0;
+unsigned long int temp;
+int error;
+unsigned long int loopcount = 0;
+
+void processLooptime()
+{
+    // If Timer has fired
+    if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
+    { // blown loop time
+        overrun = true;
+        overrun_time = millis();
+        bsetExpander(LED0, HIGH);
+        Serial.print("Looptime: ");
+        Serial.println(micros() - lastloop);
+    }
+    margin = 0;
+
+    while (xSemaphoreTake(timerSemaphore, 0) != pdTRUE)
+    {
+        margin++;
+    }
+    lastloop = micros();
+
+
+#if 0
+    uint32_t isrCount = 0, isrTime = 0;
+    // Read the interrupt count and time
+    portENTER_CRITICAL(&timerMux);
+    isrCount = isrCounter;
+    isrTime = lastIsrAt;
+    portEXIT_CRITICAL(&timerMux);
+#endif
+
+    if(overrun && (millis() > overrun_time + 5000))
+    {
+        overrun = false;
+        bsetExpander(LED0, LOW);
+    }
+
+#if 0
+    if((loopcount++ % 10000) == 0)
+    {
+        delay(10);
+    }
+#endif  
+    
+}
 
 void setup() {
     pinMode(BLINK, OUTPUT);
     Wire.begin();
     Serial.begin(115200);
     setupPower();
-    //setupExpander();
+    setupExpander();
     setupGPS();
     setupSD();
     openAcqFile();
     setupTimer();
-    //setupWifi();
-
+    setupWifi();
+    overrun = false;
+    overrun_time = millis();
+    lastloop = micros();
+    xSemaphoreTake(timerSemaphore, 0);
 }
 
-//int overrun = false;
-int i=0;
-unsigned long int startloop = 0;
-unsigned long int temp;
-int error;
-void loop() 
+
+void loop()
 {
-    while (Serial1.available()) 
+    int c;
+    while (Serial1.available())
     {
         char c = Serial1.read();
-        if (c) 
+        if (c)
         {
             ;//Serial.print(c);
         }
     }
+    processLooptime();
 
-  // If Timer has fired
-    if (xSemaphoreTake(timerSemaphore, 0) == pdTRUE)
-    { // blown loop time     
-       overrun = true; 
-       //bsetExpander(LED0, HIGH);
-    }
-    margin = 0;
-    
-    while (xSemaphoreTake(timerSemaphore, 0) != pdTRUE)
-    {
-        margin++;
-    }
-    
-    {
-        uint32_t isrCount = 0, isrTime = 0;
-        // Read the interrupt count and time
-        portENTER_CRITICAL(&timerMux);
-        isrCount = isrCounter;
-        isrTime = lastIsrAt;
-        portEXIT_CRITICAL(&timerMux);
-        //digitalWrite(BLINK, ((isrCounter % 2) == 1));
-#if 0
-        Serial.print(isrCount);
-        Serial.print(" ");
-        Serial.print(isrTime);
-        Serial.print(" ");
-        Serial.print(micros());
-        Serial.print(" ");
-        temp = micros();
-        Serial.println(temp-startloop);
-#endif
-    }
-    startloop = temp;
-    //processWifi();
+    processWifi();
     checkPowerSwitch();
-    i = 1-i;
-    error = testWire(0x38);
-    Serial.println(error);
 
-    
-    //bsetExpander(0,i);
-    
-    //digitalWrite(BLINK, digitalRead(LOW));
-    //delay(1000);
-    //digitalWrite(BLINK, HIGH);
-    //delay(1000);
 }
 

@@ -20,23 +20,23 @@ uint8_t nema_available_last = 0;
 void processGPS(HardwareSerial &uart, String &str) {
     while ((c = uart.read()) != -1) {
         if (char(c) == '$') {
-          //Serial.println(s[nema_index]);
-          for (int index1 = 0; index1 <= s[nema_index].length(); index1++) {
-              if (s[nema_index][index1] == '\r' || s[nema_index][index1] == '\n') {
-                  s[nema_index][index1] = ' ';
-              }
-          }
-          nema_available = nema_index;
-          nema_index = 1 - nema_index;
-          s[nema_index] = "";
+            //Serial.println(s[nema_index]);
+            for (int index1 = 0; index1 <= s[nema_index].length(); index1++) {
+                if (s[nema_index][index1] == '\r' || s[nema_index][index1] == '\n') {
+                    s[nema_index][index1] = ' ';
+                }
+            }
+            nema_available = nema_index;
+            nema_index = 1 - nema_index;
+            s[nema_index] = "";
         } else {
             s[nema_index] = s[nema_index] + char(c);
         }
     }
 
     if (nema_available != nema_available_last) {
-    str = s[nema_available];
-    nema_available_last = nema_available;
+        str = s[nema_available];
+        nema_available_last = nema_available;
     } else {
         str = "";
     }
