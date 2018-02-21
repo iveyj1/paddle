@@ -90,7 +90,7 @@ void processLooptime()
     if(overrun && (millis() > overrun_time + 5000))
     {
         overrun = false;
-        bsetExpander(LED0, LOW);
+        //bsetExpander(LED0, LOW);
     }
 
 #if 0
@@ -103,9 +103,9 @@ void processLooptime()
 }
 
 void setup() {
+    Serial.begin(115200);
     pinMode(BLINK, OUTPUT);
     Wire.begin();
-    Serial.begin(115200);
     setupPower();
     setupExpander();
     setupGPS();
@@ -117,6 +117,7 @@ void setup() {
     overrun_time = millis();
     lastloop = micros();
     xSemaphoreTake(timerSemaphore, 0);
+    p("asdf: %i",5);
 }
 
 
@@ -135,6 +136,5 @@ void loop()
 
     processWifi();
     checkPowerSwitch();
-
 }
 
