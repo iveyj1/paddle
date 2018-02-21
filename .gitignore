@@ -34,3 +34,5 @@
 # ltspice files
 *.log
 *.raw
+
+**/build
