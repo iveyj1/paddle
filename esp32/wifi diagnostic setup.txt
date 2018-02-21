@@ -1,0 +1,12 @@
+install wireshark
+sudo apt install aircrack-ng
+sudo airmon-ng check kill  - Note list of interfering processes and kill
+sudo ifconfig wlp58s0 down
+sudo iwconfig wlp58s0 mode monitor
+or sudo airmon-ng start wlp58s0 
+sudo ifconfig wlp58s0 up
+sudo iwconfig wlp58s0 channel 11
+ifconfig to check that if is on ch 11
+run wireshark
+enable wifi toolbar
+in 802.11 preferences add password:SSID to keys, use %20 for spaces
