@@ -1,3 +1,9 @@
+/*
+ * sd.c
+ *
+ *  Created on: Feb 27, 2018
+ *      Author: osboxes
+ */
 
 /* SD card and FAT filesystem example.
    This example code is in the Public Domain (or CC0 licensed, at your option.)
@@ -28,9 +34,9 @@ static const char *TAG = "example";
 #define PIN_NUM_CLK  18
 #define PIN_NUM_CS   5
 
-#endif //USE_SPI_MODE
+FILE *acqfile = 0;
 
-void app_main(void)
+void OpenLog(void)
 {
     ESP_LOGI(TAG, "Initializing SD card");
     ESP_LOGI(TAG, "Using SPI peripheral");
@@ -62,11 +68,9 @@ void app_main(void)
 
     if (ret != ESP_OK) {
         if (ret == ESP_FAIL) {
-            ESP_LOGE(TAG, "Failed to mount filesystem. "
-                "If you want the card to be formatted, set format_if_mount_failed = true.");
+            ESP_LOGE(TAG, "Failed to mount filesystem");
         } else {
-            ESP_LOGE(TAG, "Failed to initialize the card (%d). "
-                "Make sure SD card lines have pull-up resistors in place.", ret);
+            ESP_LOGE(TAG, "Failed to initialize the card (%d)", ret);
         }
         return;
     }
@@ -76,14 +80,44 @@ void app_main(void)
 
     // Use POSIX and C standard library functions to work with files.
     // First create a file.
-    ESP_LOGI(TAG, "Opening file");
-    FILE* f = fopen("/sdcard/hello.txt", "w");
-    if (f == NULL) {
-        ESP_LOGE(TAG, "Failed to open file for writing");
-        return;
+    char path[64] = "/sdcard/DATA00.CSV";
+    char temp[3] = "";
+    struct stat st;
+    int i;
+    for(i=0; i<=100; i++)
+    {
+        snprintf(temp, 3, "%02d", i);
+        ESP_LOGI(TAG, "Filename index: %s", temp);
+        path[12] = temp[0];
+        path[13] = temp[1];
+        ESP_LOGI(TAG, "Path: %s", path);
+        if (stat(path, &st) != 0) // if file not found
+        {
+            ESP_LOGI(TAG, "Opening file");
+            acqfile = fopen(path, "w");
+            if (acqfile == NULL) {
+                ESP_LOGE(TAG, "Failed to open file for writing");
+                esp_vfs_fat_sdmmc_unmount();
+                ESP_LOGI(TAG, "Card unmounted");
+                return;
+            }
+            ESP_LOGI(TAG, "file opened for writing");
+            break;
+        }
     }
-    fprintf(f, "Hello %s!\n", card->cid.name);
-    fclose(f);
+    ESP_LOGI(TAG, "Writing file");
+    fprintf(acqfile, "Hello %s!\n", card->cid.name);
+    ESP_LOGI(TAG, "Closing file");
+    fclose(acqfile);
+
+    // All done, unmount partition and disable SDMMC or SPI peripheral
+    ESP_LOGI(TAG, "Unmounting file");
+    esp_vfs_fat_sdmmc_unmount();
+    ESP_LOGI(TAG, "Card unmounted");
+}
+
+
+#if 0
     ESP_LOGI(TAG, "File written");
 
     // Check if destination file exists before renaming
@@ -122,4 +156,4 @@ void app_main(void)
     ESP_LOGI(TAG, "Card unmounted");
 }
 
-
+#endif

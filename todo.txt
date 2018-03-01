@@ -3,10 +3,11 @@ Fix divider on usb
 Fix diode symbol directions
 Diagnose/remove LEDs for usb
 More current for green LEDs
-Why is expander address wrong?
-Voltage drop on SD card FET -ok
+Why is expander address wrong? - ok now
+Voltage drop on SD card FET -ok now
 Add +3.3V bulk capacitor
 R205 pulldown for power switch 1M -> 100k
 Switch polarity of LED for console output
 Brownout message from ESP32
+
 
