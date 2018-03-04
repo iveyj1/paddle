@@ -2,10 +2,16 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "expander.h"
+#include "sd.h"
+
+#include "esp_log.h"
+
 
 // IO ports
 #define KEEPALIVE 4
 #define POWER_SW 35
+
+static const char TAG[]="Power.c";
 
 void SetupPower()
 {
@@ -20,21 +26,11 @@ void checkPowerSwitch()
 {
     if(gpio_get_level(POWER_SW) == 0)
     {
+        CloseAcqFile();
+        BsetExpander(3,1);
         vTaskDelay(2000/portTICK_PERIOD_MS);
         gpio_set_level(KEEPALIVE, 0);
-#if 0
-        int i;
-        logfile.close();
-        delay(50);
-        for(i=0; i<10; i++)
-        {
-            delay(100);
-            digitalWrite(BLINK, HIGH);
-            delay(100);
-            digitalWrite(BLINK, LOW);
-        }
-        digitalWrite(KEEPALIVE, LOW);
-#endif
+        ESP_LOGI(TAG, "Stack high water: %d", uxTaskGetStackHighWaterMark(NULL));
     }
 }
 

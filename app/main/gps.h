@@ -8,11 +8,12 @@
 #ifndef MAIN_GPS_H_
 #define MAIN_GPS_H_
 
-void GpsTask();
-
 extern SemaphoreHandle_t nmea_buffer_mutex;
 extern uint8_t *nmea_buffer[2];
 extern int nmea_buffer_num;
 extern int nmea_available;
+
+int GetLastNMEAMessage(char* buffer, size_t bufsize);
+void GpsTask();
 
 #endif /* MAIN_GPS_H_ */

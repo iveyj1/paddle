@@ -24,6 +24,39 @@ uint8_t *nmea_buffer[2] = {0, 0};
 int nmea_buffer_num = 0;
 int nmea_available = false;
 
+
+// Copy last complete new NMEA message to buffer
+// if no new buffer, returns false and doesn't copy
+
+int GetLastNMEAMessage(char* buffer, size_t bufsize)
+{
+    int ret = xSemaphoreTake(nmea_buffer_mutex, (TickType_t) 1);
+    if(ret != pdTRUE)
+    {
+        ESP_LOGI(TAG, "Mutex locked in AcqTask");
+        return ret;
+    }
+    else
+    {
+        if(nmea_available)
+        {
+            strncpy(buffer, (char *)nmea_buffer[1 - nmea_buffer_num], bufsize);
+            buffer[bufsize - 1] = 0;
+
+            nmea_available = false;
+            xSemaphoreGive(nmea_buffer_mutex);
+            return true;
+        }
+        else
+        {
+            xSemaphoreGive(nmea_buffer_mutex);
+            return false;
+        }
+    }
+    xSemaphoreGive(nmea_buffer_mutex);
+    return(ret);
+}
+
 void GpsTask()
 {
     nmea_buffer_mutex =  xSemaphoreCreateMutex();
@@ -60,14 +93,14 @@ void GpsTask()
     uart_write_bytes(UART_NUM_1, GPS_CMD_100MS, strlen(GPS_CMD_100MS));
     uart_write_bytes(UART_NUM_1, GPS_CMD_SBAS, strlen(GPS_CMD_SBAS));
 
-    esp_err_t starttime = esp_timer_get_time();
+    //esp_err_t starttime = esp_timer_get_time();
     while (1) {
         // Read data from the UART
         int len = uart_read_bytes(UART_NUM_1, &data_byte, 1, 200 / portTICK_RATE_MS);
         if (len>0)
         {
             xSemaphoreTake(nmea_buffer_mutex, portMAX_DELAY);
-            if (data_byte == '\n')
+            if (data_byte == '\r')
             {
                 nmea_buffer[nmea_buffer_num][nmea_buffer_index] = 0;
                 //ESP_LOGI(TAG, "Current: %s", nmea_buffer[nmea_buffer_num]);
@@ -77,7 +110,11 @@ void GpsTask()
                 nmea_buffer_index = 0;
                 nmea_buffer_num = 1 - nmea_buffer_num;
                 nmea_available = true;
-            } else
+            } else if (data_byte == '\n')
+            {
+                ;
+            }
+                else
             {
                 nmea_buffer[nmea_buffer_num][nmea_buffer_index] = data_byte;
                 nmea_buffer_index = (nmea_buffer_index < BUF_SIZE - 1) ? nmea_buffer_index + 1 : nmea_buffer_index;

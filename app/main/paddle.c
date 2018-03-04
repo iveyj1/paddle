@@ -11,6 +11,7 @@
 #include "esp_log.h"
 #include "string.h"
 #include "sd.h"
+#include "esp_timer.h"
 
 #define BLINK 13
 static const char* TAG = "paddle";
@@ -24,79 +25,73 @@ void blink_task(void *pvParameter)
     SetupExpander();
     while(1) {
         /* Blink off (output low) */
-        gpio_set_level(BLINK, 0);
         BsetExpander(LED0,1);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         /* Blink on (output high) */
-        gpio_set_level(BLINK, 1);
         BsetExpander(LED0,0);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 
-void TestTask(void *pvParameter)
+void TimerCallback(void *arg)
 {
-    while(1)
+    static int phase = 0;
+    if(phase)
     {
-        ;
-    }
-}
-
-int CheckNMEAMessage(char* buffer, size_t bufsize)
-{
-    int ret = xSemaphoreTake(nmea_buffer_mutex, (TickType_t) 1);
-    if(ret != pdTRUE)
-    {
-        ESP_LOGI(TAG, "Mutex locked in AcqTask");
-        return ret;
+        gpio_set_level(BLINK, 0);
     }
     else
     {
-        if(nmea_available)
-        {
-            strncpy(buffer, (char *)nmea_buffer[1 - nmea_buffer_num], bufsize);
-            buffer[bufsize - 1] = 0;
-
-            nmea_available = false;
-            xSemaphoreGive(nmea_buffer_mutex);
-            return true;
-        }
-        else
-        {
-            xSemaphoreGive(nmea_buffer_mutex);
-            return false;
-        }
+        gpio_set_level(BLINK, 1);
     }
-    xSemaphoreGive(nmea_buffer_mutex);
-    return(ret);
+    phase = 1-phase;
 }
 
 
 TickType_t previous_wake_time;
 
+#define NEMA_BUF_LEN 256
+//#define ACQ_BUF_LEN 512
+#define ACQ_PERIOD 50 //ms
+
+char nmeabuf[NEMA_BUF_LEN] = "";
+//char outbuf[ACQ_BUF_LEN] = "";
+static const char msg[] = "0,0,0,0,";
+
 void AcqTask(void *pvParameter)
 {
-    int ret;
-    char buf[1024];
-    buf[0] = 0;
     //esp_err_t starttime = esp_timer_get_time();
 
     while(1)
     {
-        vTaskDelayUntil(&previous_wake_time, (TickType_t) 5);
-        if(CheckNMEAMessage(buf, 1024))
+        vTaskDelayUntil(&previous_wake_time, ACQ_PERIOD / portTICK_PERIOD_MS );
+        if(acqfile)
         {
-            ESP_LOGI(TAG, "%s", buf);
+            fprintf(acqfile,"%10lld,0,0,0,0,",esp_timer_get_time());
+            if(GetLastNMEAMessage(nmeabuf, NEMA_BUF_LEN))
+            {
+                fprintf(acqfile, "%s", nmeabuf);
+            }
+            fprintf(acqfile,"\r\n");
         }
     }
 }
+
+esp_timer_handle_t acq_timer_handle;
 
 void app_main()
 {
     SetupPower();
     xTaskCreate(&blink_task, "blink_task", configMINIMAL_STACK_SIZE, NULL, 5, NULL);
-    xTaskCreate(&PowerTask, "power_task", configMINIMAL_STACK_SIZE, NULL, 5, NULL);
+    xTaskCreate(&PowerTask, "power_task", 2048, NULL, 5, NULL);
     xTaskCreate(GpsTask, "GPS task", 2048, NULL, 10, NULL);
     xTaskCreate(AcqTask, "Acq task", 4096, NULL, 10, NULL);
-    OpenLog();
+    if(!OpenNextAcqFile())
+    {
+        ESP_LOGE(TAG, "failed to open acq file");
+    }
+    fprintf(acqfile, "foo");
+    esp_timer_create_args_t t_arg = { .callback = &TimerCallback, .arg = NULL, .dispatch_method = ESP_TIMER_TASK, .name = "AcqTimer" };
+    esp_timer_create(&t_arg, &acq_timer_handle);
+    esp_timer_start_periodic(acq_timer_handle, 1000);
 }

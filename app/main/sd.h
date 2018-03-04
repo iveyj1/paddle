@@ -6,5 +6,9 @@
  */
 #ifndef MAIN_SD_H_
 #define MAIN_SD_H_
-void OpenLog(void);
+extern FILE *acqfile;
+
+void CloseAcqFile(void);
+int OpenNextAcqFile(void);
+
 #endif
