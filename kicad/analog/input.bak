@@ -1,13 +1,6 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:paddle
+EESchema Schematic File Version 4
 LIBS:analog-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -22,9 +15,11 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L CONN_02X05 J301
+L analog-rescue:CONN_02X05-RESCUE-analog J301
 U 1 1 59CECF11
 P 5300 3050
+AR Path="/59CECF11" Ref="J301"  Part="1" 
+AR Path="/59CF67CB/59CECF11" Ref="J301"  Part="1" 
 F 0 "J301" H 5300 3350 50  0000 C CNN
 F 1 "CONN_02X05" H 5300 2750 50  0000 C CNN
 F 2 "paddle:header-0.050-10-pin-through-hole" H 5300 1850 50  0001 C CNN
@@ -33,7 +28,7 @@ F 3 "" H 5300 1850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3VA #PWR301
+L power:+3.3VA #PWR301
 U 1 1 59CECF30
 P 4900 2800
 F 0 "#PWR301" H 4900 2600 50  0001 C CNN
@@ -44,7 +39,7 @@ F 3 "" H 4900 2800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR304
+L power:GND #PWR304
 U 1 1 59CECF36
 P 5700 3350
 F 0 "#PWR304" H 5700 3100 50  0001 C CNN
@@ -55,7 +50,7 @@ F 3 "" H 5700 3350 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L SP3003-04 U301
+L paddle:SP3003-04 U301
 U 1 1 59CECF3F
 P 6050 4350
 F 0 "U301" H 5800 4900 60  0000 C CNN
@@ -66,7 +61,7 @@ F 3 "" H 6050 3400 60  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L +3.3V #PWR302
+L power:+3.3V #PWR302
 U 1 1 59CECF46
 P 5450 4050
 F 0 "#PWR302" H 5450 3900 50  0001 C CNN
@@ -77,7 +72,7 @@ F 3 "" H 5450 4050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR303
+L power:GND #PWR303
 U 1 1 59CECF4C
 P 5450 4600
 F 0 "#PWR303" H 5450 4350 50  0001 C CNN
@@ -88,7 +83,7 @@ F 3 "" H 5450 4600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R301
+L paddle:R_US R301
 U 1 1 59CF0D9D
 P 6050 2850
 F 0 "R301" H 6100 3250 60  0000 C CNN
@@ -99,7 +94,7 @@ F 3 "" H 6075 2950 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R302
+L paddle:R_US R302
 U 1 1 59CF0E0C
 P 6050 2950
 F 0 "R302" H 6100 3350 60  0000 C CNN
@@ -110,7 +105,7 @@ F 3 "" H 6075 3050 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R303
+L paddle:R_US R303
 U 1 1 59CF0E2B
 P 6050 3050
 F 0 "R303" H 6100 3450 60  0000 C CNN
@@ -121,7 +116,7 @@ F 3 "" H 6075 3150 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_US R304
+L paddle:R_US R304
 U 1 1 59CF0E51
 P 6050 3150
 F 0 "R304" H 6100 3550 60  0000 C CNN
