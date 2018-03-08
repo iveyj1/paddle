@@ -46,6 +46,22 @@ D Generic Female Connector, Single Row, 01x04, socket header
 K Connector, Female, Generic
 $ENDCMP
 #
+$CMP CONN_02X07
+D Connector, double row, 02x07, pin header
+K connector
+$ENDCMP
+#
+$CMP CP
+D Polarised capacitor
+K cap capacitor
+$ENDCMP
+#
+$CMP Conn_01x03_Male
+D Generic connector, single row, 01x03
+K connector
+F ~
+$ENDCMP
+#
 $CMP LED
 D LED generic
 K led diode
