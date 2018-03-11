@@ -28,26 +28,26 @@ $EndComp
 $Comp
 L power:+3.3V #PWR01
 U 1 1 59CCDE94
-P 4300 2350
-F 0 "#PWR01" H 4300 2200 50  0001 C CNN
-F 1 "+3.3V" H 4300 2490 50  0000 C CNN
-F 2 "" H 4300 2350 50  0001 C CNN
-F 3 "" H 4300 2350 50  0001 C CNN
-	1    4300 2350
+P 4300 2300
+F 0 "#PWR01" H 4300 2150 50  0001 C CNN
+F 1 "+3.3V" H 4300 2440 50  0000 C CNN
+F 2 "" H 4300 2300 50  0001 C CNN
+F 3 "" H 4300 2300 50  0001 C CNN
+	1    4300 2300
 	1    0    0    -1  
 $EndComp
 Text Label 4300 2900 0    60   ~ 0
-BUSY*
+PIO_B_BUSY*
 Wire Wire Line
 	4300 2900 4300 2750
-Text Label 4700 1000 0    60   ~ 0
-BUSY*
-Text Label 4100 1000 2    60   ~ 0
+Text Label 4100 700  2    60   ~ 0
+PIO_B_BUSY*
+Text Label 4700 1100 0    60   ~ 0
 SPI_SCLK
-Text Label 4150 600  2    60   ~ 0
-SPI_SDO
-Text Label 4100 900  2    60   ~ 0
-SPI_SDI
+Text Label 4700 900  0    60   ~ 0
+SPI_MOSI
+Text Label 4700 1000 0    60   ~ 0
+SPI_MISO
 $Comp
 L power:GND #PWR02
 U 1 1 59FE79CA
@@ -59,7 +59,7 @@ F 3 "" H 4700 1200 50  0001 C CNN
 	1    4700 1200
 	1    0    0    -1  
 $EndComp
-Text Label 4700 600  0    60   ~ 0
+Text Label 4100 1200 2    60   ~ 0
 +3.3VA_ENABLE
 Wire Wire Line
 	4650 600  4700 600 
@@ -77,7 +77,7 @@ Wire Wire Line
 	4150 1000 4100 1000
 Wire Wire Line
 	4100 1100 4150 1100
-Text Label 4100 1200 2    60   ~ 0
+Text Label 4100 1100 2    60   ~ 0
 +V_UNREG_SW
 Wire Wire Line
 	4650 1000 4700 1000
@@ -377,7 +377,7 @@ L paddle:R_US R107
 U 1 1 59FFAC21
 P 9500 1700
 F 0 "R107" H 9525 1800 60  0000 C CNN
-F 1 "330" H 9525 1600 60  0000 C CNN
+F 1 "220" H 9525 1600 60  0000 C CNN
 F 2 "paddle:R_0603" H 9500 1350 60  0001 C CNN
 F 3 "" H 9525 1800 60  0000 C CNN
 	1    9500 1700
@@ -432,7 +432,7 @@ L paddle:R_US R110
 U 1 1 59FFAC44
 P 10000 3050
 F 0 "R110" H 10025 3150 60  0000 C CNN
-F 1 "330" H 10025 2950 60  0000 C CNN
+F 1 "220" H 10025 2950 60  0000 C CNN
 F 2 "paddle:R_0603" H 10000 2700 60  0001 C CNN
 F 3 "" H 10025 3150 60  0000 C CNN
 	1    10000 3050
@@ -576,12 +576,6 @@ $EndComp
 Text Label 10000 1500 2    60   ~ 0
 LEDY
 Wire Wire Line
-	700  1100 700  1100
-Wire Wire Line
-	3000 4950 3000 4950
-Wire Wire Line
-	3000 4850 3000 4850
-Wire Wire Line
 	3000 4250 3150 4250
 Wire Wire Line
 	3000 4150 3150 4150
@@ -600,11 +594,7 @@ Wire Wire Line
 Wire Wire Line
 	500  3350 500  3250
 Wire Wire Line
-	500  3350 1000 3350
-Wire Wire Line
-	3000 5150 3000 5150
-Wire Wire Line
-	200  4250 200  4250
+	500  3350 600  3350
 Wire Wire Line
 	200  3550 200  3600
 Wire Wire Line
@@ -640,8 +630,6 @@ Connection ~ 200  4050
 Wire Wire Line
 	700  1500 700  1850
 Wire Wire Line
-	1150 4350 1150 4350
-Wire Wire Line
 	9500 1900 9500 1950
 Wire Wire Line
 	10000 1900 10000 1950
@@ -674,31 +662,9 @@ Wire Wire Line
 Wire Wire Line
 	9350 6150 9300 6150
 Wire Wire Line
-	6500 3400 6500 3800
+	6500 3400 6500 3500
 Connection ~ 6500 3500
 Connection ~ 6500 3600
-Wire Wire Line
-	6500 2900 6500 2900
-Wire Wire Line
-	6500 3000 6500 3000
-Wire Wire Line
-	7800 2950 7800 2950
-Wire Wire Line
-	7800 3050 7800 3050
-Wire Wire Line
-	7800 3150 7800 3150
-Wire Wire Line
-	7800 3250 7800 3250
-Wire Wire Line
-	7800 3350 7800 3350
-Wire Wire Line
-	7800 3450 7800 3450
-Wire Wire Line
-	7800 3550 7800 3550
-Wire Wire Line
-	7800 3650 7800 3650
-Wire Wire Line
-	3000 3850 3000 3750
 Wire Wire Line
 	3000 3750 3150 3750
 Wire Wire Line
@@ -717,45 +683,31 @@ Wire Wire Line
 	3950 3850 3950 3950
 Wire Wire Line
 	3950 3950 3000 3950
-Connection ~ 3000 3750
 $Comp
 L device:LED LED101
 U 1 1 59FFAD10
-P 9000 2100
-F 0 "LED101" H 8950 1900 45  0000 L BNN
-F 1 "LED" H 8950 1800 45  0000 L BNN
-F 2 "paddle:SMD_D_0805" H 8800 2130 20  0001 C CNN
-F 3 "" V 8950 2100 60  0001 C CNN
-	1    9000 2100
+P 8950 2100
+F 0 "LED101" H 8900 1900 45  0000 L BNN
+F 1 "LED" H 8900 1800 45  0000 L BNN
+F 2 "paddle:SMD_D_0805" H 8750 2130 20  0001 C CNN
+F 3 "" V 8900 2100 60  0001 C CNN
+	1    8950 2100
 	0    -1   -1   0   
 $EndComp
 $Comp
 L paddle:R_US R105
 U 1 1 59FFAD17
-P 9000 1700
-F 0 "R105" H 9025 1800 60  0000 C CNN
-F 1 "330" H 9025 1600 60  0000 C CNN
-F 2 "paddle:R_0603" H 9000 1350 60  0001 C CNN
-F 3 "" H 9025 1800 60  0000 C CNN
-	1    9000 1700
+P 8950 1700
+F 0 "R105" H 8975 1800 60  0000 C CNN
+F 1 "330" H 8975 1600 60  0000 C CNN
+F 2 "paddle:R_0603" H 8950 1350 60  0001 C CNN
+F 3 "" H 8975 1800 60  0000 C CNN
+	1    8950 1700
 	0    1    1    0   
 $EndComp
-$Comp
-L power:GND #PWR023
-U 1 1 59FFAD1E
-P 9000 2300
-F 0 "#PWR023" H 9000 2050 50  0001 C CNN
-F 1 "GND" H 9000 2150 50  0000 C CNN
-F 2 "" H 9000 2300 50  0001 C CNN
-F 3 "" H 9000 2300 50  0001 C CNN
-	1    9000 2300
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
-	9000 1900 9000 1950
-Wire Wire Line
-	9000 2250 9000 2300
-Text Label 9000 1500 2    60   ~ 0
+	8950 1900 8950 1950
+Text Label 8950 2450 2    60   ~ 0
 CON_TXD
 Wire Wire Line
 	1050 1700 1700 1700
@@ -803,16 +755,16 @@ BLINK
 Text Label 1750 5500 3    60   ~ 0
 BLINK
 Text Label 7800 3650 0    60   ~ 0
-AN_REFSEL
+PIO_A
 $Sheet
 S 6100 4900 1150 1600
 U 59FFAD44
 F0 "USB" 60
 F1 "USB.sch" 60
-F2 "BOOTLOAD*" I R 7250 6100 60 
+F2 "BOOTLOAD*" O R 7250 6100 60 
 F3 "+VBUS" O R 7250 5100 60 
 F4 "RESET*" O R 7250 5850 60 
-F5 "TXD" I R 7250 5350 60 
+F5 "TXD" O R 7250 5350 60 
 F6 "RXD" I R 7250 5600 60 
 $EndSheet
 Wire Wire Line
@@ -865,29 +817,27 @@ $EndComp
 Wire Wire Line
 	3450 1650 3450 1700
 Wire Wire Line
-	2900 1400 3450 1400
+	2900 1400 3000 1400
 Wire Wire Line
 	3450 1400 3450 1450
-Text Label 1150 4550 2    60   ~ 0
+Text Label 1100 4750 2    60   ~ 0
 AN1_CS*
-Text Label 1150 4650 2    60   ~ 0
+Text Label 1100 4650 2    60   ~ 0
 AN2_CS*
 Text Label 3150 4050 0    60   ~ 0
 I2C_SCK
 Wire Wire Line
 	3900 4650 3000 4650
-Text Label 1100 4450 2    60   ~ 0
+Text Label 1100 4350 2    60   ~ 0
 POWER_SW*
 Wire Wire Line
-	1100 4450 1150 4450
-Wire Wire Line
 	3000 4050 3150 4050
-Text Label 3700 3950 2    60   ~ 0
-SPI_SDO
+Text Label 3650 3950 2    60   ~ 0
+SD_MOSI
 Text Label 3150 4350 0    60   ~ 0
 I2C_SDA
-Text Label 3550 4550 2    60   ~ 0
-SPI_SDI
+Text Label 3600 4550 2    60   ~ 0
+SD_MISO
 Text Label 6500 2900 2    60   ~ 0
 I2C_SDA
 Text Label 6500 3000 2    60   ~ 0
@@ -914,37 +864,35 @@ F 3 "" H 7150 2500 50  0001 C CNN
 	1    7150 2500
 	1    0    0    -1  
 $EndComp
-NoConn ~ 1150 5050
-NoConn ~ 1150 5150
-Text Label 1150 4750 2    60   ~ 0
-BUSY*
-Text Label 4700 900  0    60   ~ 0
-AN_REFSEL
+Text Label 1100 4450 2    60   ~ 0
+PIO_B_BUSY*
+Text Label 4100 1000 2    60   ~ 0
+PIO_A
 Wire Wire Line
 	4700 900  4650 900 
-Text Label 4100 800  2    60   ~ 0
+Text Label 4100 900  2    60   ~ 0
 I2C_SDA
-Text Label 4100 700  2    60   ~ 0
+Text Label 4100 800  2    60   ~ 0
 I2C_SCK
 Text Label 3200 4650 0    60   ~ 0
-SPI_SCLK
+SD_SCLK
 Text Label 7350 5350 0    60   ~ 0
 CON_RXD
 Text Label 7350 5600 0    60   ~ 0
 CON_TXD
-Text Label 4100 1100 2    60   ~ 0
+Text Label 4100 600  2    60   ~ 0
 AN3_CS*
 Text Label 4550 1600 2    60   ~ 0
 AN0_CS*
 Text Label 5750 1450 2    60   ~ 0
 GPS_ENABLE*
-Text Label 2550 5500 3    60   ~ 0
+Text Label 1100 4550 2    60   ~ 0
 AN3_CS*
 Text Label 4700 700  0    60   ~ 0
 AN1_CS*
-Text Label 1150 4950 2    60   ~ 0
+Text Label 1100 4850 2    60   ~ 0
 AN0_CS*
-Text Label 3550 4750 0    60   ~ 0
+Text Label 3200 4750 0    60   ~ 0
 SD_CS*
 Wire Wire Line
 	3000 1400 3000 1700
@@ -966,8 +914,6 @@ F 3 "" H 1150 3750 50  0001 C CNN
 	1    1150 3750
 	-1   0    0    1   
 $EndComp
-Wire Wire Line
-	1150 3750 1150 3850
 $Comp
 L paddle:ESP32-WROOM U101
 U 1 1 59FFACB8
@@ -980,14 +926,68 @@ F 3 "" H 1650 4900 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 1150 4250
-NoConn ~ 1150 4350
 NoConn ~ 2450 5500
-NoConn ~ 1150 4850
-NoConn ~ 6600 1700
-Text Label 4700 1100 0    60   ~ 0
-AN0_CS*
 Text Label 4700 800  0    60   ~ 0
+AN0_CS*
+Text Label 4700 600  0    60   ~ 0
 AN2_CS*
 Wire Wire Line
 	4700 1100 4650 1100
+Wire Wire Line
+	850  3350 1000 3350
+Wire Wire Line
+	600  3350 850  3350
+Wire Wire Line
+	6500 3500 6500 3600
+Wire Wire Line
+	6500 3600 6500 3800
+Wire Wire Line
+	3000 1400 3450 1400
+Wire Wire Line
+	8950 2250 8950 2450
+$Comp
+L power:+3.3V #PWR0101
+U 1 1 5AA4A110
+P 8950 1500
+F 0 "#PWR0101" H 8950 1350 50  0001 C CNN
+F 1 "+3.3V" H 8950 1640 50  0000 C CNN
+F 2 "" H 8950 1500 50  0001 C CNN
+F 3 "" H 8950 1500 50  0001 C CNN
+	1    8950 1500
+	1    0    0    -1  
+$EndComp
+Text Label 1100 4950 2    60   ~ 0
+SPI_MOSI
+Text Label 1100 5050 2    60   ~ 0
+SPI_MISO
+Text Label 1100 5150 2    60   ~ 0
+SPI_SCLK
+Wire Wire Line
+	1100 4350 1150 4350
+Wire Wire Line
+	1150 4450 1100 4450
+Wire Wire Line
+	1100 4550 1150 4550
+Wire Wire Line
+	1150 4650 1100 4650
+Wire Wire Line
+	1100 4750 1150 4750
+Wire Wire Line
+	1150 4850 1100 4850
+Wire Wire Line
+	1150 4950 1100 4950
+Wire Wire Line
+	1100 5050 1150 5050
+Wire Wire Line
+	1150 5150 1100 5150
+Connection ~ 3000 3750
+Wire Wire Line
+	3000 3850 3000 3750
+Wire Wire Line
+	1150 3750 1150 3850
+NoConn ~ 2550 5500
+Wire Wire Line
+	4100 600  4150 600 
+Wire Wire Line
+	4300 2300 4300 2350
 $EndSCHEMATC

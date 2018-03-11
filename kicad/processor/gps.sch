@@ -88,7 +88,7 @@ Wire Wire Line
 Wire Wire Line
 	4550 4150 4550 4800
 Wire Wire Line
-	3350 2800 3350 3150
+	3350 2800 3350 2850
 $Comp
 L device:Q_PMOS_GSD Q301
 U 1 1 59CAD4AE
@@ -170,7 +170,7 @@ Wire Wire Line
 Text HLabel 2950 3350 0    60   Input ~ 0
 ENABLE*
 Wire Wire Line
-	2950 3350 3050 3350
+	2950 3350 3000 3350
 $Comp
 L paddle:R_US R301
 U 1 1 59CB0CA3
@@ -229,7 +229,7 @@ $EndComp
 Wire Wire Line
 	5050 5500 5050 5650
 Wire Wire Line
-	5050 4050 5050 5200
+	5050 4050 5050 4900
 $Comp
 L device:C_Small C303
 U 1 1 59CB3249
@@ -306,7 +306,7 @@ $EndComp
 Wire Wire Line
 	3550 3750 3350 3750
 Wire Wire Line
-	3750 3750 5300 3750
+	3750 3750 4000 3750
 $Comp
 L paddle:Battery_single-cell BT301
 U 1 1 59D0200B
@@ -370,4 +370,16 @@ F 3 "" H 5050 4900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Connection ~ 5050 4900
+Wire Wire Line
+	4250 3750 4700 3750
+Wire Wire Line
+	4000 3750 4250 3750
+Wire Wire Line
+	3000 3350 3050 3350
+Wire Wire Line
+	3350 2850 3350 3150
+Wire Wire Line
+	4700 3750 5300 3750
+Wire Wire Line
+	5050 4900 5050 5200
 $EndSCHEMATC
