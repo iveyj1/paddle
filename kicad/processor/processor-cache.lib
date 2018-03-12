@@ -609,19 +609,6 @@ X pwr 1 0 0 0 U 50 50 0 0 w
 ENDDRAW
 ENDDEF
 #
-# processor-rescue:CONN_01X01_FEMALE-RESCUE-processor
-#
-DEF processor-rescue:CONN_01X01_FEMALE-RESCUE-processor J 0 40 Y N 1 F N
-F0 "J" 0 100 50 H V C CNN
-F1 "processor-rescue:CONN_01X01_FEMALE-RESCUE-processor" 0 -100 50 H V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-DRAW
-A 150 0 50 901 -901 0 1 0 N 150 50 150 -50
-X 1 1 -100 0 200 R 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
 # processor-rescue:CONN_01X02-RESCUE-processor
 #
 DEF processor-rescue:CONN_01X02-RESCUE-processor J 0 40 Y N 1 F N
