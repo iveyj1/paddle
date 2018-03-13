@@ -318,17 +318,6 @@ Text Label 2100 4450 0    50   ~ 0
 BRIDGE_COMP
 Wire Wire Line
 	1950 4450 2100 4450
-$Comp
-L paddle:CONN_02X07_1 J101
-U 1 1 5AA6807C
-P 8300 1650
-F 0 "J101" H 8300 2165 50  0000 C CNN
-F 1 "CONN_02X07_1" H 8300 2074 50  0000 C CNN
-F 2 "" H 8300 450 50  0001 C CNN
-F 3 "" H 8300 450 50  0001 C CNN
-	1    8300 1650
-	1    0    0    -1  
-$EndComp
 $Sheet
 S 4600 2800 950  1450
 U 5AA6CD5B
@@ -516,4 +505,17 @@ F 3 "" H 9650 4850 50  0001 C CNN
 	1    9650 4850
 	1    0    0    -1  
 $EndComp
+$Comp
+L paddle:CONN_02X07_0 J?
+U 1 1 5AA83A8D
+P 8300 1650
+F 0 "J?" H 8300 2165 50  0000 C CNN
+F 1 "CONN_02X07_0" H 8300 2074 50  0000 C CNN
+F 2 "paddle:conn_FCI_14_NH" H 8300 450 50  0001 C CNN
+F 3 "" H 8300 450 50  0001 C CNN
+	1    8300 1650
+	1    0    0    -1  
+$EndComp
+Text Notes 7250 2250 0    50   ~ 0
+Note: connector pinout is mirror-image to processor board
 $EndSCHEMATC
