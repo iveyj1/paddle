@@ -29,7 +29,7 @@ F8 "ANALOG_IN" I L 4600 1250 60
 F9 "BRIDGE_COMP" I L 4600 2050 50 
 $EndSheet
 Text Label 4550 1250 2    60   ~ 0
-IN_
+IN_0
 Text Label 4550 1650 2    60   ~ 0
 VREF
 $Sheet
@@ -333,7 +333,7 @@ F8 "ANALOG_IN" I L 4600 3150 60
 F9 "BRIDGE_COMP" I L 4600 3950 50 
 $EndSheet
 Text Label 4550 3150 2    60   ~ 0
-IN_
+IN_1
 Text Label 4550 3550 2    60   ~ 0
 VREF
 Text Label 5700 3300 0    60   ~ 0
@@ -379,7 +379,7 @@ F8 "ANALOG_IN" I L 4600 5000 60
 F9 "BRIDGE_COMP" I L 4600 5800 50 
 $EndSheet
 Text Label 4550 5000 2    60   ~ 0
-IN_
+IN_2
 Text Label 4550 5400 2    60   ~ 0
 VREF
 Text Label 5700 5150 0    60   ~ 0
@@ -425,7 +425,7 @@ F8 "ANALOG_IN" I L 4600 6800 60
 F9 "BRIDGE_COMP" I L 4600 7600 50 
 $EndSheet
 Text Label 4550 6800 2    60   ~ 0
-IN_
+IN_3
 Text Label 4550 7200 2    60   ~ 0
 VREF
 Text Label 5700 6950 0    60   ~ 0
@@ -516,6 +516,6 @@ F 3 "" H 8300 450 50  0001 C CNN
 	1    8300 1650
 	1    0    0    -1  
 $EndComp
-Text Notes 7250 2250 0    50   ~ 0
-Note: connector pinout is mirror-image to processor board
+Text Notes 7250 2350 0    50   ~ 0
+Note: connector pinout is mirror-image \nto processor board
 $EndSCHEMATC
