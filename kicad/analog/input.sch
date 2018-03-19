@@ -147,38 +147,10 @@ Wire Wire Line
 	6550 4450 7200 4450
 Wire Wire Line
 	6550 4650 7350 4650
-Wire Wire Line
-	6250 2850 6900 2850
-Wire Wire Line
-	6250 2950 7050 2950
-Wire Wire Line
-	6250 3050 7200 3050
-Wire Wire Line
-	6250 3150 7350 3150
-Wire Wire Line
-	6900 4050 6900 2850
-Connection ~ 6900 2850
-Wire Wire Line
-	7050 4250 7050 2950
-Connection ~ 7050 2950
-Wire Wire Line
-	7200 4450 7200 3050
-Connection ~ 7200 3050
-Wire Wire Line
-	7350 4650 7350 3150
-Connection ~ 7350 3150
 NoConn ~ 5050 2950
 NoConn ~ 5050 3050
 NoConn ~ 5050 3150
 NoConn ~ 5050 3250
-Wire Wire Line
-	6900 2850 7800 2850
-Wire Wire Line
-	7050 2950 7800 2950
-Wire Wire Line
-	7200 3050 7800 3050
-Wire Wire Line
-	7350 3150 7800 3150
 Wire Wire Line
 	5400 4150 5550 4150
 $Comp
@@ -194,4 +166,32 @@ F 3 "" H 5400 4050 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	5400 4050 5400 4150
+Wire Wire Line
+	6250 3150 7200 3150
+Wire Wire Line
+	6250 3050 7350 3050
+Wire Wire Line
+	6250 2950 6900 2950
+Wire Wire Line
+	6250 2850 7050 2850
+Wire Wire Line
+	7350 4650 7350 3050
+Connection ~ 7350 3050
+Wire Wire Line
+	7350 3050 7800 3050
+Wire Wire Line
+	7200 4450 7200 3150
+Connection ~ 7200 3150
+Wire Wire Line
+	7200 3150 7800 3150
+Wire Wire Line
+	6900 4050 6900 2950
+Connection ~ 6900 2950
+Wire Wire Line
+	6900 2950 7800 2950
+Wire Wire Line
+	7050 4250 7050 2850
+Connection ~ 7050 2850
+Wire Wire Line
+	7050 2850 7800 2850
 $EndSCHEMATC

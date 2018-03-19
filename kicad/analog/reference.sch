@@ -15,17 +15,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L analog-rescue:TEST-RESCUE-analog TP401
-U 1 1 59CEDE1E
-P 6450 1950
-F 0 "TP401" H 6450 2250 50  0000 C BNN
-F 1 "VREF" H 6450 2200 50  0000 C CNN
-F 2 "paddle:tp_th_1mm" H 6450 1950 50  0001 C CNN
-F 3 "" H 6450 1950 50  0001 C CNN
-	1    6450 1950
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:+3.3VA #PWR0403
 U 1 1 59CEDE4D
 P 3350 1900
@@ -190,11 +179,6 @@ Wire Wire Line
 	5050 2000 5350 2000
 Wire Wire Line
 	5350 2000 5700 2000
-Wire Wire Line
-	6450 2000 6450 1950
-Wire Wire Line
-	6450 2000 6550 2000
-Connection ~ 6450 2000
 Text HLabel 5550 4900 2    50   Output ~ 0
 BRIDGE_COMP
 $Comp
@@ -242,8 +226,6 @@ F 3 "" H 3300 4250 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5700 2000 6450 2000
-Wire Wire Line
 	3300 5400 3300 5300
 NoConn ~ 4050 2300
 Wire Wire Line
@@ -257,4 +239,6 @@ Wire Wire Line
 Connection ~ 3300 4800
 Wire Wire Line
 	3300 4800 3300 4900
+Wire Wire Line
+	5700 2000 6550 2000
 $EndSCHEMATC

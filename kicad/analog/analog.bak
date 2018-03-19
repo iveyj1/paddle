@@ -516,6 +516,6 @@ F 3 "" H 8300 450 50  0001 C CNN
 	1    8300 1650
 	1    0    0    -1  
 $EndComp
-Text Notes 7250 2250 0    50   ~ 0
-Note: connector pinout is mirror-image to processor board
+Text Notes 7250 2350 0    50   ~ 0
+Note: connector pinout is mirror-image \nto processor board
 $EndSCHEMATC
