@@ -30,7 +30,9 @@ void checkPowerSwitch()
         BsetExpander(3,1);
         vTaskDelay(2000/portTICK_PERIOD_MS);
         gpio_set_level(KEEPALIVE, 0);
-        ESP_LOGI(TAG, "Stack high water: %d", uxTaskGetStackHighWaterMark(NULL));
+        ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+        // why is power.c stack sensitive to SD not being in place?
+        // 3472 bytes vs 2528 when SD in?
     }
 }
 

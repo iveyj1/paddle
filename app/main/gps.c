@@ -57,7 +57,7 @@ int GetLastNMEAMessage(char* buffer, size_t bufsize)
     return(ret);
 }
 
-void GpsTask()
+void GpsTask(void *pvParameter)
 {
     nmea_buffer_mutex =  xSemaphoreCreateMutex();
     uint8_t data_byte = 0;

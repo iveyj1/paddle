@@ -11,6 +11,7 @@
 #include "esp_log.h"
 #include "string.h"
 #include "sd.h"
+#include "ad.h"
 #include "esp_timer.h"
 
 #define BLINK 13
@@ -83,14 +84,14 @@ void app_main()
 {
     SetupPower();
     xTaskCreate(&blink_task, "blink_task", configMINIMAL_STACK_SIZE, NULL, 5, NULL);
-    xTaskCreate(&PowerTask, "power_task", 2048, NULL, 5, NULL);
-    xTaskCreate(GpsTask, "GPS task", 2048, NULL, 10, NULL);
+    //xTaskCreate(&PowerTask, "power_task", 4096, NULL, 5, NULL);
+    xTaskCreate(GpsTask, "GPS task", 4096, NULL, 10, NULL);
     xTaskCreate(AcqTask, "Acq task", 4096, NULL, 10, NULL);
+    xTaskCreate(ADTask, "AD task", 4096, NULL, 10, NULL);
     if(!OpenNextAcqFile())
     {
         ESP_LOGE(TAG, "failed to open acq file");
     }
-    fprintf(acqfile, "foo");
     esp_timer_create_args_t t_arg = { .callback = &TimerCallback, .arg = NULL, .dispatch_method = ESP_TIMER_TASK, .name = "AcqTimer" };
     esp_timer_create(&t_arg, &acq_timer_handle);
     esp_timer_start_periodic(acq_timer_handle, 1000);
