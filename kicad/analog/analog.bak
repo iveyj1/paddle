@@ -491,8 +491,6 @@ Wire Wire Line
 Wire Wire Line
 	9350 3500 9450 3500
 Connection ~ 9350 3500
-Wire Wire Line
-	9450 3500 9850 3500
 Connection ~ 9450 3500
 $Comp
 L power:GND #PWR0106
@@ -519,19 +517,16 @@ $EndComp
 Text Notes 7250 2350 0    50   ~ 0
 Note: connector pinout is mirror-image \nto processor board
 $Comp
-L paddle:CP 100uF101
+L paddle:CP C?
 U 1 1 5AAF46F9
 P 9850 3650
-F 0 "100uF101" H 9968 3696 50  0000 L CNN
-F 1 "CP" H 9968 3605 50  0000 L CNN
+F 0 "C?" H 9968 3696 50  0000 L CNN
+F 1 "100uF" H 9968 3605 50  0000 L CNN
 F 2 "paddle:CP_Radial_D6.3mm_P2.50mm" H 9888 3500 50  0001 C CNN
 F 3 "" H 9850 3650 50  0001 C CNN
 	1    9850 3650
 	1    0    0    -1  
 $EndComp
-Connection ~ 9850 3500
-Wire Wire Line
-	9850 3500 9950 3500
 $Comp
 L power:GND #PWR0108
 U 1 1 5AAF477B
@@ -544,21 +539,21 @@ F 3 "" H 9850 3800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L paddle:CP 100uF?
+L paddle:CP C?
 U 1 1 5AAF4990
 P 7400 3650
-F 0 "100uF?" H 7518 3696 50  0000 L CNN
-F 1 "CP" H 7518 3605 50  0000 L CNN
+F 0 "C?" H 7518 3696 50  0000 L CNN
+F 1 "100uF" H 7518 3605 50  0000 L CNN
 F 2 "paddle:CP_Radial_D6.3mm_P2.50mm" H 7438 3500 50  0001 C CNN
 F 3 "" H 7400 3650 50  0001 C CNN
 	1    7400 3650
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0109
 U 1 1 5AAF4997
 P 7400 3800
-F 0 "#PWR?" H 7400 3550 50  0001 C CNN
+F 0 "#PWR0109" H 7400 3550 50  0001 C CNN
 F 1 "GND" H 7405 3627 50  0000 C CNN
 F 2 "" H 7400 3800 50  0001 C CNN
 F 3 "" H 7400 3800 50  0001 C CNN
@@ -568,4 +563,9 @@ $EndComp
 Connection ~ 7400 3500
 Wire Wire Line
 	7400 3500 7750 3500
+Connection ~ 9850 3500
+Wire Wire Line
+	9850 3500 9950 3500
+Wire Wire Line
+	9450 3500 9850 3500
 $EndSCHEMATC
