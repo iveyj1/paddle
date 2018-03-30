@@ -3,6 +3,7 @@
 #include "freertos/task.h"
 #include "expander.h"
 #include "sd.h"
+#include "ad.h"
 
 #include "esp_log.h"
 
@@ -11,23 +12,15 @@
 #define KEEPALIVE 4
 #define POWER_SW 35
 
-static const char TAG[]="Power.c";
+static const char TAG[]="Power";
 
-void SetupPower()
-{
-    gpio_pad_select_gpio(KEEPALIVE);
-    gpio_set_direction(KEEPALIVE, GPIO_MODE_OUTPUT);
-    gpio_set_level(KEEPALIVE, 1);
-    gpio_pad_select_gpio(POWER_SW);
-    gpio_set_direction(POWER_SW, GPIO_MODE_INPUT);
-}
+
 
 void checkPowerSwitch()
 {
     if(gpio_get_level(POWER_SW) == 0)
     {
         CloseAcqFile();
-        BsetExpander(3,1);
         vTaskDelay(2000/portTICK_PERIOD_MS);
         gpio_set_level(KEEPALIVE, 0);
         ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
@@ -36,11 +29,22 @@ void checkPowerSwitch()
     }
 }
 
+void checkAcqButton()
+{
+
+}
+
 void PowerTask(void *pvParameter)
 {
+    gpio_pad_select_gpio(KEEPALIVE);
+    gpio_set_direction(KEEPALIVE, GPIO_MODE_OUTPUT);
+    gpio_set_level(KEEPALIVE, 1);
+    gpio_pad_select_gpio(POWER_SW);
+    gpio_set_direction(POWER_SW, GPIO_MODE_INPUT);
     while(1)
     {
         checkPowerSwitch();
+        checkAcqButton();
         vTaskDelay(200/portTICK_PERIOD_MS);
     }
 }

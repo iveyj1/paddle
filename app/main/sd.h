@@ -8,6 +8,10 @@
 #define MAIN_SD_H_
 extern FILE *acqfile;
 
+
+int MountSD();
+int UnMountSD();
+
 void CloseAcqFile(void);
 int OpenNextAcqFile(void);
 

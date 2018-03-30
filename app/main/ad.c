@@ -1,9 +1,3 @@
-/*
- * ad.c
- *
- *  Created on: Mar 22, 2018
- *      Author: osboxes
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,6 +13,8 @@
 #include "gps.h"
 
 static const char *TAG = "ad";
+
+static int acquire = 0;
 
 #define PIN_NUM_MISO 14
 #define PIN_NUM_MOSI 27
@@ -66,12 +62,22 @@ void ADData(spi_device_handle_t spi, uint8_t *data, int len)
     memcpy(data, t.rx_data, 4);
 }
 
+void ADStartAcquire()
+{
+    acquire = true;
+}
+
+void ADStopAcquire()
+{
+    acquire = false;
+}
 
 TickType_t previous_wake_time;
 char nmeabuf[NMEA_BUF_LEN];
 
 void ADTask(void *pvParameter)
 {
+
     TickType_t previous_wake_time;
 
     esp_err_t ret;
@@ -107,32 +113,59 @@ void ADTask(void *pvParameter)
     ADSetup(spi);
     int32_t val;
     int print_nmea;
+    int acq_in_progress = 0;
     while(1)
     {
-        ADCmd(spi, 0x08);  // start conversion
-        vTaskDelayUntil(&previous_wake_time, 20 / portTICK_PERIOD_MS );
-        ADData(spi, data, sizeof(data));
-        val = (int32_t)((data[1]<<24) + (data[2]<<16) + (data[3]<<8));
-        val >>= 8;
-        print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN);
-        //ESP_LOGI(TAG, "print_nmea: %d", print_nmea);
-
-        if(acqfile)
+        if(acquire)
         {
-            fprintf(acqfile,"%10lld,%12.0d,0,0,0,", esp_timer_get_time(), val);
-            if(print_nmea)
+            if(acq_in_progress)
             {
-                fprintf(acqfile, "%s", nmeabuf);
+                ADCmd(spi, 0x08);  // start conversion
+                vTaskDelayUntil(&previous_wake_time, 20 / portTICK_PERIOD_MS );
+                ADData(spi, data, sizeof(data));
+                val = (int32_t)((data[1]<<24) + (data[2]<<16) + (data[3]<<8));
+                val >>= 8;
+                print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN);
+                //ESP_LOGI(TAG, "print_nmea: %d", print_nmea);
+                int64_t timenow =  esp_timer_get_time()/1000;
+                if(acqfile)
+                {
+                    fprintf(acqfile,"%10lld,%12.0d,0,0,0,", timenow, val);
+                    if(print_nmea)
+                    {
+                        fprintf(acqfile, "%s", nmeabuf);
+                    }
+                    fprintf(acqfile,"\r\n");
+                }
             }
-            fprintf(acqfile,"\r\n");
+            else  // is this logic working?
+            {
+                if(!OpenNextAcqFile())
+                {
+                    ESP_LOGE(TAG, "failed to open acq file");
+                }
+                acq_in_progress = true;
+            }
         }
-
-        if(print_nmea)
+        else
         {
-            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,%s", esp_timer_get_time(), val, nmeabuf);
-        } else
-        {
-            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,", esp_timer_get_time(), val);
+            if(acq_in_progress)
+            {
+                CloseAcqFile();
+                acq_in_progress = false;
+            }
+            vTaskDelayUntil(&previous_wake_time, 20 / portTICK_PERIOD_MS );
         }
     }
 }
+
+#if 0
+        if(print_nmea)
+        {
+            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,%s", timenow, val, nmeabuf);
+        } else
+        {
+            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,", timenow, val);
+        }
+#endif
+

@@ -9,5 +9,7 @@
 #define MAIN_AD_H_
 
 void ADTask(void *pvParameter);
+void ADStartAcquire();
+void ADStopAcquire();
 
 #endif /* MAIN_AD_H_ */

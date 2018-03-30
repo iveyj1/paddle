@@ -32,7 +32,7 @@ int GetLastNMEAMessage(char* buffer, size_t bufsize)
     int ret = xSemaphoreTake(nmea_buffer_mutex, (TickType_t) 1);
     if(ret != pdTRUE)
     {
-        ESP_LOGI(TAG, "Mutex locked in AcqTask");
+        ESP_LOGI(TAG, "Mutex lock timed out in GetLastNMEAMessage");
         return ret;
     }
     else
@@ -52,8 +52,6 @@ int GetLastNMEAMessage(char* buffer, size_t bufsize)
             return false;
         }
     }
-    xSemaphoreGive(nmea_buffer_mutex);
-    return(ret);
 }
 
 void GpsTask(void *pvParameter)
