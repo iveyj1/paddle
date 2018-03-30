@@ -4,6 +4,7 @@
 #include "freertos/task.h"
 #include "driver/uart.h"
 #include "esp_log.h"
+#include "gps.h"
 
 static const char* TAG = "GPS";
 static const char* GPS_CMD_RMS = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n";
@@ -16,8 +17,6 @@ static const char* GPS_CMD_HOT_START = "$PMTK101*32\r\n";
 #define ECHO_TEST_RXD  (GPIO_NUM_16)
 #define ECHO_TEST_RTS  (UART_PIN_NO_CHANGE)
 #define ECHO_TEST_CTS  (UART_PIN_NO_CHANGE)
-
-#define BUF_SIZE (1024)
 
 SemaphoreHandle_t nmea_buffer_mutex;
 uint8_t *nmea_buffer[2] = {0, 0};
@@ -69,9 +68,9 @@ void GpsTask(void *pvParameter)
     }
     xSemaphoreTake(nmea_buffer_mutex, portMAX_DELAY);
     // Configure a temporary buffer for the incoming data
-    nmea_buffer[0] = (uint8_t *) malloc(BUF_SIZE);
+    nmea_buffer[0] = (uint8_t *) malloc(NMEA_BUF_LEN);
     nmea_buffer[0][0] = '\0';
-    nmea_buffer[1] = (uint8_t *) malloc(BUF_SIZE);
+    nmea_buffer[1] = (uint8_t *) malloc(NMEA_BUF_LEN);
     nmea_buffer[1][0] = '\0';
     xSemaphoreGive(nmea_buffer_mutex);
     /* Configure parameters of an UART driver,
@@ -85,7 +84,7 @@ void GpsTask(void *pvParameter)
     };
     uart_param_config(UART_NUM_1, &uart_config);
     uart_set_pin(UART_NUM_1, ECHO_TEST_TXD, ECHO_TEST_RXD, ECHO_TEST_RTS, ECHO_TEST_CTS);
-    uart_driver_install(UART_NUM_1, BUF_SIZE * 2, 0, 0, NULL, 0);
+    uart_driver_install(UART_NUM_1, NMEA_BUF_LEN * 2, 0, 0, NULL, 0);
 
     uart_write_bytes(UART_NUM_1, GPS_CMD_HOT_START, strlen(GPS_CMD_HOT_START));
     vTaskDelay(1000/portTICK_PERIOD_MS);
@@ -117,7 +116,7 @@ void GpsTask(void *pvParameter)
                 else
             {
                 nmea_buffer[nmea_buffer_num][nmea_buffer_index] = data_byte;
-                nmea_buffer_index = (nmea_buffer_index < BUF_SIZE - 1) ? nmea_buffer_index + 1 : nmea_buffer_index;
+                nmea_buffer_index = (nmea_buffer_index < NMEA_BUF_LEN - 1) ? nmea_buffer_index + 1 : nmea_buffer_index;
             }
             xSemaphoreGive(nmea_buffer_mutex);
         }

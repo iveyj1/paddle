@@ -15,28 +15,44 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "esp_err.h"
+#include "sd.h"
+#include "gps.h"
 
-static const char *TAG = "ad.c";
+static const char *TAG = "ad";
 
 #define PIN_NUM_MISO 14
 #define PIN_NUM_MOSI 27
 #define PIN_NUM_CLK  12
 #define PIN_NUM_CS   26
 
-void ad_cmd(spi_device_handle_t spi, const uint8_t cmd)
+//Send data to the AD. Uses spi_device_transmit, which waits until the transfer is complete.
+void ADSetup(spi_device_handle_t spi)
+{
+    esp_err_t ret;
+    spi_transaction_t t;
+    memset(&t, 0, sizeof(t));               //Zero out the transaction
+    t.flags = SPI_TRANS_USE_RXDATA | SPI_TRANS_USE_TXDATA; // use local data storage, not allocated
+    t.length = 16;                          //Transaction length is in bits.
+    t.tx_data[0] = 0x44;                    // Write one byte to register 1
+    t.tx_data[1] = 0x40;                    // Data rate 90 SPS normal mode, single shot, temp sensor off, burnout current off
+    ret=spi_device_transmit(spi, &t);
+    assert(ret==ESP_OK);                    //Should have had no issues.
+}
+
+
+void ADCmd(spi_device_handle_t spi, const uint8_t cmd)
 {
     esp_err_t ret;
     spi_transaction_t t;
     memset(&t, 0, sizeof(t));       //Zero out the transaction
     t.length=8;                     //Command is 8 bits
     t.tx_buffer=&cmd;               //The data is the cmd itself
-    t.user=(void*)0;                //D/C needs to be set to 0
-    ret=spi_device_transmit(spi, &t);  //Transmit!
+    ret=spi_device_transmit(spi, &t);
     assert(ret==ESP_OK);            //Should have had no issues.
 }
 
 //Send data to the AD. Uses spi_device_transmit, which waits until the transfer is complete.
-void ad_data(spi_device_handle_t spi, uint8_t *data, int len)
+void ADData(spi_device_handle_t spi, uint8_t *data, int len)
 {
     esp_err_t ret;
     spi_transaction_t t;
@@ -50,8 +66,14 @@ void ad_data(spi_device_handle_t spi, uint8_t *data, int len)
     memcpy(data, t.rx_data, 4);
 }
 
+
+TickType_t previous_wake_time;
+char nmeabuf[NMEA_BUF_LEN];
+
 void ADTask(void *pvParameter)
 {
+    TickType_t previous_wake_time;
+
     esp_err_t ret;
     spi_device_handle_t spi;
 
@@ -80,15 +102,37 @@ void ADTask(void *pvParameter)
     assert(ret==ESP_OK);
     ESP_LOGI(TAG, "attached to VSPI for AD");
 
-
     uint8_t data[4];
 
+    ADSetup(spi);
+    int32_t val;
+    int print_nmea;
     while(1)
     {
-        ad_cmd(spi, 0x08);
-        vTaskDelay(200/portTICK_PERIOD_MS);
-        ad_data(spi, data, sizeof(data));
-        ESP_LOGI(TAG, "data: %0x %0x %0x %0x", data[0], data[1], data[2], data[3])
+        ADCmd(spi, 0x08);  // start conversion
+        vTaskDelayUntil(&previous_wake_time, 20 / portTICK_PERIOD_MS );
+        ADData(spi, data, sizeof(data));
+        val = (int32_t)((data[1]<<24) + (data[2]<<16) + (data[3]<<8));
+        val >>= 8;
+        print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN);
+        //ESP_LOGI(TAG, "print_nmea: %d", print_nmea);
 
+        if(acqfile)
+        {
+            fprintf(acqfile,"%10lld,%12.0d,0,0,0,", esp_timer_get_time(), val);
+            if(print_nmea)
+            {
+                fprintf(acqfile, "%s", nmeabuf);
+            }
+            fprintf(acqfile,"\r\n");
+        }
+
+        if(print_nmea)
+        {
+            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,%s", esp_timer_get_time(), val, nmeabuf);
+        } else
+        {
+            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,", esp_timer_get_time(), val);
+        }
     }
 }
