@@ -126,7 +126,10 @@ void ADTask(void *pvParameter)
                 val = (int32_t)((data[1]<<24) + (data[2]<<16) + (data[3]<<8));
                 val >>= 8;
                 print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN);
-                //ESP_LOGI(TAG, "print_nmea: %d", print_nmea);
+                if(print_nmea)
+                {
+                    ESP_LOGV(TAG, "%s", nmeabuf);
+                }
                 int64_t timenow =  esp_timer_get_time()/1000;
                 if(acqfile)
                 {

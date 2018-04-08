@@ -92,7 +92,6 @@ static esp_err_t WriteReadI2c(i2c_port_t i2c_num, uint8_t addr, uint8_t port, ui
 void SetupExpander()
 {
     int i2c_master_port = 0;
-    int i2c_out;
     i2c_config_t conf;
     conf.mode = I2C_MODE_MASTER;
     conf.sda_io_num = EXPANDER_MASTER_SDA_IO;
@@ -127,5 +126,4 @@ int BsetExpander(uint8_t bit, uint8_t val)
 int SetExpander(uint8_t val)
 {
     return(Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_OUT_PORT, val));
-
 }

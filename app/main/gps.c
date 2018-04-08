@@ -7,11 +7,11 @@
 #include "gps.h"
 
 static const char* TAG = "GPS";
+static const char* GPS_CMD_HOT_START = "$PMTK101*32\r\n";
 static const char* GPS_CMD_RMS = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n";
 static const char* GPS_CMD_100MS = "$PMTK220,100*2F\r\n"; // 100ms position solutions
 static const char* GPS_CMD_SBAS = "$PMTK313,1*2E\r\n"; // enable SBAS
-//static const char* GPS_CMD_FACTORY_RESET = "$PMTK104*37\r\n";
-static const char* GPS_CMD_HOT_START = "$PMTK101*32\r\n";
+static const char* GPS_CMD_FACTORY_RESET = "$PMTK104*37\r\n";
 
 #define ECHO_TEST_TXD  (GPIO_NUM_17)
 #define ECHO_TEST_RXD  (GPIO_NUM_16)
@@ -60,6 +60,7 @@ void GpsTask(void *pvParameter)
     uint8_t data_byte = 0;
     size_t nmea_buffer_index = 0;
     nmea_buffer_num = 0;
+    int len = 0;
     if( nmea_buffer_mutex == NULL )
     {
         ESP_LOGE(TAG, "NMEA mutex not created");
@@ -84,24 +85,32 @@ void GpsTask(void *pvParameter)
     uart_set_pin(UART_NUM_1, ECHO_TEST_TXD, ECHO_TEST_RXD, ECHO_TEST_RTS, ECHO_TEST_CTS);
     uart_driver_install(UART_NUM_1, NMEA_BUF_LEN * 2, 0, 0, NULL, 0);
 
+    do
+    {
+        len = uart_read_bytes(UART_NUM_1, &data_byte, 1, 200 / portTICK_RATE_MS);
+        ESP_LOGI(TAG, "len %d byte %d", len, data_byte);
+    } while(len == 0 || data_byte != '$');
     uart_write_bytes(UART_NUM_1, GPS_CMD_HOT_START, strlen(GPS_CMD_HOT_START));
     vTaskDelay(1000/portTICK_PERIOD_MS);
     uart_write_bytes(UART_NUM_1, GPS_CMD_RMS, strlen(GPS_CMD_RMS));
+    vTaskDelay(100/portTICK_PERIOD_MS);
     uart_write_bytes(UART_NUM_1, GPS_CMD_100MS, strlen(GPS_CMD_100MS));
+    vTaskDelay(100/portTICK_PERIOD_MS);
     uart_write_bytes(UART_NUM_1, GPS_CMD_SBAS, strlen(GPS_CMD_SBAS));
+    vTaskDelay(100/portTICK_PERIOD_MS);
 
     //esp_err_t starttime = esp_timer_get_time();
     while (1) {
         // Read data from the UART
-        int len = uart_read_bytes(UART_NUM_1, &data_byte, 1, 200 / portTICK_RATE_MS);
+        len = uart_read_bytes(UART_NUM_1, &data_byte, 1, 200 / portTICK_RATE_MS);
         if (len>0)
         {
             xSemaphoreTake(nmea_buffer_mutex, portMAX_DELAY);
             if (data_byte == '\r')
             {
                 nmea_buffer[nmea_buffer_num][nmea_buffer_index] = 0;
-                //ESP_LOGI(TAG, "Current: %s", nmea_buffer[nmea_buffer_num]);
-                //ESP_LOGI(TAG, "Previous: %s", nmea_buffer[1-nmea_buffer_num]);
+                ESP_LOGI(TAG, "NMEA: %s", nmea_buffer[nmea_buffer_num]);
+                //ESP_LOGI(TAG, "Previous NMEA: %s", nmea_buffer[1-nmea_buffer_num]);
                 //ESP_LOGI(TAG, "%lld", esp_timer_get_time());
                 //ESP_LOGI(TAG, "Stack high-water: %d", uxTaskGetStackHighWaterMark(NULL));
                 nmea_buffer_index = 0;

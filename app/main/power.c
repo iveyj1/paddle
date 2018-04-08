@@ -6,30 +6,52 @@
 #include "ad.h"
 
 #include "esp_log.h"
+#include "power.h"
 
 
-// IO ports
-#define KEEPALIVE 4
-#define POWER_SW 35
 
 static const char TAG[]="Power";
 
-
-
-void checkPowerSwitch()
+void CheckPowerButton()
 {
-    if(gpio_get_level(POWER_SW) == 0)
+    ESP_LOGI(TAG, "checking power");
+    int msg_sent = 0;
+    while(gpio_get_level(POWER_SW) == 1)
     {
+        vTaskDelay(100/portTICK_PERIOD_MS);
+        if(!msg_sent)
+        {
+            ESP_LOGI(TAG, "Power button pressed.");
+            msg_sent = 1;
+        }
+    }
+
+    ESP_LOGI(TAG, "Power button released");
+    while(gpio_get_level(POWER_SW) == 0)
+    {
+        vTaskDelay(100/portTICK_PERIOD_MS);
+    }
+    ESP_LOGI(TAG, "Power button pressed");
+    vTaskDelay(100/portTICK_PERIOD_MS);
+    if(gpio_get_level(POWER_SW) == 1)
+    {
+        ESP_LOGI(TAG, "Powering off");
         CloseAcqFile();
-        vTaskDelay(2000/portTICK_PERIOD_MS);
+        vTaskDelay(100/portTICK_PERIOD_MS);
         gpio_set_level(KEEPALIVE, 0);
         ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+        while(1)
+        {
+            vTaskDelay(50/portTICK_PERIOD_MS);
+        }
         // why is power.c stack sensitive to SD not being in place?
         // 3472 bytes vs 2528 when SD in?
     }
+    ESP_LOGI(TAG, "Power button released");
+
 }
 
-void checkAcqButton()
+void CheckAcqButton()
 {
 
 }
@@ -41,10 +63,9 @@ void PowerTask(void *pvParameter)
     gpio_set_level(KEEPALIVE, 1);
     gpio_pad_select_gpio(POWER_SW);
     gpio_set_direction(POWER_SW, GPIO_MODE_INPUT);
+    
     while(1)
     {
-        checkPowerSwitch();
-        checkAcqButton();
-        vTaskDelay(200/portTICK_PERIOD_MS);
+        CheckPowerButton();
     }
 }

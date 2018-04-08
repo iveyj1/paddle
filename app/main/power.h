@@ -8,6 +8,10 @@
 #ifndef MAIN_POWER_H_
 #define MAIN_POWER_H_
 
+// IO ports
+#define KEEPALIVE 4
+#define POWER_SW 34
+
 void SetupPower();
 void checkPowerSwitch();
 void PowerTask(void *pvParameter);
