@@ -24,6 +24,11 @@ void app_main()
     /* Set the GPIO as a push/pull output */
     gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
     SetupExpander();
+    BSetExpander(GPS_ENABLE, 0);
+    vTaskDelay(20/portTICK_PERIOD_MS);
+    BSetExpander(SD_ENABLE, 0);
+    vTaskDelay(50/portTICK_PERIOD_MS);  // may need 500 ms to start SD - don't know if this is handled by mount
+
     if(!MountSD())
     {
         ESP_LOGE(TAG, "failed to mount SD");

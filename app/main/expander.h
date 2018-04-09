@@ -10,7 +10,7 @@
 #define SD_ENABLE 0x06u
 #define AN_REFSEL 0x07u
 
-#define EXPANDER_INIT_STATE (0x00) 
+#define EXPANDER_INIT_STATE (0x60) 
 #define EXPANDER_INIT_DIR (0x00)
 #define EXPANDER_INIT_POL (0x00)
 
