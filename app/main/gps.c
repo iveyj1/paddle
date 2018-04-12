@@ -88,7 +88,7 @@ void GpsTask(void *pvParameter)
     do
     {
         len = uart_read_bytes(UART_NUM_1, &data_byte, 1, 200 / portTICK_RATE_MS);
-        ESP_LOGI(TAG, "len %d byte %d", len, data_byte);
+        //ESP_LOGI(TAG, "len %d byte %d", len, data_byte);
     } while(len == 0 || data_byte != '$');
     uart_write_bytes(UART_NUM_1, GPS_CMD_HOT_START, strlen(GPS_CMD_HOT_START));
     vTaskDelay(1000/portTICK_PERIOD_MS);
@@ -109,7 +109,7 @@ void GpsTask(void *pvParameter)
             if (data_byte == '\r')
             {
                 nmea_buffer[nmea_buffer_num][nmea_buffer_index] = 0;
-                ESP_LOGI(TAG, "NMEA: %s", nmea_buffer[nmea_buffer_num]);
+                //ESP_LOGI(TAG, "NMEA: %s", nmea_buffer[nmea_buffer_num]);
                 //ESP_LOGI(TAG, "Previous NMEA: %s", nmea_buffer[1-nmea_buffer_num]);
                 //ESP_LOGI(TAG, "%lld", esp_timer_get_time());
                 //ESP_LOGI(TAG, "Stack high-water: %d", uxTaskGetStackHighWaterMark(NULL));

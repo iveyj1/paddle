@@ -17,16 +17,16 @@
 #define BLINK 13
 static const char* TAG = "paddle";
 
-
 void app_main()
 {
     gpio_pad_select_gpio(BLINK);
-    /* Set the GPIO as a push/pull output */
     gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
     SetupExpander();
-    BSetExpander(GPS_ENABLE, 0);
+    BsetExpander(GPS_ENABLE, 0);
     vTaskDelay(20/portTICK_PERIOD_MS);
-    BSetExpander(SD_ENABLE, 0);
+    BsetExpander(VA_3_3_ENABLE, 1);
+    vTaskDelay(20/portTICK_PERIOD_MS);
+    BsetExpander(SD_ENABLE, 0);
     vTaskDelay(50/portTICK_PERIOD_MS);  // may need 500 ms to start SD - don't know if this is handled by mount
 
     if(!MountSD())
