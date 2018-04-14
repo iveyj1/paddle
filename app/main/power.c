@@ -42,7 +42,7 @@ void CheckPowerButton()
         ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
         while(1)
         {
-            vTaskDelay(50/portTICK_PERIOD_MS);
+            vTaskDelay(1);
         }
         // why is power.c stack sensitive to SD not being in place?
         // 3472 bytes vs 2528 when SD in?
@@ -67,5 +67,6 @@ void PowerTask(void *pvParameter)
     while(1)
     {
         CheckPowerButton();
+        vTaskDelay(1);
     }
 }

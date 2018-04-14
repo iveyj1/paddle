@@ -16,12 +16,19 @@ static const char *TAG = "ad";
 
 static int acquire = 0;
 
-#define PIN_NUM_AD_MISO 14
-#define PIN_NUM_AD_MOSI 27
-#define PIN_NUM_AD_CLK  12
-#define PIN_NUM_AD_CS   26
+#define PORT_AD_MISO 14
+#define PORT_AD_MOSI 27
+#define PORT_AD_CLK  12
+#define PORT_AD_CS0  26
+#define PORT_AD_CS1  25
+#define PORT_AD_CS2  33
+#define PORT_AD_CS3  32
+#define PORT_AD_BUSY 35
+#define NUM_AD 4
 
-const static int ad_cs_table[4] = { 26, 25, 33, 32 };  // IO pins for a/d channel 0-3
+#define AD_MSG_LEN 4
+#define LOOPTIME 20  // loop time in ms, minimum 10 (== tick time)
+const static int ad_cs_table[NUM_AD] = { PORT_AD_CS0, PORT_AD_CS1, PORT_AD_CS2, PORT_AD_CS3 };  // IO pins for a/d channel 0-3
 static int ad_current = 0;
 
 //Send data to the AD. Uses spi_device_transmit, which waits until the transfer is complete.
@@ -30,7 +37,11 @@ void ADSetup(spi_device_handle_t spi)
     esp_err_t ret;
     spi_transaction_t t;
 
-    for(ad_current = 0; ad_current < 4; ad_current++)
+    gpio_pad_select_gpio(PORT_AD_BUSY);
+    gpio_set_direction(PORT_AD_BUSY, GPIO_MODE_INPUT);
+    
+    
+    for(ad_current = 0; ad_current < NUM_AD; ad_current++)
     {
         memset(&t, 0, sizeof(t));               //Zero out the transaction
         t.flags = SPI_TRANS_USE_RXDATA | SPI_TRANS_USE_TXDATA; // use local data storage, not allocated
@@ -71,14 +82,14 @@ void ADData(spi_device_handle_t spi, uint8_t *data, int len)
 {
     esp_err_t ret;
     spi_transaction_t t;
-    if (len < 4) return;                    //Not enough room to receive
+    if (len < AD_MSG_LEN) return;                    //Not enough room to receive
     memset(&t, 0, sizeof(t));               //Zero out the transaction
     t.flags = SPI_TRANS_USE_RXDATA | SPI_TRANS_USE_TXDATA; // use local data storage, not allocated
     t.length = 32;                         //Transaction length is in bits.
-    memcpy(t.tx_data, (uint8_t[]){0x10, 0x00, 0x00, 0x00}, 4) ;  //RDATA command followed by dummy bytes
+    memcpy(t.tx_data, (uint8_t[]){0x10, 0x00, 0x00, 0x00}, AD_MSG_LEN) ;  //RDATA command followed by dummy bytes
     ret=spi_device_transmit(spi, &t);       //Transmit
     assert(ret == ESP_OK);                    //Should have had no issues.
-    memcpy(data, t.rx_data, 4);
+    memcpy(data, t.rx_data, AD_MSG_LEN);
 }
 
 void ADStartAcquire()
@@ -113,9 +124,9 @@ void ADTask(void *pvParameter)
     spi_device_handle_t spi;
 
     spi_bus_config_t buscfg={
-        .miso_io_num=PIN_NUM_AD_MISO,
-        .mosi_io_num=PIN_NUM_AD_MOSI,
-        .sclk_io_num=PIN_NUM_AD_CLK,
+        .miso_io_num=PORT_AD_MISO,
+        .mosi_io_num=PORT_AD_MOSI,
+        .sclk_io_num=PORT_AD_CLK,
         .quadwp_io_num=-1,
         .quadhd_io_num=-1
     };
@@ -130,7 +141,7 @@ void ADTask(void *pvParameter)
     };
 
     int i;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < NUM_AD; i++)
     {
         gpio_pad_select_gpio(ad_cs_table[i]);
         gpio_set_direction(ad_cs_table[i], GPIO_MODE_OUTPUT);
@@ -146,13 +157,17 @@ void ADTask(void *pvParameter)
     assert(ret==ESP_OK);
     ESP_LOGI(TAG, "attached to VSPI for AD");
 
-    uint8_t data[4];
+    uint8_t ad_temp[AD_MSG_LEN];
 
     ADSetup(spi);
     int32_t val;
     int print_nmea;
     int acq_in_progress = 0;
-    int32_t adval[4];
+    int32_t adval[NUM_AD];
+    float filtval = 0.0f;
+    float offset = 0;
+    int sample_count = 0;
+    float filt_coef = 0.05;
     
     while(1)
     {
@@ -160,17 +175,17 @@ void ADTask(void *pvParameter)
         {
             if(acq_in_progress)
             {
-                for(ad_current = 0; ad_current < 4; ad_current++)
+                vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
+                for(ad_current = 0; ad_current < NUM_AD; ad_current++)
                 {
                     ADCmd(spi, 0x08);  // start conversion
                 }
-                
-                vTaskDelayUntil(&previous_wake_time, 20 / portTICK_PERIOD_MS );
-                
-                for(ad_current = 0; ad_current < 4; ad_current++)
+
+                for(ad_current = 0; ad_current < NUM_AD; ad_current++)
                 {
-                    ADData(spi, data, sizeof(data));
-                    val = (int32_t)((data[1]<<24) + (data[2]<<16) + (data[3]<<8));  // assemble at left side of int so sign bit is correct
+                    ADData(spi, ad_temp, sizeof(ad_temp));
+                    val = (int32_t)((ad_temp[1]<<24) + (ad_temp[2]<<16) + (ad_temp[3]<<8));  // assemble at left side of int so sign bit is correct
+                    // first byte is empty
                     val >>= 8;  // right shift to get scale correct - sign will be extended
                     adval[ad_current] = val;
                 }
@@ -181,6 +196,7 @@ void ADTask(void *pvParameter)
                     //ESP_LOGI(TAG, "%s", nmeabuf);
                 }
                 int64_t timenow =  esp_timer_get_time()/1000;
+                filtval = filtval * (1-filt_coef) + (float)(adval[0] - adval[1]) * filt_coef;
                 if(acqfile)
                 {
                     fprintf(acqfile,"%10lld,%12.0d,%12.0d,%12.0d,%12.0d,", timenow, adval[0], adval[1], adval[2], adval[3]);
@@ -190,7 +206,12 @@ void ADTask(void *pvParameter)
                     }
                     fprintf(acqfile,"\r\n");
                 }
-                ESP_LOGI(TAG, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,", timenow, adval[0], adval[1], adval[2], adval[3]);
+                ESP_LOGI(TAG, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,%12.0f", timenow, adval[0], adval[1], adval[2], adval[3], filtval - offset);
+                if(sample_count++ == 100)
+                {
+                    offset = filtval;
+                    filt_coef *= 10;
+                }
             }
             else  // is this logic working?
             {
@@ -199,6 +220,7 @@ void ADTask(void *pvParameter)
                     ESP_LOGE(TAG, "failed to open acq file");
                 }
                 acq_in_progress = true;
+                sample_count = 0;
             }
         }
         else
@@ -208,7 +230,7 @@ void ADTask(void *pvParameter)
                 CloseAcqFile();
                 acq_in_progress = false;
             }
-            vTaskDelayUntil(&previous_wake_time, 25 / portTICK_PERIOD_MS );
+            vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
         }
     }
 }
