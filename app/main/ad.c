@@ -29,16 +29,28 @@ void ADSetup(spi_device_handle_t spi)
 {
     esp_err_t ret;
     spi_transaction_t t;
-    int i;
+
     for(ad_current = 0; ad_current < 4; ad_current++)
     {
         memset(&t, 0, sizeof(t));               //Zero out the transaction
         t.flags = SPI_TRANS_USE_RXDATA | SPI_TRANS_USE_TXDATA; // use local data storage, not allocated
         t.length = 16;                          //Transaction length is in bits.
-        t.tx_data[0] = 0x44;                    // Write one byte to register 1
-        t.tx_data[1] = 0x40;                    // Data rate 90 SPS normal mode, single shot, temp sensor off, burnout current off
+
+        t.tx_data[0] = 0x40;                    // Write one byte to register 0
+        t.tx_data[1] = 0x34;                    // convert AIN1 - AIN2, gain 4, PGA off (gain 1-4 ok without PGA)
         ret = spi_device_transmit(spi, &t);
-        assert(ret == ESP_OK);                    //Should have had no issues.
+        assert(ret == ESP_OK);                    
+ 
+        t.tx_data[0] = 0x44;                    // Write one byte to register 1
+        t.tx_data[1] = 0x40;                    // Data rate 90 SPS, normal mode, single shot, temp sensor off, burnout current off
+        ret = spi_device_transmit(spi, &t);
+        assert(ret == ESP_OK);                 
+
+        t.tx_data[0] = 0x48;                    // Write one byte to register 2
+        t.tx_data[1] = 0x40;                    // VREF=REFP0, REFN0, low side switch open, idac off
+        ret = spi_device_transmit(spi, &t);
+        assert(ret == ESP_OK);                    
+
     }
 }
 
@@ -141,6 +153,7 @@ void ADTask(void *pvParameter)
     int print_nmea;
     int acq_in_progress = 0;
     int32_t adval[4];
+    
     while(1)
     {
         if(acquire)
@@ -157,8 +170,8 @@ void ADTask(void *pvParameter)
                 for(ad_current = 0; ad_current < 4; ad_current++)
                 {
                     ADData(spi, data, sizeof(data));
-                    val = (int32_t)((data[1]<<24) + (data[2]<<16) + (data[3]<<8));
-                    val >>= 8;
+                    val = (int32_t)((data[1]<<24) + (data[2]<<16) + (data[3]<<8));  // assemble at left side of int so sign bit is correct
+                    val >>= 8;  // right shift to get scale correct - sign will be extended
                     adval[ad_current] = val;
                 }
                 
