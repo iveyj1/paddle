@@ -13,6 +13,7 @@
 #include "sd.h"
 #include "ad.h"
 #include "esp_timer.h"
+#include "httpd_paddle.h"
 
 #define BLINK 13
 static const char* TAG = "paddle";
@@ -21,6 +22,7 @@ void app_main()
 {
     gpio_pad_select_gpio(BLINK);
     gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
+    gpio_set_level(BLINK, 1);
     
     SetupExpander();
     
@@ -38,9 +40,12 @@ void app_main()
         ESP_LOGE(TAG, "failed to mount SD");
     }
 
-    xTaskCreate(PowerTask, "power_task", 4096, NULL, 5, NULL);
-    xTaskCreate(GpsTask, "GPS task", 4096, NULL, 7, NULL);
-    xTaskCreate(ADTask, "AD task", 4096, NULL, 10, NULL);
+    xTaskCreate(PowerTask, "Power", 4096, NULL, 5, NULL);
+    xTaskCreate(ServerTask, "Webserver", 32768, NULL, 6, NULL);
+    xTaskCreate(GpsTask, "GPS", 4096, NULL, 7, NULL);
+    xTaskCreate(ADTask, "AD", 4096, NULL, 10, NULL);
     ADStartAcquire();
+
+
 }
 

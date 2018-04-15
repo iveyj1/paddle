@@ -6,8 +6,10 @@
  */
 #ifndef MAIN_SD_H_
 #define MAIN_SD_H_
-extern FILE *acqfile;
 
+#define SD_PREFIX "/sdcard"
+
+extern FILE *acqfile;
 
 int MountSD();
 int UnMountSD();

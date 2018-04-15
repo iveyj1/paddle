@@ -8,6 +8,7 @@
 #include "driver/sdmmc_host.h"
 #include "driver/sdspi_host.h"
 #include "sdmmc_cmd.h"
+#include "sd.h"
 
 static const char *TAG = "sd";
 
@@ -40,7 +41,7 @@ int MountSD()
     };
 
     sdmmc_card_t* card;
-    esp_err_t ret = esp_vfs_fat_sdmmc_mount("/sdcard", &host, &slot_config, &mount_config, &card);
+    esp_err_t ret = esp_vfs_fat_sdmmc_mount(SD_PREFIX, &host, &slot_config, &mount_config, &card);
 
     if (ret == ESP_OK)
     {

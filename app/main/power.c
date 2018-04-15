@@ -8,37 +8,35 @@
 #include "esp_log.h"
 #include "power.h"
 
-
+//#define BUTTON_SW
 
 static const char TAG[]="Power";
 
 void CheckPowerButton()
 {
-    ESP_LOGI(TAG, "checking power");
-    int msg_sent = 0;
+    //int msg_sent = 0;
     while(gpio_get_level(POWER_SW) == 1)
     {
-        vTaskDelay(100/portTICK_PERIOD_MS);
-        if(!msg_sent)
-        {
-            ESP_LOGI(TAG, "Power button pressed.");
-            msg_sent = 1;
-        }
+        vTaskDelay(20/portTICK_PERIOD_MS);
     }
 
-    ESP_LOGI(TAG, "Power button released");
+#ifdef BUTTON_SW
     while(gpio_get_level(POWER_SW) == 0)
     {
-        vTaskDelay(100/portTICK_PERIOD_MS);
+        vTaskDelay(20/portTICK_PERIOD_MS);
     }
-    ESP_LOGI(TAG, "Power button pressed");
-    vTaskDelay(100/portTICK_PERIOD_MS);
+    vTaskDelay(20/portTICK_PERIOD_MS);
     if(gpio_get_level(POWER_SW) == 1)
+#else
+    vTaskDelay(20/portTICK_PERIOD_MS);
+    if(gpio_get_level(POWER_SW) == 0)
+#endif
     {
         ESP_LOGI(TAG, "Powering off");
         CloseAcqFile();
         vTaskDelay(100/portTICK_PERIOD_MS);
         gpio_set_level(KEEPALIVE, 0);
+        gpio_set_level(13,0);
         ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
         while(1)
         {

@@ -206,7 +206,7 @@ void ADTask(void *pvParameter)
                     }
                     fprintf(acqfile,"\r\n");
                 }
-                ESP_LOGI(TAG, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,%12.0f", timenow, adval[0], adval[1], adval[2], adval[3], filtval - offset);
+                //ESP_LOGI(TAG, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,%12.0f", timenow, adval[0], adval[1], adval[2], adval[3], filtval - offset);
                 if(sample_count++ == 100)
                 {
                     offset = filtval;
