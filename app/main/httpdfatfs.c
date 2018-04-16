@@ -14,6 +14,7 @@ Connector to let httpd use the fat filesystem on eg an SD-card to serve the file
 
 
 #include <stdio.h>
+#include <errno.h>
 #include <string.h>
 #include <sys/unistd.h>
 #include <sys/stat.h>
@@ -46,20 +47,22 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
     ESP_LOGI(TAG, "In cgiFatFsDirHook");
     ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
 
-    if (connData->isConnectionClosed) {
+    if (connData->isConnectionClosed) 
+    {
         //Connection aborted. Clean up.
         ESP_LOGE(TAG, "connection aborted")
 
         if (dp != NULL) {
             closedir(dp);
-            free(dp);
+            connData->cgiData = NULL;
         }
         return HTTPD_CGI_DONE;
     }
 
     if (connData->url[strlen(connData->url)-1]=='/') needSlash=0; else needSlash=1;
     
-    if (dp == NULL) {
+    if (dp == NULL) 
+    {
         //First call to this cgi. Open the dir so we can read it.
         int prefixlen = strlen(SD_PREFIX);
         ESP_LOGI(TAG, "SD_PREFIX: %s, length: %d", SD_PREFIX, prefixlen);
@@ -72,7 +75,8 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
         ESP_LOGI(TAG, "opening %s, buffer used %d", path, prefixlen + urllen + 1);
         
         dp = opendir(path);
-        if (!dp) {
+        if (!dp) 
+        {
             ESP_LOGI(TAG, "Can't open %s", connData->url);
             return HTTPD_CGI_NOTFOUND;
         } 
@@ -83,17 +87,20 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
         httpdEndHeaders(connData);
         sprintf(buff, "<html><head><title>Index of %s</title></head><body><h2>Index of %s</h2><ul>\n", connData->url, connData->url);
         httpdSend(connData, buff, -1);
+        ESP_LOGE(TAG, "dir opened - more")
         return HTTPD_CGI_MORE;
     }
     else
     {
         ep = readdir(dp);
-        if (ep && ep->d_name[0] != 0) {
+        if (ep && ep->d_name[0] != 0) 
+        {
             sprintf(buff, "<li><a href=\"%s%s%s\">%s</a></li>\n", connData->url, needSlash?"/":"", ep->d_name, ep->d_name);
             //sprintf(buff, "next\n");
             httpdSend(connData, buff, -1);
             
             //Ok, till next time.
+            ESP_LOGE(TAG, "entry sent - more")
             return HTTPD_CGI_MORE;
             } else {
             //We're done.
@@ -102,9 +109,88 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
             httpdSend(connData, buff, -1);
         }
     }
+    ESP_LOGE(TAG, "dir done")
     return HTTPD_CGI_DONE;
 }
 
+CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData) 
+{
+    FILE *fp = connData->cgiData;
+    char buff[512];
+    char path[P_PATHBUFSIZE];
+    ESP_LOGI(TAG, "In cgiFatFsHook");
+    ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+    size_t ret;
+
+    if (connData->isConnectionClosed) 
+    {
+        ESP_LOGE(TAG, "connection aborted")
+        if (fp != NULL) {
+            fclose(fp);
+        }
+        return HTTPD_CGI_DONE;
+    }
+
+    if (connData->cgiData == NULL) 
+    {
+        int prefixlen = strlen(SD_PREFIX);
+        ESP_LOGI(TAG, "SD_PREFIX: %s, length: %d", SD_PREFIX, prefixlen);
+        int urllen = strlen(connData->url);
+        ESP_LOGI(TAG, "url: %s urllen:%d", connData->url, urllen);
+        if((prefixlen + urllen + 1) > P_PATHBUFSIZE) 
+        {
+            ESP_LOGE(TAG, "file not found")
+            return HTTPD_CGI_NOTFOUND;
+        }
+        memcpy(path, SD_PREFIX, prefixlen);
+        memcpy(path + prefixlen, connData->url, urllen);
+        path[prefixlen + urllen] = '\0';
+        ESP_LOGI(TAG, "opening %s, buffer used %d", path, prefixlen + urllen + 1);
+
+        fp = fopen(path, "r");
+        if (!fp) 
+        {
+            ESP_LOGE(TAG, "Can't open %s", path);
+            return HTTPD_CGI_NOTFOUND;
+        } 
+        connData->cgiData = fp;  // store directory info for next round
+        httpdStartResponse(connData, 200);
+        httpdHeader(connData, "Content-Type", "text/plain"); // httpdGetMimetype(connData->url));
+        httpdHeader(connData, "Cache-Control", "max-age=3600, must-revalidate");
+        httpdEndHeaders(connData);
+        ESP_LOGI(TAG, "file opened - more")
+        return HTTPD_CGI_MORE;
+    }
+    else 
+    {
+        ret = fread(buff, 1, sizeof(buff), fp);
+        if(ret)
+        {
+            ESP_LOGI(TAG, "read %d chars", ret);
+            httpdSend(connData, buff, ret);
+        } else
+        {
+            ESP_LOGI(TAG, "file read error: %s", strerror(errno));
+        }
+        if(ret == sizeof(buff))
+        {
+            ESP_LOGI(TAG, "file part sent - more")
+            return HTTPD_CGI_MORE;
+        } else 
+        {
+            ESP_LOGI(TAG, "file part sent - finished")
+            if (fp) 
+            {
+                fclose(fp);
+            } 
+            return HTTPD_CGI_DONE;
+        }
+    }
+    ESP_LOGI(TAG, "fell through - finished")
+    return HTTPD_CGI_DONE;
+}
+
+#if 0
 //This is a catch-all cgi function. It takes the url passed to it, looks up the corresponding
 //path in the filesystem and if it exists, passes the file through. This simulates what a normal
 //webserver would do with static files.
@@ -164,15 +250,48 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData) {
 
     if (len > 0) httpdSend(connData, (char *)buff, len);
     if (len != sizeof(buff)) {
-        //We're done.
         ESP_LOGI(TAG, "Finished file read");
-        fclose(fp);
-        //free(fp);
+        if(fp)
+        {
+            fclose(fp);
+        }
         return HTTPD_CGI_DONE;
-    } else {
-        //Ok, till next time.
+    } else 
+    {
         ESP_LOGI(TAG, "Next chunk");
         return HTTPD_CGI_MORE;
     }
 }
- 
+
+// works
+CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData) 
+{
+    char buff[512];
+
+    if (connData->isConnectionClosed) {
+        return HTTPD_CGI_DONE;
+    }
+
+    if (connData->cgiData == NULL) {
+        connData->cgiData = (void *)1; 
+        httpdStartResponse(connData, 200);
+        httpdHeader(connData, "Content-Type", "text/html"); //httpdGetMimetype(connData->url));
+        httpdHeader(connData, "Cache-Control", "max-age=3600, must-revalidate");
+        httpdEndHeaders(connData);
+        sprintf(buff, "<html><head><title>Index of %s</title></head><body><h2>Index of %s</h2><ul>\n", connData->url, connData->url);
+        httpdSend(connData, buff, -1);
+        return HTTPD_CGI_MORE;
+    }
+    else if((int)connData->cgiData == 1)
+    {
+        connData->cgiData = (void *)2; 
+        httpdSend(connData, "1234", -1);
+        return HTTPD_CGI_MORE;
+    } else
+    {
+        httpdSend(connData, "5678", -1);
+        httpdSend(connData, "</ul></body></html>", -1);
+    }
+    return HTTPD_CGI_DONE;
+}
+#endif
