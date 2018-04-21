@@ -65,13 +65,23 @@ CgiStatus ICACHE_FLASH_ATTR cgiUploadSdFile(HttpdConnData *connData)
     }
  
     ESP_LOGI(TAG, "post.len %d, post.received %d\n", connData->post.len, connData->post.received);
+    if(fwrite(connData->post.buff, 1, connData->post.buffLen, fs) < connData->post.buffLen)
+    {
+        ESP_LOGE(TAG, "error writing file %s", name);
+        httpdStartResponse(connData, 404);
+        httpdHeader(connData, "Content-Type", "text/plain");
+        httpdEndHeaders(connData); 
+        return HTTPD_CGI_DONE;
+    }
 
     if (connData->post.len == connData->post.received) {
         //We're done! Format a response.
-        httpdStartResponse(connData, 201);
+        httpdStartResponse(connData, 200);
         httpdHeader(connData, "Content-Type", "text/plain");
         httpdEndHeaders(connData); // Getting an extra 0x0a in the body at the other end - why?
+        ESP_LOGI(TAG, "Closing file");
         fclose(fs);
+        fs = 0;
         return HTTPD_CGI_DONE;
     }
     connData->cgiData = (void *)fs;

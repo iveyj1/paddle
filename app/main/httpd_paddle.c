@@ -140,10 +140,15 @@ HttpdBuiltInUrl builtInUrls[]={
 	ROUTE_TPL("/led.tpl", tplLed),
 	ROUTE_TPL("/index.tpl", tplCounter),
 	ROUTE_CGI("/led.cgi", cgiLed),
-    ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/"),
+    ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/html/"),
     
-    ROUTE_CGI("/", cgiFatFsDirHook),
-    ROUTE_CGI("/*", cgiFatFsHook),
+    ROUTE_CGI("/data/*", cgiFatFsHook),
+    ROUTE_CGI("/html/*", cgiFatFsHook),
+ 	ROUTE_REDIRECT("/data", "/data/"),
+	ROUTE_REDIRECT("/html", "/html/"),
+    ROUTE_CGI("/data/", cgiFatFsDirHook),
+    ROUTE_CGI("/html/", cgiFatFsDirHook),
+    
 
 	//ROUTE_REDIRECT("/flash", "/flash/index.html"),
 	//ROUTE_REDIRECT("/flash/", "/flash/index.html"),

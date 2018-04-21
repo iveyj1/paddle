@@ -59,7 +59,14 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
         return HTTPD_CGI_DONE;
     }
 
-    if (connData->url[strlen(connData->url)-1]=='/') needSlash=0; else needSlash=1;
+    if (connData->url[strlen(connData->url)-1]=='/') 
+    {
+        needSlash=0; 
+    }
+    else 
+    {
+        needSlash=1;
+    }
     
     if (dp == NULL) 
     {
@@ -68,7 +75,10 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
         ESP_LOGI(TAG, "SD_PREFIX: %s, length: %d", SD_PREFIX, prefixlen);
         int urllen = strlen(connData->url);
         ESP_LOGI(TAG, "url: %s urllen:%d", connData->url, urllen);
-        if((prefixlen + urllen + 1) > P_PATHBUFSIZE) return HTTPD_CGI_NOTFOUND;
+        if((prefixlen + urllen + 1) > P_PATHBUFSIZE)
+        {
+            return HTTPD_CGI_NOTFOUND;
+        }
         memcpy(path, SD_PREFIX, prefixlen);
         memcpy(path + prefixlen, connData->url, urllen);
         path[prefixlen + urllen] = '\0';

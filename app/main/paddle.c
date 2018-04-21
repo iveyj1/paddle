@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <time.h>
+#include <sys/time.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
@@ -46,6 +48,15 @@ void app_main()
     xTaskCreate(ADTask, "AD", 4096, NULL, 10, NULL);
     ADStartAcquire();
 
-
+    struct timeval tv = { 1524273992 , 0};
+    settimeofday(&tv, NULL);
+    setenv("TZ", "America/New_York", 1);
+    tzset();
+    struct timeval tv1;
+    vTaskDelay(200);
+    gettimeofday(&tv1, NULL);
+    ESP_LOGI(TAG, "tv: %ld", tv1.tv_sec);
+    
+    
 }
 
