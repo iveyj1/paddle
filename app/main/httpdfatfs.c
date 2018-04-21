@@ -155,7 +155,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData)
         } 
         connData->cgiData = fp;  // store directory info for next round
         httpdStartResponse(connData, 200);
-        httpdHeader(connData, "Content-Type", "text/plain"); // httpdGetMimetype(connData->url));
+        httpdHeader(connData, "Content-Type", httpdGetMimetype(connData->url));
         httpdHeader(connData, "Cache-Control", "max-age=3600, must-revalidate");
         httpdEndHeaders(connData);
         ESP_LOGI(TAG, "file opened - more")
@@ -164,19 +164,18 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData)
     else 
     {
         ret = fread(buff, 1, sizeof(buff), fp);
+        ESP_LOGI(TAG, "read %d chars", ret);
         if(ret)
         {
-            ESP_LOGI(TAG, "read %d chars", ret);
             httpdSend(connData, buff, ret);
-        } else
-        {
-            ESP_LOGI(TAG, "file read error: %s", strerror(errno));
         }
+
         if(ret == sizeof(buff))
         {
             ESP_LOGI(TAG, "file part sent - more")
             return HTTPD_CGI_MORE;
-        } else 
+        } 
+        else 
         {
             ESP_LOGI(TAG, "file part sent - finished")
             if (fp) 
@@ -190,7 +189,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData)
     return HTTPD_CGI_DONE;
 }
 
-#if 0
+#if 0 
 //This is a catch-all cgi function. It takes the url passed to it, looks up the corresponding
 //path in the filesystem and if it exists, passes the file through. This simulates what a normal
 //webserver would do with static files.

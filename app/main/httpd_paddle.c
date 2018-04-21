@@ -40,16 +40,16 @@ the server, including WiFi connection management capabilities, some IO etc.
 #include "esp_log.h"
 #include "esp_event_loop.h"
 #include "nvs_flash.h"
-#include "esp_event_loop.h"
 #include "tcpip_adapter.h"
 
 #include "httpdfatfs.h"
 
-#define TAG "httpd_paddle"
+#include "cgiuploadsd.h"
 
 #include "libesphttpd/route.h"
 #include "libesphttpd/httpd-freertos.h"
 
+#define TAG "httpd_paddle"
 
 
 #if 0
@@ -140,6 +140,8 @@ HttpdBuiltInUrl builtInUrls[]={
 	ROUTE_TPL("/led.tpl", tplLed),
 	ROUTE_TPL("/index.tpl", tplCounter),
 	ROUTE_CGI("/led.cgi", cgiLed),
+    ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/"),
+    
     ROUTE_CGI("/", cgiFatFsDirHook),
     ROUTE_CGI("/*", cgiFatFsHook),
 

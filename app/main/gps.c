@@ -6,7 +6,7 @@
 #include "esp_log.h"
 #include "gps.h"
 
-static const char* TAG = "GPS";
+static const char* TAG = "gps.c";
 static const char* GPS_CMD_HOT_START = "$PMTK101*32\r\n";
 static const char* GPS_CMD_RMS = "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n";
 static const char* GPS_CMD_100MS = "$PMTK220,100*2F\r\n"; // 100ms position solutions

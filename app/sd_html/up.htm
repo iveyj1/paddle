@@ -1,0 +1,57 @@
+<html>
+<head><title>Upgrade firmware</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script type="text/javascript" src="M.JS"></script>
+<script type="text/javascript">
+
+
+var xhr=j();
+
+ 
+function setProgress(amt) {
+	$("#progressbarinner").style.width=String(amt*200)+"px";
+}
+
+function doUpload() {
+	var f = $("#file").files[0];
+	if (typeof f == 'undefined') {
+		$("#remark").innerHTML = "Can't read file!";
+		return
+	}
+
+	xhr.open("POST", "upload");
+	xhr.onreadystatechange = function() {
+        //alert("xhr readystate changed: "+ xhr.readyState.toString() +"\n" + xhr.status.toString());
+		if (xhr.readyState == 4 && xhr.status >= 200 && xhr.status<300) {
+			setProgress(1);
+			if (xhr.responseText!="") {
+				$("#remark").innerHTML="Error len: " + xhr.responseText.charCodeAt(0).toString();
+			} else {
+				$("#remark").innerHTML="Uploading done.";
+				    alert("uploading done");
+			}
+		}
+	}
+	if (typeof xhr.upload.onprogress != 'undefined') {
+		xhr.upload.onprogress=function(e) {
+			setProgress(e.loaded / e.total);
+		} 
+	}
+    alert("f.name");
+    xhr.setRequestHeader('X-FileName', f.name); // Pass the filename along
+	xhr.send(f);
+	return false;
+}
+
+
+
+</script>
+</head>
+<body>
+<div id="main">
+<h1>Update firmware</h1>
+<div id="remark">Loading...</div>
+<input type="file" id="file" />
+<input type="submit" value="Upload" onclick="doUpload()" />
+<div id="progressbar"><div id="progressbarinner"></div></div>
+</body>

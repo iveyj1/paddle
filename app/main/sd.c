@@ -75,7 +75,7 @@ int UnmountSD()
 
 int OpenNextAcqFile(void)
 {
-    char path[64] = "/sdcard/DATA000.CSV";
+    char path[64] = "/sdcard/data000.csv";
     char temp[ACQ_FILE_DIGITS + 1] = "";
     struct stat st;
     int i;

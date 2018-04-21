@@ -39,7 +39,7 @@ void app_main()
     {
         ESP_LOGE(TAG, "failed to mount SD");
     }
-
+    
     xTaskCreate(PowerTask, "Power", 4096, NULL, 5, NULL);
     xTaskCreate(ServerTask, "Webserver", 32768, NULL, 6, NULL);
     xTaskCreate(GpsTask, "GPS", 4096, NULL, 7, NULL);
