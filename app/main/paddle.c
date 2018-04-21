@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <dirent.h>
 #include <time.h>
 #include <sys/time.h>
 #include "freertos/FreeRTOS.h"
@@ -57,6 +58,25 @@ void app_main()
     gettimeofday(&tv1, NULL);
     ESP_LOGI(TAG, "tv: %ld", tv1.tv_sec);
     
+    FILE *fp = fopen("/sdcard/data001.csv", "r");
+    ESP_LOGI(TAG, "fopen data001.csv %d", (fp==0?0:1));
+    if(fp) fclose(fp);
+
+    fp = fopen("/sdcard/html/index.htm", "r");
+    ESP_LOGI(TAG, "fopen /html/index.htm %d", (fp==0?0:1));
+    if(fp) fclose(fp);
+
+    DIR *dp = opendir("/sdcard/");
+    ESP_LOGI(TAG, "opendir / %d", (dp==0?0:1));
+    if(dp) closedir(dp);
+    
+    dp = opendir("/sdcard/html");
+    ESP_LOGI(TAG, "opendir /html %d", (dp==0?0:1));
+    if(dp) closedir(dp);
+    
+    dp = opendir("/sdcard/html/");
+    ESP_LOGI(TAG, "opendir /html/ %d", (dp==0?0:1));
+    if(dp) closedir(dp);
     
 }
 

@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
 <div id="demo">
@@ -7,9 +13,12 @@
 <button type="button" onclick="loadDoc()">Change Content</button>
 <canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3;">
 </div>
+
 <a href="up.htm"up.htm</a> 
 
 <script>
+//loadDoc();
+
 function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -17,7 +26,7 @@ function loadDoc() {
       processData(this.responseText);
     }
   };
-  xhttp.open("GET", "data000.csv", true);
+  xhttp.open("GET", "../data/data000.csv", true);
   xhttp.send();
 }
 

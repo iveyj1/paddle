@@ -25,32 +25,28 @@ the server, including WiFi connection management capabilities, some IO etc.
 #include "libesphttpd/webpages-espfs.h"
 #include "libesphttpd/cgiwebsocket.h"
 //#include "cgi-test.h"
-
-#include "esp_wifi.h"
+#include "libesphttpd/route.h"
+#include "libesphttpd/httpd-freertos.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
 #include "freertos/queue.h"
+#include "freertos/event_groups.h"
 
+#include "esp_wifi.h"
 #include "esp_err.h"
 #include "esp_log.h"
-
-#include "freertos/event_groups.h"
 #include "esp_log.h"
 #include "esp_event_loop.h"
+
 #include "nvs_flash.h"
 #include "tcpip_adapter.h"
 
 #include "httpdfatfs.h"
-
 #include "cgiuploadsd.h"
 
-#include "libesphttpd/route.h"
-#include "libesphttpd/httpd-freertos.h"
-
 #define TAG "httpd_paddle"
-
 
 #if 0
 //Function that tells the authentication system what users/passwords live on the system.
@@ -141,13 +137,21 @@ HttpdBuiltInUrl builtInUrls[]={
 	ROUTE_TPL("/index.tpl", tplCounter),
 	ROUTE_CGI("/led.cgi", cgiLed),
     ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/html/"),
-    
-    ROUTE_CGI("/data/*", cgiFatFsHook),
-    ROUTE_CGI("/html/*", cgiFatFsHook),
- 	ROUTE_REDIRECT("/data", "/data/"),
-	ROUTE_REDIRECT("/html", "/html/"),
-    ROUTE_CGI("/data/", cgiFatFsDirHook),
+
+    ROUTE_CGI("/", cgiFatFsDirHook),
+    ROUTE_CGI("/html", cgiFatFsDirHook),
     ROUTE_CGI("/html/", cgiFatFsDirHook),
+    ROUTE_CGI("/data", cgiFatFsDirHook),
+    ROUTE_CGI("/data/", cgiFatFsDirHook),
+    ROUTE_CGI("/*", cgiFatFsHook),
+    
+    
+ 	ROUTE_REDIRECT("/data/", "/data"),
+	ROUTE_REDIRECT("/html/", "/html"),
+    // ROUTE_CGI("/data/", cgiFatFsDirHook),
+    // ROUTE_CGI("/html/", cgiFatFsDirHook),
+    // ROUTE_CGI("/data/*", cgiFatFsHook),
+    // ROUTE_CGI("/html/*", cgiFatFsHook),
     
 
 	//ROUTE_REDIRECT("/flash", "/flash/index.html"),
@@ -157,8 +161,8 @@ HttpdBuiltInUrl builtInUrls[]={
 	//ROUTE_CGI("/flash/reboot", cgiRebootFirmware),
 
 	//Routines to make the /wifi URL and everything beneath it work.
-//Enable the line below to protect the WiFi configuration with an username/password combo.
-//	{"/wifi/*", authBasic, myPassFn},
+    //Enable the line below to protect the WiFi configuration with an username/password combo.
+    //	{"/wifi/*", authBasic, myPassFn},
 
 	//ROUTE_REDIRECT("/wifi", "/wifi/wifi.tpl"),
 	//ROUTE_REDIRECT("/wifi/", "/wifi/wifi.tpl"),
@@ -172,8 +176,8 @@ HttpdBuiltInUrl builtInUrls[]={
 	//ROUTE_WS("/websocket/ws.cgi", myWebsocketConnect),
 	//ROUTE_WS("/websocket/echo.cgi", myEchoWebsocketConnect),
 
-//	ROUTE_REDIRECT("/test", "/test/index.html"),
-//	ROUTE_CGI("/test/test.cgi", cgiTestbed),
+    //ROUTE_REDIRECT("/test", "/test/index.html"),
+    //ROUTE_CGI("/test/test.cgi", cgiTestbed),
 
 	ROUTE_FILESYSTEM(),
 	ROUTE_END()
