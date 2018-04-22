@@ -1,7 +1,14 @@
+* {
+    font-family: sans-serif;
+}
 
 body {
-	background-color: #404040;
+	background-color: #d0d0d0;
 	font-family: sans-serif;
+}
+
+th {
+    font-weight: strong
 }
 
 #main {
