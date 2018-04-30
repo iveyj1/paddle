@@ -12,7 +12,7 @@
 extern FILE *acqfile;
 
 int MountSD();
-int UnMountSD();
+int UnmountSD();
 
 void CloseAcqFile(void);
 int OpenNextAcqFile(void);

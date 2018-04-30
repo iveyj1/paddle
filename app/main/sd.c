@@ -24,49 +24,59 @@ bool sd_mounted = false;
 
 int MountSD()
 {
-    ESP_LOGI(TAG, "Initializing SD card using SPI");
-
-    sdmmc_host_t host = SDSPI_HOST_DEFAULT();
-    sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
-    slot_config.gpio_miso = PIN_NUM_MISO;
-    slot_config.gpio_mosi = PIN_NUM_MOSI;
-    slot_config.gpio_sck  = PIN_NUM_CLK;
-    slot_config.gpio_cs   = PIN_NUM_CS;
-    // initialize the slot without card detect (CD) and write protect (WP) signals.
-
-    esp_vfs_fat_sdmmc_mount_config_t mount_config = {
-        .format_if_mount_failed = false,
-        .max_files = 5,
-        .allocation_unit_size = 16 * 1024
-    };
-
-    sdmmc_card_t* card;
-    esp_err_t ret = esp_vfs_fat_sdmmc_mount(SD_PREFIX, &host, &slot_config, &mount_config, &card);
-
-    if (ret == ESP_OK)
+    if(!sd_mounted)
     {
-        sd_mounted = true;
-        sdmmc_card_print_info(stdout, card);
-        return (true);
+        ESP_LOGI(TAG, "Initializing SD card using SPI");
+
+        sdmmc_host_t host = SDSPI_HOST_DEFAULT();
+        sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
+        slot_config.gpio_miso = PIN_NUM_MISO;
+        slot_config.gpio_mosi = PIN_NUM_MOSI;
+        slot_config.gpio_sck  = PIN_NUM_CLK;
+        slot_config.gpio_cs   = PIN_NUM_CS;
+        // initialize the slot without card detect (CD) and write protect (WP) signals.
+
+        esp_vfs_fat_sdmmc_mount_config_t mount_config = {
+            .format_if_mount_failed = false,
+            .max_files = 5,
+            .allocation_unit_size = 16 * 1024
+        };
+
+        sdmmc_card_t* card;
+        esp_err_t ret = esp_vfs_fat_sdmmc_mount(SD_PREFIX, &host, &slot_config, &mount_config, &card);
+
+        if (ret == ESP_OK)
+        {
+            sd_mounted = true;
+            sdmmc_card_print_info(stdout, card);
+            return (true);
+        }
+        else
+        {
+            if (ret == ESP_FAIL) {
+                ESP_LOGE(TAG, "Failed to mount filesystem");
+            } else {
+                ESP_LOGE(TAG, "Failed to initialize SD card (%d)", ret);
+            }
+            sd_mounted = false;
+            return(false);
+        }
     }
     else
     {
-        if (ret == ESP_FAIL) {
-            ESP_LOGE(TAG, "Failed to mount filesystem");
-        } else {
-            ESP_LOGE(TAG, "Failed to initialize the card (%d)", ret);
-        }
-        sd_mounted = false;
-        return(false);
+        return true;
     }
 }
 
 int UnmountSD()
 {
-    ESP_LOGI(TAG, "Unmounting card");
-    esp_vfs_fat_sdmmc_unmount();
-    sd_mounted = false;
-    ESP_LOGI(TAG, "Card unmounted");
+    if(sd_mounted)
+    {
+        ESP_LOGI(TAG, "Unmounting card");
+        esp_vfs_fat_sdmmc_unmount();
+        sd_mounted = false;
+        ESP_LOGI(TAG, "Card unmounted");
+    }
     return true;
 }
 
@@ -79,7 +89,8 @@ int OpenNextAcqFile(void)
     char temp[ACQ_FILE_DIGITS + 1] = "";
     struct stat st;
     int i;
-    if(sd_mounted)
+
+    if(MountSD())
     {
         for(i = 0; i < 1000; i++)
         {

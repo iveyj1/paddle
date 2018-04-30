@@ -11,5 +11,6 @@
 void ADTask(void *pvParameter);
 void ADStartAcquire();
 void ADStopAcquire();
+int ADAcquireInProgress();
 
 #endif /* MAIN_AD_H_ */

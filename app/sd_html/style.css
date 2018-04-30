@@ -22,3 +22,26 @@ th {
 	padding: 20px
 }
 
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid;
+}
+
+thead th:nth-child(1) {
+  width: 20%;
+}
+
+thead th:nth-child(2) {
+  width: 20%;
+}
+
+thead th:nth-child(3) {
+  width: 60%;
+}
+
+th, td {
+  padding: 5px;
+}
+

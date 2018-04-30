@@ -11,6 +11,7 @@
 #include "esp_err.h"
 #include "sd.h"
 #include "gps.h"
+#include "expander.h"
 
 static const char *TAG = "ad";
 
@@ -61,7 +62,6 @@ void ADSetup(spi_device_handle_t spi)
         t.tx_data[1] = 0x40;                    // VREF=REFP0, REFN0, low side switch open, idac off
         ret = spi_device_transmit(spi, &t);
         assert(ret == ESP_OK);                    
-
     }
 }
 
@@ -100,6 +100,11 @@ void ADStartAcquire()
 void ADStopAcquire()
 {
     acquire = false;
+}
+
+int ADAcquireInProgress()
+{
+    return acquire;
 }
 
 void PreSPICallback(spi_transaction_t *config)
@@ -190,11 +195,8 @@ void ADTask(void *pvParameter)
                     adval[ad_current] = val;
                 }
                 
-                print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN);
-                if(print_nmea)
-                {
-                    //ESP_LOGI(TAG, "%s", nmeabuf);
-                }
+                print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN, false);
+
                 int64_t timenow =  esp_timer_get_time()/1000;
                 filtval = filtval * (1-filt_coef) + (float)(adval[0] - adval[1]) * filt_coef;
                 if(acqfile)
@@ -203,6 +205,7 @@ void ADTask(void *pvParameter)
                     if(print_nmea)
                     {
                         fprintf(acqfile, "%s", nmeabuf);
+                        ESP_LOGI(TAG, "NMEA added to acq file: %s", nmeabuf);
                     }
                     fprintf(acqfile,"\r\n");
                 }
@@ -215,12 +218,16 @@ void ADTask(void *pvParameter)
             }
             else  // is this logic working?
             {
-                if(!OpenNextAcqFile())
+                if(OpenNextAcqFile())
+                {
+                    BsetExpander(2,1);
+                    acq_in_progress = true;
+                    sample_count = 0;
+                }
+                else
                 {
                     ESP_LOGE(TAG, "failed to open acq file");
                 }
-                acq_in_progress = true;
-                sample_count = 0;
             }
         }
         else
@@ -228,6 +235,7 @@ void ADTask(void *pvParameter)
             if(acq_in_progress)
             {
                 CloseAcqFile();
+                BsetExpander(2,0);
                 acq_in_progress = false;
             }
             vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
