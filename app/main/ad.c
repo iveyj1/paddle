@@ -119,7 +119,7 @@ void PostSPICallback(spi_transaction_t *config)
     gpio_set_level(ad_cs_table[ad_current], 1);
 }
 
-TickType_t previous_wake_time;
+//TickType_t previous_wake_time;
 char nmeabuf[NMEA_BUF_LEN];
 
 void ADTask(void *pvParameter)
@@ -175,14 +175,21 @@ void ADTask(void *pvParameter)
     float offset = 0;
     int sample_count = 0;
     float filt_coef = 0.05;
-    
+    static int64_t last_esp_time;
     while(1)
     {
         if(acquire)
         {
             if(acq_in_progress)
             {
+                    
                 vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
+                int64_t temptime = esp_timer_get_time() - last_esp_time;
+                if(temptime >= 20000 || temptime < 18000))
+                {
+                    ESP_LOGI(TAG, "Looptime: %lld", temptime);
+                }
+                last_esp_time = esp_timer_get_time();
                 for(ad_current = 0; ad_current < NUM_AD; ad_current++)
                 {
                     ADCmd(spi, 0x08);  // start conversion
@@ -230,6 +237,7 @@ void ADTask(void *pvParameter)
                 {
                     ESP_LOGE(TAG, "failed to open acq file");
                 }
+                last_esp_time = esp_timer_get_time();
             }
         }
         else
