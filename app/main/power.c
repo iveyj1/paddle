@@ -15,6 +15,9 @@
 static const char TAG[]="Power";
 
 #include "checkstack.h"
+
+static char tasklist_buf[1024];
+
 void CheckPowerSwitch()
 {
 
@@ -24,14 +27,19 @@ void CheckPowerSwitch()
         if(gpio_get_level(POWER_SW) == 0)
         {
             vTaskDelay(20/portTICK_PERIOD_MS);
+            vTaskList(tasklist_buf);
+            ESP_LOGI(TAG, "Tasks\n%s", tasklist_buf);
             ESP_LOGI(TAG, "Powering off");
             ADStopAcquire();
-            vTaskDelay(50/portTICK_PERIOD_MS);
+            vTaskDelay(500/portTICK_PERIOD_MS);  // ideally should be closed-loop
             UnmountSD();
-            vTaskDelay(50/portTICK_PERIOD_MS);
+            vTaskDelay(500/portTICK_PERIOD_MS);
             gpio_set_level(KEEPALIVE, 0);
             gpio_set_level(13,0);
             ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+            vTaskList(tasklist_buf);
+            ESP_LOGI(TAG, "Tasks: %s\n", tasklist_buf);
+
             while(1)
             {
                 vTaskDelay(1);
