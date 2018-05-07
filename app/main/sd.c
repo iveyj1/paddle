@@ -81,24 +81,42 @@ int UnmountSD()
 }
 
 
-#define ACQ_FILE_DIGITS 3
+//#define ACQ_FILE_DIGITS 3
 
 int OpenNextAcqFile(void)
 {
-    char path[64] = "/sdcard/data000.csv";
-    char temp[ACQ_FILE_DIGITS + 1] = "";
+    char path[64] = "/sdcard/data/data000.csv";
+    char temp[4] = "";
     struct stat st;
     int i;
 
     if(MountSD())
     {
+        if(stat("/sdcard/data", &st) == 0)
+        {
+            if(!S_ISDIR(st.st_mode))
+            {
+                ESP_LOGE(TAG, "/sdcard/data is not a directory");
+                return false;
+            }
+        }
+        else
+        {
+            if(mkdir("/sdcard/data", 0777) != 0)
+            {
+                ESP_LOGE(TAG, "/sdcard/data could not be created");
+                return false;
+            }
+        }
+
         for(i = 0; i < 1000; i++)
         {
-            snprintf(temp, ACQ_FILE_DIGITS + 1, "%03d", i);
+            int pathlen = strlen(path);
+            snprintf(temp, 4, "%03d", i);
             ESP_LOGV(TAG, "Filename index: %s", temp);
-            path[12] = temp[0];
-            path[13] = temp[1];
-            path[14] = temp[2];
+            path[pathlen - 7] = temp[0];
+            path[pathlen - 6] = temp[1];
+            path[pathlen - 5] = temp[2];
             ESP_LOGV(TAG, "Path: %s", path);
             if (stat(path, &st) != 0) // if file not found
             {
