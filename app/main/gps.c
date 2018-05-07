@@ -25,6 +25,7 @@ uint8_t *nmea_buffer[2] = {0, 0};
 int nmea_buffer_num = 0;
 int nmea_available = false;
 
+#include "checkstack.h"
 
 int copyNthToken(char *dest, size_t destsize, const char *source, int column, char delim, int nchars)
 {
@@ -294,5 +295,6 @@ void GpsTask(void *pvParameter)
                 xSemaphoreGive(nmea_buffer_mutex);
             }
        }
+       checkStack();
     }
 }

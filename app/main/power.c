@@ -14,6 +14,7 @@
 
 static const char TAG[]="Power";
 
+#include "checkstack.h"
 void CheckPowerSwitch()
 {
 
@@ -89,6 +90,7 @@ void PowerTask(void *pvParameter)
     {
         CheckPowerSwitch();
         CheckAcqSwitch();
+        checkStack();
         vTaskDelay(1);
     }
 }

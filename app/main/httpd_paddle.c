@@ -48,6 +48,9 @@ the server, including WiFi connection management capabilities, some IO etc.
 
 #define TAG "httpd_paddle"
 
+#include "checkstack.h"
+
+
 #if 0
 //Function that tells the authentication system what users/passwords live on the system.
 //This is disabled in the default build; if you want to try it, enable the authBasic line in
@@ -119,6 +122,7 @@ CgiUploadFlashDef uploadParams={
 };
 #endif
 
+
 /*
 This is the main url->function dispatching data struct.
 In short, it's a struct with various URLs plus their handlers. The handlers can
@@ -137,6 +141,7 @@ HttpdBuiltInUrl builtInUrls[]={
 	ROUTE_TPL("/index.tpl", tplCounter),
 	ROUTE_CGI("/led.cgi", cgiLed),
     ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/html/"),
+    //ROUTE_CGI("/plot", cgiPlot),
 
     ROUTE_CGI("/", cgiFatFsDirHook),
     ROUTE_CGI("/html", cgiFatFsDirHook),
@@ -335,6 +340,7 @@ void ServerTask(void *pvParameter)
     while(1)
     {
         vTaskDelay(10);
+        checkStack();
     }
 	
 }

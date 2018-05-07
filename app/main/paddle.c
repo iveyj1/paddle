@@ -19,6 +19,11 @@
 #define BLINK 13
 static const char* TAG = "paddle";
 
+#include "checkstack.h"
+
+static char tasklist_buf[1024];
+
+
 void app_main()
 {
     gpio_pad_select_gpio(BLINK);
@@ -46,6 +51,12 @@ void app_main()
     xTaskCreate(GpsTask, "GPS", 4096, NULL, 7, NULL);
     xTaskCreate(ADTask, "AD", 4096, NULL, 10, NULL);
     //ADStartAcquire();
-
+    checkStack();
+    while(1)
+    {
+        //vTaskList(tasklist_buf);
+        //ESP_LOGI(TAG, "Tasks: %s\n", tasklist_buf);
+        vTaskDelay(50);
+    }
 }
 

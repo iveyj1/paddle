@@ -32,6 +32,8 @@ static int acquire = 0;
 const static int ad_cs_table[NUM_AD] = { PORT_AD_CS0, PORT_AD_CS1, PORT_AD_CS2, PORT_AD_CS3 };  // IO pins for a/d channel 0-3
 static int ad_current = 0;
 
+#include "checkstack.h"
+
 //Send data to the AD. Uses spi_device_transmit, which waits until the transfer is complete.
 void ADSetup(spi_device_handle_t spi)
 {
@@ -240,6 +242,7 @@ void ADTask(void *pvParameter)
             }
             vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
         }
+        checkStack();
     }
 }
 
