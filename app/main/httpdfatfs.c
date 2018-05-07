@@ -75,7 +75,6 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
             return HTTPD_CGI_NOTFOUND;
         }
 
-
         connData->cgiData = dp;  // store directory info for next round
         httpdStartResponse(connData, 200);
         httpdHeader(connData, "Content-Type", httpdGetMimetype(connData->url));
@@ -109,7 +108,18 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
                 tm = localtime(&statbuf.st_mtime);
                 ESP_LOGI(TAG, "strftime returns: %d", strftime(datestring, sizeof(datestring), "%Y-%m-%d_%H:%M:%S", tm));
                 ESP_LOGI(TAG, "date: %s\n", datestring);
-                sprintf(buff, "<tr><td><a href=\"%s%s%s\">%s</a></td><td>%lld</td><td>%s</td></tr>\n", connData->url, needSlash?"/":"", ep->d_name, ep->d_name, (intmax_t)statbuf.st_size, datestring);
+                int namelen = strlen(ep->d_name);
+                ESP_LOGI(TAG, "namelen: %d dname:%s", namelen, ep->d_name);
+                ESP_LOGI(TAG, "csv:%s", ep->d_name + namelen - 4);
+                if(strcasecmp(ep->d_name + namelen - 4, ".csv") == 0) // plot .csv files
+                {
+                    sprintf(buff, "<tr><td><a href=\"/html/plot.html?url=%s%s%s\">%s</a></td><td>%lld</td><td>%s</td></tr>\n", connData->url, needSlash?"/":"", ep->d_name, ep->d_name, (intmax_t)statbuf.st_size, datestring);
+                }
+                else // just link to everything else
+                {
+                    sprintf(buff, "<tr><td><a href=\"%s%s%s\">%s</a></td><td>%lld</td><td>%s</td></tr>\n", connData->url, needSlash?"/":"", ep->d_name, ep->d_name, (intmax_t)statbuf.st_size, datestring);  
+                } 
+                ESP_LOGI(TAG, "url:%s", buff);
                 httpdSend(connData, buff, -1);
             }
             else
