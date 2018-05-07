@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      #container {
+        width : 600px;
+        height: 384px;
+        margin: 8px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <button type="button" onclick="loadDoc()">load</button>
+    <button type="button" onclick="processData(0)">Plot 0</button>
+    <button type="button" onclick="processData(1)">Plot 1</button>
+    <button type="button" onclick="processData(2)">Plot 2</button>
+    <button type="button" onclick="processData(3)">Plot 3</button>
+
+    <script src = "flotr2.js" >   </script>
+    <script type="text/javascript">
+
+var text;
+    
+function loadDoc() 
+{
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = 
+        function() 
+        {
+            if (this.readyState == 4 && this.status == 200) 
+            {
+                //processData(this.responseText);
+                text = this.responseText;
+            }
+        };
+    var paramsString = location.search;
+    var searchParams = new URLSearchParams(paramsString);
+    //alert(searchParams.get("url"));
+    xhttp.open("GET", searchParams.get("url"), true);
+    xhttp.send();
+}
+
+function processData(channel) 
+{
+    var allTextLines = text.split(/\r\n|\n/);
+    var headers = allTextLines[0].split(',');
+    var x, y;
+    var series = [[],[],[],[]];
+    for (var i = 1; i < allTextLines.length; i++) 
+    {
+        var data = allTextLines[i].split(',');
+        if (data.length >= 5) 
+        {
+            t = parseInt(data[0]) * 0.001;
+            for(var j = 0; j < 4; j++)
+            {
+                w = parseInt(data[j+1]) / 8388608.0;                
+                series[j].push([t,w]);
+            }
+        }
+    }
+    var series_all = [];
+    
+    graph = Flotr.draw(
+        container, 
+        [ 
+            {data: series[channel], lines: {show: true}, points:{show:true, radius: 2, linewidth: 1}},
+        ], 
+        {
+            shadowSize: 0
+        }
+    );
+}
+
+    </script>
+  </body>
+</html>
