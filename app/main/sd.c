@@ -8,7 +8,18 @@
 #include "driver/sdmmc_host.h"
 #include "driver/sdspi_host.h"
 #include "sdmmc_cmd.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+//#include "freertos/projdefs.h"
+#include "expander.h"
+
 #include "sd.h"
+
+#define min(x, y) ({                \
+    typeof(x) _min1 = (x);          \
+    typeof(y) _min2 = (y);          \
+    (void) (&_min1 == &_min2);      \
+    _min1 < _min2 ? _min1 : _min2; })
 
 static const char *TAG = "sd";
 
@@ -21,6 +32,101 @@ static const char *TAG = "sd";
 
 FILE *acqfile = 0;
 bool sd_mounted = false;
+
+#define ACQWRITE_BUFFER_LEN 1024
+static char acqwrite_buffer[ACQWRITE_BUFFER_LEN] = "";//{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+static int acqwrite_index_in = 0;   // index into acqwrite_buffer -- next character to be filled when a written to 
+static int acqwrite_index_out = 0;  // index into acqwrite_buffer -- next character to be written out -- 
+                                    //== index_in when all characters have been written to SD
+SemaphoreHandle_t acq_file_mutex = 0;
+static int close_acq_file = false;
+
+// used by other tasks to store info to the buffer
+int acqQueue(const char* buf, int length)
+{
+    ESP_LOGI(TAG, "in acqQueue    buf:%s, length:%d", buf, length);
+    for(int i = 0; i < length; i++)
+    {
+        acqwrite_buffer[(acqwrite_index_in + i) % ACQWRITE_BUFFER_LEN] = buf[i];
+    }
+
+    if(xSemaphoreTake(acq_file_mutex, (TickType_t) 200) == pdTRUE)
+    {
+        BsetExpander(0,1);
+        acqwrite_index_in = (acqwrite_index_in + length) % ACQWRITE_BUFFER_LEN;
+        ESP_LOGI(TAG, "after write acqwrite_buffer:%s, index_in1:%d length:%d", acqwrite_buffer, acqwrite_index_in,length);
+    }
+    else
+    {
+        ESP_LOGE(TAG, "Mutex lock timed out in acqWrite()");
+        return false;
+    }
+        BsetExpander(0,0);
+    ESP_LOGE(TAG, "gave acq_file_mutex 1");
+    return true;
+}
+
+void sdAcqWriteTask(void *pvParameter)
+{
+    while(1)
+    {
+        int ret = xSemaphoreTake(acq_file_mutex, (TickType_t) 200);
+        if(ret != pdTRUE)
+        {
+            ESP_LOGI(TAG, "Mutex lock timed out in sdTask");
+            assert(0);
+        }
+        BsetExpander(1,1);
+        int in = acqwrite_index_in;
+        xSemaphoreGive(acq_file_mutex);
+        BsetExpander(1,0);
+
+        int backlog = in - acqwrite_index_out;
+
+        if(acqfile)
+        {
+            if(backlog)
+            {
+                char *write_start = acqwrite_buffer + acqwrite_index_out;
+                ESP_LOGI(TAG, "backlog: %d acqwrite_index_in: %d, acqwrite_index_out %d", backlog, acqwrite_index_in, acqwrite_index_out);
+                if(backlog > 0)
+                {
+                    fwrite(write_start, 1, backlog, acqfile);
+                }
+                else 
+                {
+                    int write_bytes_to_end = ACQWRITE_BUFFER_LEN - acqwrite_index_out;
+                    // write bytes from current buffer out index through end of buffer
+                    fwrite(acqwrite_buffer + acqwrite_index_out, 1, write_bytes_to_end, acqfile);
+                    // write remaining bytes from beginning of buffer
+                    fwrite(acqwrite_buffer, 1, backlog - write_bytes_to_end, acqfile);
+                }
+                acqwrite_index_out = acqwrite_index_in;
+            }
+            if(close_acq_file)
+            {
+                ESP_LOGI(TAG, "closing acq file");
+                int ret = xSemaphoreTake(acq_file_mutex, (TickType_t) 2);
+                if(ret != pdTRUE)
+                {
+                    ESP_LOGI(TAG, "Mutex lock timed out closing file in sdTask");
+                    assert(0);
+                }
+                BsetExpander(2,1);
+                ESP_LOGI(TAG, "Closing file");
+                fclose(acqfile);
+                acqfile = 0;
+                acqwrite_index_in = 0;
+                acqwrite_index_out = 0;
+                close_acq_file = false;
+                xSemaphoreGive(acq_file_mutex);
+                BsetExpander(2,0);
+            }
+        }
+        vTaskDelay(1);
+    }
+}
+
 
 int MountSD()
 {
@@ -92,6 +198,26 @@ int OpenNextAcqFile(void)
 
     if(MountSD())
     {
+        int ret = xSemaphoreTake(acq_file_mutex, (TickType_t) 2);
+        if(ret != pdTRUE)
+        {
+            ESP_LOGI(TAG, "Mutex lock timed out in openNextAcqFile");
+            return ret;
+        }
+        BsetExpander(3,1);
+        if(close_acq_file)
+        {
+            vTaskDelay(1);
+            if(close_acq_file)
+            {
+                ESP_LOGE(TAG, "acq file still open in OpenNextAcqFile");
+                xSemaphoreGive(acq_file_mutex);
+                BsetExpander(3,0);
+                return false;
+            }
+        }
+        BsetExpander(3,0);
+        ESP_LOGE(TAG, "gave acq_file_mutex 4");
         if(stat("/sdcard/data", &st) == 0)
         {
             if(!S_ISDIR(st.st_mode))
@@ -141,11 +267,9 @@ int OpenNextAcqFile(void)
 
 void CloseAcqFile(void)
 {
-    if(acqfile)
-    {
-        ESP_LOGI(TAG, "Closing file");
-        fclose(acqfile);
-        acqfile = 0;
-    }
+                ESP_LOGI(TAG, "Closing file");
+                fclose(acqfile);
+                acqfile = 0;
+    close_acq_file = false;
 }
 

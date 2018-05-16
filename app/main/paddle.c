@@ -41,6 +41,8 @@ void app_main()
     BsetExpander(SD_ENABLE, 0);      // Turn on SD card
     vTaskDelay(500/portTICK_PERIOD_MS);  // may need 500 ms to start SD - don't know if this is handled by mount
 
+    acq_file_mutex = xSemaphoreCreateMutex();
+
     if(!MountSD())
     {
         ESP_LOGE(TAG, "failed to mount SD");
@@ -49,9 +51,12 @@ void app_main()
     xTaskCreate(PowerTask, "Power", 4096, NULL, 5, NULL);
     xTaskCreate(ServerTask, "Webserver", 32768, NULL, 6, NULL);
     xTaskCreate(GpsTask, "GPS", 4096, NULL, 7, NULL);
+    xTaskCreate(sdAcqWriteTask, "acqwrite", 8192, NULL, 8, NULL);
     xTaskCreate(ADTask, "AD", 4096, NULL, 10, NULL);
     //ADStartAcquire();
     checkStack();
+    //acqQueue("0123456789abcdefgh", 18);
+    //acqQueue("0123456789abcdefgh", 18);
     while(1)
     {
         //vTaskList(tasklist_buf);

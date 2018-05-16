@@ -32,8 +32,6 @@ static int acquire = 0;
 const static int ad_cs_table[NUM_AD] = { PORT_AD_CS0, PORT_AD_CS1, PORT_AD_CS2, PORT_AD_CS3 };  // IO pins for a/d channel 0-3
 static int ad_current = 0;
 
-#define WRITE_BUF_LEN 2048
-
 #include "checkstack.h"
 
 //Send data to the AD. Uses spi_device_transmit, which waits until the transfer is complete.
@@ -123,14 +121,12 @@ void PostSPICallback(spi_transaction_t *config)
 
 //TickType_t previous_wake_time;
 char nmeabuf[NMEA_BUF_LEN];
-char writebuf[WRITE_BUF_LEN];
 
 void ADTask(void *pvParameter)
 {
 
     TickType_t previous_wake_time;
 
-#if 1
     esp_err_t ret;
     spi_device_handle_t spi;
 
@@ -163,6 +159,7 @@ void ADTask(void *pvParameter)
 
     ret=spi_bus_initialize(VSPI_HOST, &buscfg, 0); // HSPI is used by SD
     assert(ret==ESP_OK);
+    //Attach the LCD to the SPI bus
     ret=spi_bus_add_device(VSPI_HOST, &devcfg, &spi);
     assert(ret==ESP_OK);
     ESP_LOGI(TAG, "attached to VSPI for AD");
@@ -170,8 +167,6 @@ void ADTask(void *pvParameter)
     uint8_t ad_temp[AD_MSG_LEN];
 
     ADSetup(spi);
-    
-#endif    
     int32_t val;
     int print_nmea;
     int acq_in_progress = 0;
@@ -181,18 +176,16 @@ void ADTask(void *pvParameter)
     int sample_count = 0;
     float filt_coef = 0.05;
     static int64_t last_esp_time;
-
     while(1)
     {
-        vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
         if(acquire)
         {
             if(acq_in_progress)
             {
                     
+                vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
                 int64_t temptime = esp_timer_get_time() - last_esp_time;
-#if 1
-               if(temptime >= 20000 || temptime < 18000)
+                if(temptime >= 20000 || temptime < 18000)
                 {
                     ESP_LOGI(TAG, "Looptime: %lld", temptime);
                 }
@@ -201,6 +194,7 @@ void ADTask(void *pvParameter)
                 {
                     ADCmd(spi, 0x08);  // start conversion
                 }
+
                 for(ad_current = 0; ad_current < NUM_AD; ad_current++)
                 {
                     ADData(spi, ad_temp, sizeof(ad_temp));
@@ -209,40 +203,33 @@ void ADTask(void *pvParameter)
                     val >>= 8;  // right shift to get scale correct - sign will be extended
                     adval[ad_current] = val;
                 }
+                
                 print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN, false);
 
-                filtval = filtval * (1-filt_coef) + (float)(adval[0] - adval[1]) * filt_coef;
-#endif                
                 int64_t timenow =  esp_timer_get_time()/1000;
+                filtval = filtval * (1-filt_coef) + (float)(adval[0] - adval[1]) * filt_coef;
                 if(acqfile)
                 {
-                    //int n = 0;
-                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,", timenow, adval[0], adval[1], adval[2], adval[3]);
-                    //acqQueue(writebuf, n);
+                    fprintf(acqfile,"%10lld,%12.0d,%12.0d,%12.0d,%12.0d,", timenow, adval[0], adval[1], adval[2], adval[3]);
                     if(print_nmea)
                     {
-                        n += snprintf(writebuf + n, WRITE_BUF_LEN - n, "%s", nmeabuf);
-                        //acqQueue(writebuf, n);
-                        //ESP_LOGI(TAG, "NMEA added to acq file: %s", nmeabuf);
+                        fprintf(acqfile, "%s", nmeabuf);
+                        ESP_LOGI(TAG, "NMEA added to acq file: %s", nmeabuf);
                     }
-                    ESP_LOGI(TAG, "n: %d, write: %s", n, writebuf);
-                    n += snprintf(writebuf + n, WRITE_BUF_LEN - n, "\r\n");
-                    acqQueue(writebuf, n);
+                    fprintf(acqfile,"\r\n");
                 }
-#if 1
                 //ESP_LOGI(TAG, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,%12.0f", timenow, adval[0], adval[1], adval[2], adval[3], filtval - offset);
                 if(sample_count++ == 100)
                 {
                     offset = filtval;
                     filt_coef *= 10;
                 }
-#endif
             }
             else  // is this logic working?
             {
-                ESP_LOGI(TAG, "starting acq");
                 if(OpenNextAcqFile())
                 {
+                    BsetExpander(2,1);
                     acq_in_progress = true;
                     sample_count = 0;
                 }
@@ -257,10 +244,11 @@ void ADTask(void *pvParameter)
         {
             if(acq_in_progress)
             {
-                ESP_LOGI(TAG, "stopping acq");
                 CloseAcqFile();
+                BsetExpander(2,0);
                 acq_in_progress = false;
             }
+            vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
         }
         checkStack();
     }
