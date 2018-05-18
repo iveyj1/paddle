@@ -44,6 +44,7 @@ static int close_acq_file = false;
 // used by other tasks to store info to the buffer
 int acqQueue(const char* buf, int length)
 {
+#if 0
     ESP_LOGI(TAG, "in acqQueue    buf:%s, length:%d", buf, length);
     for(int i = 0; i < length; i++)
     {
@@ -63,6 +64,7 @@ int acqQueue(const char* buf, int length)
     }
         BsetExpander(0,0);
     ESP_LOGE(TAG, "gave acq_file_mutex 1");
+#endif
     return true;
 }
 
@@ -188,13 +190,14 @@ int UnmountSD()
 
 
 //#define ACQ_FILE_DIGITS 3
-
+#define BLINK 13
 int OpenNextAcqFile(void)
 {
     char path[64] = "/sdcard/data/data000.csv";
     char temp[4] = "";
     struct stat st;
     int i;
+    ESP_LOGI(TAG, "open next acq file 1");
 
     if(MountSD())
     {
@@ -204,7 +207,10 @@ int OpenNextAcqFile(void)
             ESP_LOGI(TAG, "Mutex lock timed out in openNextAcqFile");
             return ret;
         }
+        ESP_LOGI(TAG, "open next acq file 2");
         BsetExpander(3,1);
+        gpio_set_level(BLINK, 1);
+
         if(close_acq_file)
         {
             vTaskDelay(1);
@@ -213,11 +219,16 @@ int OpenNextAcqFile(void)
                 ESP_LOGE(TAG, "acq file still open in OpenNextAcqFile");
                 xSemaphoreGive(acq_file_mutex);
                 BsetExpander(3,0);
-                return false;
+                gpio_set_level(BLINK, 0);
+               return false;
             }
         }
+        ESP_LOGI(TAG, "open next acq file 3");
+        xSemaphoreGive(acq_file_mutex);
         BsetExpander(3,0);
-        ESP_LOGE(TAG, "gave acq_file_mutex 4");
+        gpio_set_level(BLINK, 0);
+
+        ESP_LOGI(TAG, "open next acq file 4");
         if(stat("/sdcard/data", &st) == 0)
         {
             if(!S_ISDIR(st.st_mode))
@@ -267,9 +278,13 @@ int OpenNextAcqFile(void)
 
 void CloseAcqFile(void)
 {
+#if 0
                 ESP_LOGI(TAG, "Closing file");
                 fclose(acqfile);
                 acqfile = 0;
     close_acq_file = false;
+#endif
+    close_acq_file = true;
+
 }
 

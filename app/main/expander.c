@@ -8,6 +8,8 @@
 #include "driver/i2c.h"
 #include "freertos/FreeRTOS.h"
 #include "expander.h"
+#include "esp_log.h"
+
 
 #define EXPANDER_ADDR 0x38
 
@@ -35,6 +37,8 @@
 #define TCA9534_POL_PORT 0x02
 #define TCA9534_DIR_PORT 0x03
 
+
+static const char *TAG = "expander";
 static int tca9534_device = 0; // use esp32 i2c device number zero for expander
 
 //uint8_t TestWire(uint8_t address);
@@ -46,6 +50,7 @@ static int tca9534_device = 0; // use esp32 i2c device number zero for expander
  * _________________________________________________________________
  * | start | slave_addr + wr_bit + ack | write 1 byte + ack  | stop |
  * --------|---------------------------|---------------------|------| */
+static SemaphoreHandle_t expander_mutex = 0;
 
 static esp_err_t Write2I2c(i2c_port_t i2c_num, uint8_t addr, uint8_t port, uint8_t data)
 {
@@ -91,6 +96,16 @@ static esp_err_t WriteReadI2c(i2c_port_t i2c_num, uint8_t addr, uint8_t port, ui
 
 void SetupExpander()
 {
+    if(!expander_mutex)
+    {
+        expander_mutex = xSemaphoreCreateMutex();
+    }
+    int ret = xSemaphoreTake(expander_mutex, (TickType_t) 2);
+    if(ret != pdTRUE)
+    {
+        ESP_LOGI(TAG, "Mutex lock timed out in SetupExpander");
+        assert(0);
+    }
     int i2c_master_port = 0;
     i2c_config_t conf;
     conf.mode = I2C_MODE_MASTER;
@@ -107,23 +122,42 @@ void SetupExpander()
     Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_OUT_PORT, EXPANDER_INIT_STATE );
     Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_POL_PORT, EXPANDER_INIT_POL );
     Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_DIR_PORT, EXPANDER_INIT_DIR );
+    xSemaphoreGive(expander_mutex);
 }
 
 int BsetExpander(uint8_t bit, uint8_t val)
 {
     uint8_t temp;
 
+    int ret = xSemaphoreTake(expander_mutex, (TickType_t) 2);
+    if(ret != pdTRUE)
+    {
+        ESP_LOGI(TAG, "Mutex lock timed out in BsetExpander");
+        assert(0);
+    }
+    
     if (WriteReadI2c(tca9534_device, EXPANDER_ADDR, TCA9534_OUT_PORT, &temp, 1 ) != ESP_OK)
     {
+        xSemaphoreGive(expander_mutex);
         return(ESP_FAIL);
     }
 
     temp = (temp & ~BMASK(bit)) | (-((int8_t)val) & bmask(bit));  // sets or clears bit indexed by "bit" depending on val
-
-    return(Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_OUT_PORT, temp));
+//    ESP_LOGI("expander", "bit: %d, val: %d, temp: %x", bit, val, temp);
+    ret = Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_OUT_PORT, temp);
+    xSemaphoreGive(expander_mutex);
+    return(ret);
 }
 
 int SetExpander(uint8_t val)
 {
-    return(Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_OUT_PORT, val));
+    int ret = xSemaphoreTake(expander_mutex, (TickType_t) 2);
+    if(ret != pdTRUE)
+    {
+        ESP_LOGI(TAG, "Mutex lock timed out in SetExpander");
+        return ret;
+    }
+    ret = Write2I2c(tca9534_device, EXPANDER_ADDR, TCA9534_OUT_PORT, val);
+    xSemaphoreGive(expander_mutex);
+    return(ret);
 }

@@ -36,7 +36,6 @@ void CheckPowerSwitch()
             UnmountSD();
             vTaskDelay(500/portTICK_PERIOD_MS);
             gpio_set_level(KEEPALIVE, 0);
-            gpio_set_level(13,0);
             ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
             vTaskList(tasklist_buf);
             ESP_LOGI(TAG, "Tasks: %s\n", tasklist_buf);

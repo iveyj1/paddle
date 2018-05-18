@@ -173,7 +173,7 @@ void ADTask(void *pvParameter)
     
 #endif    
     int32_t val;
-    int print_nmea;
+    int print_nmea = false;
     int acq_in_progress = 0;
     int32_t adval[NUM_AD];
     float filtval = 0.0f;
@@ -210,7 +210,9 @@ void ADTask(void *pvParameter)
                     adval[ad_current] = val;
                 }
                 print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN, false);
-
+                //strcpy(nmeabuf, "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfaasdfasdfasdfasdfsdfasdf");
+                //print_nmea = true;
+                
                 filtval = filtval * (1-filt_coef) + (float)(adval[0] - adval[1]) * filt_coef;
 #endif                
                 int64_t timenow =  esp_timer_get_time()/1000;

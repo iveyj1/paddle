@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "driver/spi_master.h"
+#include "soc/gpio_struct.h"
+#include "driver/gpio.h"
+#include "esp_log.h"
+#include "esp_err.h"
+#include "sd.h"
+#include "gps.h"
+#include "expander.h"
+
+static const char *TAG = "ad";
+
+static int acquire = 0;
+
+#define PORT_AD_MISO 14
+#define PORT_AD_MOSI 27
+#define PORT_AD_CLK  12
+#define PORT_AD_CS0  26
+#define PORT_AD_CS1  25
+#define PORT_AD_CS2  33
+#define PORT_AD_CS3  32
+#define PORT_AD_BUSY 35
+#define NUM_AD 4
+
+#define AD_MSG_LEN 4
+#define LOOPTIME 20  // loop time in ms, minimum 10 (== tick time)
+
+#define WRITE_BUF_LEN 2048
+
+#include "checkstack.h"
+
+void ADStartAcquire()
+{
+    acquire = true;
+}
+
+void ADStopAcquire()
+{
+    acquire = false;
+}
+
+int ADAcquireInProgress()
+{
+    return acquire;
+}
+
+
+//TickType_t previous_wake_time;
+char nmeabuf[NMEA_BUF_LEN];
+char writebuf[WRITE_BUF_LEN];
+
+void ADTask(void *pvParameter)
+{
+
+    TickType_t previous_wake_time;
+
+  
+    int32_t val;
+    int print_nmea = false;
+    int acq_in_progress = 0;
+    int32_t adval[NUM_AD];
+    float filtval = 0.0f;
+    float offset = 0;
+    int sample_count = 0;
+    float filt_coef = 0.05;
+    static int64_t last_esp_time;
+
+    while(1)
+    {
+        vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
+        if(acquire)
+        {
+            if(acq_in_progress)
+            {
+                    
+                int64_t temptime = esp_timer_get_time() - last_esp_time;
+                int64_t timenow =  esp_timer_get_time()/1000;
+
+            }
+            else  // is this logic working?
+            {
+#if 1
+                ESP_LOGI(TAG, "starting acq");
+                if(OpenNextAcqFile())
+                {
+                    acq_in_progress = true;
+                    sample_count = 0;
+                }
+                else
+                {
+                    ESP_LOGE(TAG, "failed to open acq file");
+                }
+#endif
+                last_esp_time = esp_timer_get_time();
+            }
+        }
+        else
+        {
+            if(acq_in_progress)
+            {
+                ESP_LOGI(TAG, "stopping acq");
+                CloseAcqFile();
+                acq_in_progress = false;
+            }
+        }
+        checkStack();
+    }
+}
+

@@ -190,7 +190,7 @@ int setTime()
 
 void GpsTask(void *pvParameter)
 {
-    nmea_buffer_mutex =  xSemaphoreCreateMutex();
+
     uint8_t data_byte = 0;
     size_t nmea_buffer_index = 0;
     nmea_buffer_num = 0;
