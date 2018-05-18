@@ -49,7 +49,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
     if (connData->isConnectionClosed) 
     {
         //Connection aborted. Clean up.
-        ESP_LOGE(TAG, "connection aborted")
+        ESP_LOGE(TAG, "connection aborted");
         if (dp) 
         {
             closedir(dp);
@@ -145,7 +145,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData)
 
     if (connData->isConnectionClosed) 
     {
-        ESP_LOGE(TAG, "connection aborted")
+        ESP_LOGE(TAG, "connection aborted");
         if (fp != NULL) {
             fclose(fp);
         }
@@ -158,7 +158,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsHook(HttpdConnData *connData)
         int urllen = strlen(connData->url);
         if((prefixlen + urllen + 1) > P_PATHBUFSIZE) 
         {
-            ESP_LOGE(TAG, "file not found")
+            ESP_LOGE(TAG, "file not found");
             return HTTPD_CGI_NOTFOUND;
         }
         memcpy(path, SD_PREFIX, prefixlen);

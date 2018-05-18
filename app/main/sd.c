@@ -44,7 +44,7 @@ static int close_acq_file = false;
 // used by other tasks to store info to the buffer
 int acqQueue(const char* buf, int length)
 {
-#if 0
+#if 1
     ESP_LOGI(TAG, "in acqQueue    buf:%s, length:%d", buf, length);
     for(int i = 0; i < length; i++)
     {
@@ -62,8 +62,9 @@ int acqQueue(const char* buf, int length)
         ESP_LOGE(TAG, "Mutex lock timed out in acqWrite()");
         return false;
     }
-        BsetExpander(0,0);
-    ESP_LOGE(TAG, "gave acq_file_mutex 1");
+    BsetExpander(0,0);
+    xSemaphoreGive(acq_file_mutex);
+    ESP_LOGI(TAG, "gave acq_file_mutex 1");
 #endif
     return true;
 }
@@ -271,7 +272,7 @@ int OpenNextAcqFile(void)
     }
     else
     {
-        ESP_LOGE(TAG, "SD not mounted trying to open acq file")
+        ESP_LOGE(TAG, "SD not mounted trying to open acq file");
         return(false);
     }
 }

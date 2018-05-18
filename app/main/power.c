@@ -32,7 +32,10 @@ void CheckPowerSwitch()
             ESP_LOGI(TAG, "Tasks\n%s", tasklist_buf);
             ESP_LOGI(TAG, "Powering off");
             ADStopAcquire();
-            vTaskDelay(500/portTICK_PERIOD_MS);  // ideally should be closed-loop
+            while(acqfile)
+            {
+                vTaskDelay(1);
+            }
             UnmountSD();
             vTaskDelay(500/portTICK_PERIOD_MS);
             gpio_set_level(KEEPALIVE, 0);
