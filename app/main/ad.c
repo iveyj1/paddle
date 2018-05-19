@@ -181,19 +181,22 @@ void ADTask(void *pvParameter)
     int sample_count = 0;
     float filt_coef = 0.05;
     static int64_t last_esp_time;
+    uint8_t blown_loop = false;
 
     while(1)
     {
         vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
+        int64_t temptime = esp_timer_get_time() - last_esp_time;
         if(acquire)
         {
             if(acq_in_progress)
             {
                     
-                int64_t temptime = esp_timer_get_time() - last_esp_time;
 #if 1
-               if(temptime >= 20000 || temptime < 18000)
+                blown_loop = false;
+                if(temptime >= 20040 || temptime <= 19960)
                 {
+                    blown_loop = true;
                     //ESP_LOGI(TAG, "Looptime: %lld", temptime);
                 }
                 last_esp_time = esp_timer_get_time();
@@ -218,8 +221,9 @@ void ADTask(void *pvParameter)
                 int64_t timenow =  esp_timer_get_time()/1000;
                 if(acqfile)
                 {
+                    BsetExpander(2,1);
                     //int n = 0;
-                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,", timenow, adval[0], adval[1], adval[2], adval[3]);
+                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12d,%12d,%12d,%12d,%12lld,%2d,", timenow, adval[0], adval[1], adval[2], adval[3], temptime, (blown_loop?1:0));
                     //acqQueue(writebuf, n);
                     if(print_nmea)
                     {
@@ -227,9 +231,10 @@ void ADTask(void *pvParameter)
                         //acqQueue(writebuf, n);
                         //ESP_LOGI(TAG, "NMEA added to acq file: %s", nmeabuf);
                     }
-                    ESP_LOGI(TAG, "n: %d, write: %s", n, writebuf);
+                    //ESP_LOGI(TAG, "n: %d, write: %s", n, writebuf);
                     n += snprintf(writebuf + n, WRITE_BUF_LEN - n, "\r\n");
                     acqQueue(writebuf, n);
+                    BsetExpander(2,0);
                 }
 #if 1
                 //ESP_LOGI(TAG, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,%12.0f", timenow, adval[0], adval[1], adval[2], adval[3], filtval - offset);

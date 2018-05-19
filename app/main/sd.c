@@ -51,9 +51,9 @@ int acqQueue(const char* buf, int length)
         acqwrite_buffer[(acqwrite_index_in + i) % ACQWRITE_BUFFER_LEN] = buf[i];
     }
 
+    BsetExpander(0,1);
     if(xSemaphoreTake(acq_file_mutex, (TickType_t) 200) == pdTRUE)
     {
-        BsetExpander(0,1);
         acqwrite_index_in = (acqwrite_index_in + length) % ACQWRITE_BUFFER_LEN;
 //        ESP_LOGI(TAG, "after write acqwrite_buffer:%s, index_in1:%d length:%d", acqwrite_buffer, acqwrite_index_in,length);
     }
@@ -62,8 +62,8 @@ int acqQueue(const char* buf, int length)
         ESP_LOGE(TAG, "Mutex lock timed out in acqWrite()");
         return false;
     }
-    BsetExpander(0,0);
     xSemaphoreGive(acq_file_mutex);
+    BsetExpander(0,0);
 //    ESP_LOGI(TAG, "gave acq_file_mutex 1");
 #endif
     return true;
@@ -73,13 +73,13 @@ void sdAcqWriteTask(void *pvParameter)
 {
     while(1)
     {
+        BsetExpander(1,1);
         int ret = xSemaphoreTake(acq_file_mutex, (TickType_t) 200);
         if(ret != pdTRUE)
         {
             ESP_LOGI(TAG, "Mutex lock timed out in sdTask");
             assert(0);
         }
-        BsetExpander(1,1);
         int in = acqwrite_index_in;
         xSemaphoreGive(acq_file_mutex);
         BsetExpander(1,0);
@@ -124,7 +124,6 @@ void sdAcqWriteTask(void *pvParameter)
                     ESP_LOGI(TAG, "Mutex lock timed out closing file in sdTask");
                     assert(0);
                 }
-                BsetExpander(2,1);
                 ESP_LOGI(TAG, "Closing file");
                 fclose(acqfile);
                 acqfile = 0;
@@ -132,7 +131,6 @@ void sdAcqWriteTask(void *pvParameter)
                 acqwrite_index_out = 0;
                 close_acq_file = false;
                 xSemaphoreGive(acq_file_mutex);
-                BsetExpander(2,0);
             }
         }
         vTaskDelay(1);
@@ -207,7 +205,6 @@ int OpenNextAcqFile(void)
     char temp[4] = "";
     struct stat st;
     int i;
-    ESP_LOGI(TAG, "open next acq file 1");
 
     if(MountSD())
     {
@@ -217,8 +214,6 @@ int OpenNextAcqFile(void)
             ESP_LOGI(TAG, "Mutex lock timed out in openNextAcqFile");
             return ret;
         }
-        ESP_LOGI(TAG, "open next acq file 2");
-        BsetExpander(3,1);
         gpio_set_level(BLINK, 1);
 
         if(close_acq_file)
@@ -228,17 +223,11 @@ int OpenNextAcqFile(void)
             {
                 ESP_LOGE(TAG, "acq file still open in OpenNextAcqFile");
                 xSemaphoreGive(acq_file_mutex);
-                BsetExpander(3,0);
-                gpio_set_level(BLINK, 0);
                return false;
             }
         }
-        ESP_LOGI(TAG, "open next acq file 3");
         xSemaphoreGive(acq_file_mutex);
-        BsetExpander(3,0);
-        gpio_set_level(BLINK, 0);
 
-        ESP_LOGI(TAG, "open next acq file 4");
         if(stat("/sdcard/data", &st) == 0)
         {
             if(!S_ISDIR(st.st_mode))
@@ -289,9 +278,9 @@ int OpenNextAcqFile(void)
 void CloseAcqFile(void)
 {
 #if 0
-                ESP_LOGI(TAG, "Closing file");
-                fclose(acqfile);
-                acqfile = 0;
+    ESP_LOGI(TAG, "Closing file");
+    fclose(acqfile);
+    acqfile = 0;
     close_acq_file = false;
 #endif
     close_acq_file = true;
