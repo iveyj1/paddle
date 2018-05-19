@@ -194,7 +194,7 @@ void ADTask(void *pvParameter)
 #if 1
                if(temptime >= 20000 || temptime < 18000)
                 {
-                    ESP_LOGI(TAG, "Looptime: %lld", temptime);
+                    //ESP_LOGI(TAG, "Looptime: %lld", temptime);
                 }
                 last_esp_time = esp_timer_get_time();
                 for(ad_current = 0; ad_current < NUM_AD; ad_current++)

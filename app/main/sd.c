@@ -55,7 +55,7 @@ int acqQueue(const char* buf, int length)
     {
         BsetExpander(0,1);
         acqwrite_index_in = (acqwrite_index_in + length) % ACQWRITE_BUFFER_LEN;
-        ESP_LOGI(TAG, "after write acqwrite_buffer:%s, index_in1:%d length:%d", acqwrite_buffer, acqwrite_index_in,length);
+//        ESP_LOGI(TAG, "after write acqwrite_buffer:%s, index_in1:%d length:%d", acqwrite_buffer, acqwrite_index_in,length);
     }
     else
     {
@@ -64,7 +64,7 @@ int acqQueue(const char* buf, int length)
     }
     BsetExpander(0,0);
     xSemaphoreGive(acq_file_mutex);
-    ESP_LOGI(TAG, "gave acq_file_mutex 1");
+//    ESP_LOGI(TAG, "gave acq_file_mutex 1");
 #endif
     return true;
 }
@@ -88,6 +88,7 @@ void sdAcqWriteTask(void *pvParameter)
 
         if(acqfile)
         {
+#if 1            
             if(backlog)
             {
                 char *write_start = acqwrite_buffer + acqwrite_index_out;
@@ -95,17 +96,25 @@ void sdAcqWriteTask(void *pvParameter)
                 if(backlog > 0)
                 {
                     fwrite(write_start, 1, backlog, acqfile);
+//                    fwrite(write_start, 1, backlog, acqfile);
                 }
-                else 
+                else // write buffer wrapped around
                 {
                     int write_bytes_to_end = ACQWRITE_BUFFER_LEN - acqwrite_index_out;
                     // write bytes from current buffer out index through end of buffer
                     fwrite(acqwrite_buffer + acqwrite_index_out, 1, write_bytes_to_end, acqfile);
+//                    fwrite(acqwrite_buffer, 1, write_bytes_to_end, acqfile);
                     // write remaining bytes from beginning of buffer
+                    backlog += ACQWRITE_BUFFER_LEN;
                     fwrite(acqwrite_buffer, 1, backlog - write_bytes_to_end, acqfile);
+//                    fwrite(acqwrite_buffer, 1, backlog - write_bytes_to_end, acqfile);
                 }
                 acqwrite_index_out = acqwrite_index_in;
             }
+#endif            
+//            fwrite("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 1, 120, acqfile);
+//            fwrite("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 1, 120, acqfile);
+
             if(close_acq_file)
             {
                 ESP_LOGI(TAG, "closing acq file");
