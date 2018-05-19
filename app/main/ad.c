@@ -121,7 +121,6 @@ void PostSPICallback(spi_transaction_t *config)
     gpio_set_level(ad_cs_table[ad_current], 1);
 }
 
-//TickType_t previous_wake_time;
 char nmeabuf[NMEA_BUF_LEN];
 char writebuf[WRITE_BUF_LEN];
 
@@ -182,24 +181,25 @@ void ADTask(void *pvParameter)
     float filt_coef = 0.05;
     static int64_t last_esp_time;
     uint8_t blown_loop = false;
-
+    previous_wake_time = xTaskGetTickCount();
+    int64_t toptime, toptime_last, looptime;
+    toptime_last = esp_timer_get_time();
     while(1)
     {
         vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
-        int64_t temptime = esp_timer_get_time() - last_esp_time;
+        toptime = esp_timer_get_time();
+        looptime = toptime - toptime_last;
         if(acquire)
         {
             if(acq_in_progress)
             {
-                    
 #if 1
                 blown_loop = false;
-                if(temptime >= 20040 || temptime <= 19960)
+                if(looptime >= 20040 || looptime <= 19960)
                 {
                     blown_loop = true;
                     //ESP_LOGI(TAG, "Looptime: %lld", temptime);
                 }
-                last_esp_time = esp_timer_get_time();
                 for(ad_current = 0; ad_current < NUM_AD; ad_current++)
                 {
                     ADCmd(spi, 0x08);  // start conversion
@@ -223,7 +223,7 @@ void ADTask(void *pvParameter)
                 {
                     BsetExpander(2,1);
                     //int n = 0;
-                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12d,%12d,%12d,%12d,%12lld,%2d,", timenow, adval[0], adval[1], adval[2], adval[3], temptime, (blown_loop?1:0));
+                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12d,%12d,%12d,%12d,%12lld,%12lld,%12lld,%d,%2d,", timenow, adval[0], adval[1], adval[2], adval[3], looptime, toptime, toptime_last, previous_wake_time, (blown_loop?1:0));
                     //acqQueue(writebuf, n);
                     if(print_nmea)
                     {
@@ -250,6 +250,7 @@ void ADTask(void *pvParameter)
                 ESP_LOGI(TAG, "starting acq");
                 if(OpenNextAcqFile())
                 {
+                    previous_wake_time = xTaskGetTickCount();
                     acq_in_progress = true;
                     sample_count = 0;
                 }
@@ -257,7 +258,6 @@ void ADTask(void *pvParameter)
                 {
                     ESP_LOGE(TAG, "failed to open acq file");
                 }
-                last_esp_time = esp_timer_get_time();
             }
         }
         else
@@ -270,6 +270,8 @@ void ADTask(void *pvParameter)
             }
         }
         checkStack();
+        toptime_last = toptime;
+
     }
 }
 

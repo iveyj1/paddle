@@ -45,7 +45,7 @@ static int close_acq_file = false;
 int acqQueue(const char* buf, int length)
 {
 #if 1
-    ESP_LOGI(TAG, "in acqQueue    buf:%s, length:%d", buf, length);
+    //ESP_LOGI(TAG, "in acqQueue    buf:%s, length:%d", buf, length);
     for(int i = 0; i < length; i++)
     {
         acqwrite_buffer[(acqwrite_index_in + i) % ACQWRITE_BUFFER_LEN] = buf[i];
@@ -69,6 +69,7 @@ int acqQueue(const char* buf, int length)
     return true;
 }
 
+char temp[2048] = "";
 void sdAcqWriteTask(void *pvParameter)
 {
     while(1)
@@ -96,18 +97,21 @@ void sdAcqWriteTask(void *pvParameter)
                 if(backlog > 0)
                 {
                     fwrite(write_start, 1, backlog, acqfile);
-//                    fwrite(write_start, 1, backlog, acqfile);
+                    strncpy(temp, write_start, 2048);
+                    ESP_LOGI(TAG, "%s\n",temp);
                 }
                 else // write buffer wrapped around
                 {
                     int write_bytes_to_end = ACQWRITE_BUFFER_LEN - acqwrite_index_out;
                     // write bytes from current buffer out index through end of buffer
                     fwrite(acqwrite_buffer + acqwrite_index_out, 1, write_bytes_to_end, acqfile);
-//                    fwrite(acqwrite_buffer, 1, write_bytes_to_end, acqfile);
+                    strncpy(temp, acqwrite_buffer + acqwrite_index_out, 2048 - acqwrite_index_out);
+                    ESP_LOGI(TAG, "%s\n",temp);
                     // write remaining bytes from beginning of buffer
                     backlog += ACQWRITE_BUFFER_LEN;
                     fwrite(acqwrite_buffer, 1, backlog - write_bytes_to_end, acqfile);
-//                    fwrite(acqwrite_buffer, 1, backlog - write_bytes_to_end, acqfile);
+                    strncpy(temp, acqwrite_buffer , 2048);
+                    ESP_LOGI(TAG, "%s\n",temp);
                 }
                 acqwrite_index_out = acqwrite_index_in;
             }
