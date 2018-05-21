@@ -11,8 +11,6 @@
 
 #define PORT_ACQ_SW  15
 
-//#define BUTTON_SW // uncomment to support pushbutton power switch rather than a toggle switch
-
 static const char TAG[]="Power";
 
 #include "checkstack.h"
@@ -30,7 +28,7 @@ void CheckPowerSwitch()
             vTaskDelay(20/portTICK_PERIOD_MS);
             vTaskList(tasklist_buf);
             ESP_LOGI(TAG, "Tasks\n%s", tasklist_buf);
-            ESP_LOGI(TAG, "Powering off");
+            ESP_LOGI(TAG, "power switch off");
             ADStopAcquire();
             while(acqfile)
             {
@@ -55,7 +53,6 @@ void CheckPowerSwitch()
 
 void CheckAcqSwitch()
 {
-    //ESP_LOGI(TAG, "acquire switch state: %d", gpio_get_level(PORT_ACQ_SW));
     if(ADAcquireInProgress())
     {
         if(gpio_get_level(PORT_ACQ_SW) == 0)
@@ -64,7 +61,7 @@ void CheckAcqSwitch()
             if(gpio_get_level(PORT_ACQ_SW) == 0)
             {
                 ADStopAcquire(); 
-                ESP_LOGI(TAG, "acq stopped");
+                ESP_LOGI(TAG, "acq switch on");
             }
         }
     }   
@@ -76,7 +73,7 @@ void CheckAcqSwitch()
             if(gpio_get_level(PORT_ACQ_SW) == 1)
             {
                 ADStartAcquire(); 
-                ESP_LOGI(TAG, "acq started");
+                ESP_LOGI(TAG, "acq switch off");
             }
         }
     }   
@@ -94,8 +91,6 @@ void PowerTask(void *pvParameter)
     gpio_pad_select_gpio(PORT_ACQ_SW);
     gpio_set_direction(PORT_ACQ_SW, GPIO_MODE_INPUT);
     gpio_pullup_en(PORT_ACQ_SW);
-    
-    
     
     while(1)
     {

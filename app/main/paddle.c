@@ -15,16 +15,10 @@
 #include "ad.h"
 #include "esp_timer.h"
 #include "httpd_paddle.h"
-
 #include "driver/uart.h"
-
 #define BLINK 13
 static const char* TAG = "paddle";
-
 #include "checkstack.h"
-
-static char tasklist_buf[1024];
-
 
 void app_main()
 {
@@ -51,11 +45,11 @@ void app_main()
         ESP_LOGE(TAG, "failed to mount SD");
     }
     
-    xTaskCreate(PowerTask, "Power", 4096, NULL, 5, NULL);
-    xTaskCreate(ServerTask, "Webserver", 32768, NULL, 6, NULL);
-    xTaskCreate(GpsTask, "GPS", 4096, NULL, 7, NULL);
-    xTaskCreate(sdAcqWriteTask, "acqwrite", 16384, NULL, 8, NULL);
-    xTaskCreate(ADTask, "AD", 8192, NULL, 10, NULL);
+    xTaskCreatePinnedToCore(PowerTask, "Power", 4096, NULL, 5, NULL,0);
+    xTaskCreatePinnedToCore(ServerTask, "Webserver", 32768, NULL, 6, NULL,0);
+    xTaskCreatePinnedToCore(GpsTask, "GPS", 4096, NULL, 7, NULL,0);
+    xTaskCreatePinnedToCore(sdAcqWriteTask, "acqwrite", 16384, NULL, 8, NULL,0);
+    xTaskCreatePinnedToCore(ADTask, "AD", 8192, NULL, 24, NULL,1);
     //ADStartAcquire();
     checkStack();
     //acqQueue("0123456789abcdefgh", 18);

@@ -34,8 +34,8 @@ FILE *acqfile = 0;
 bool sd_mounted = false;
 
 #define ACQWRITE_BUFFER_LEN 4096
-static char acqwrite_buffer[ACQWRITE_BUFFER_LEN] = "";//{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-static int acqwrite_index_in = 0;   // index into acqwrite_buffer -- next character to be filled when a written to 
+static char acqwrite_buffer[ACQWRITE_BUFFER_LEN] = "";
+static int acqwrite_index_in = 0;   // index into acqwrite_buffer -- next character to be filled when written to 
 static int acqwrite_index_out = 0;  // index into acqwrite_buffer -- next character to be written out -- 
                                     //== index_in when all characters have been written to SD
 SemaphoreHandle_t acq_file_mutex = 0;
@@ -44,18 +44,14 @@ static int close_acq_file = false;
 // used by other tasks to store info to the buffer
 int acqQueue(const char* buf, int length)
 {
-#if 1
-    //ESP_LOGI(TAG, "in acqQueue    buf:%s, length:%d", buf, length);
     for(int i = 0; i < length; i++)
     {
         acqwrite_buffer[(acqwrite_index_in + i) % ACQWRITE_BUFFER_LEN] = buf[i];
     }
 
-    BsetExpander(0,1);
     if(xSemaphoreTake(acq_file_mutex, (TickType_t) 200) == pdTRUE)
     {
         acqwrite_index_in = (acqwrite_index_in + length) % ACQWRITE_BUFFER_LEN;
-//        ESP_LOGI(TAG, "after write acqwrite_buffer:%s, index_in1:%d length:%d", acqwrite_buffer, acqwrite_index_in,length);
     }
     else
     {
@@ -63,19 +59,14 @@ int acqQueue(const char* buf, int length)
         return false;
     }
     xSemaphoreGive(acq_file_mutex);
-    BsetExpander(0,0);
-//    ESP_LOGI(TAG, "gave acq_file_mutex 1");
-#endif
     return true;
 }
 
-char temp[2048] = "";
 void sdAcqWriteTask(void *pvParameter)
 {
     while(1)
     {
-        BsetExpander(1,1);
-        int ret = xSemaphoreTake(acq_file_mutex, (TickType_t) 200);
+       int ret = xSemaphoreTake(acq_file_mutex, (TickType_t) 200);
         if(ret != pdTRUE)
         {
             ESP_LOGI(TAG, "Mutex lock timed out in sdTask");
@@ -83,69 +74,40 @@ void sdAcqWriteTask(void *pvParameter)
         }
         int in = acqwrite_index_in;
         xSemaphoreGive(acq_file_mutex);
-        BsetExpander(1,0);
 
         int backlog = in - acqwrite_index_out;
 
         if(acqfile)
         {
-#if 1            
             if(backlog)
             {
                 char *write_start = acqwrite_buffer + acqwrite_index_out;
 //                ESP_LOGI(TAG, "backlog: %d acqwrite_index_in: %d, acqwrite_index_out %d", backlog, acqwrite_index_in, acqwrite_index_out);
                 if(backlog > 0)
                 {
-                    BsetExpander(3,1);
-                    ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d", backlog, (uint32_t) (write_start), acqwrite_index_out);
+                    //ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d", backlog, (uint32_t) (write_start), acqwrite_index_out);
+                    BsetExpander(0,1);
                     fwrite(write_start, 1, backlog, acqfile);
-                    BsetExpander(3,0);
-                    strncpy(temp, write_start, 2048);
-//                    ESP_LOGI(TAG, "%s\n",temp);
+                    BsetExpander(0,0);
                 }
                 else // write buffer wrapped around
                 {
                     int write_bytes_to_end = ACQWRITE_BUFFER_LEN - acqwrite_index_out;
-                    ESP_LOGI(TAG, "BUFLEN: %d, acqwrite_index_out: %d, write_bytes_to_end: %d", ACQWRITE_BUFFER_LEN, acqwrite_index_out, write_bytes_to_end);
+                    //ESP_LOGI(TAG, "BUFLEN: %d, acqwrite_index_out: %d, write_bytes_to_end: %d", ACQWRITE_BUFFER_LEN, acqwrite_index_out, write_bytes_to_end);
                     // write bytes from current buffer out index through end of buffer
-                    ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d, write_bytes_to_end %12d", backlog, (uint32_t) (write_start), acqwrite_index_out, write_bytes_to_end);
+//                    ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d, write_bytes_to_end %12d", backlog, (uint32_t) (write_start), acqwrite_index_out, write_bytes_to_end);
+                    BsetExpander(0,1);
                     fwrite(write_start, 1, write_bytes_to_end, acqfile);
-                    //strncpy(temp, acqwrite_buffer + acqwrite_index_out, 2048 - acqwrite_index_out);
-//                    ESP_LOGI(TAG, "%s\n",temp);
+                    BsetExpander(0,0);
                     // write remaining bytes from beginning of buffer
                     backlog += ACQWRITE_BUFFER_LEN;
-                    ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d, write_bytes_to_end %12d", backlog, (uint32_t) (acqwrite_buffer), acqwrite_index_out, write_bytes_to_end);
+//                    ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d, write_bytes_to_end %12d", backlog, (uint32_t) (acqwrite_buffer), acqwrite_index_out, write_bytes_to_end);
+                    BsetExpander(0,1);
                     fwrite(acqwrite_buffer, 1, backlog - write_bytes_to_end, acqfile);
-                    //strncpy(temp, acqwrite_buffer , 2048);
-//                    ESP_LOGI(TAG, "%s\n",temp);
+                    BsetExpander(0,0);
                 }
-#if 0
-                for(int i = acqwrite_index_out, int first_cr_found = false; 1; i--)
-                {
-                    if(i < 0)
-                    {
-                        i = ACQWRITE_BUFFER_LEN);
-                    }
-                    if(i = acqwrite_index_out)
-                    {
-                        break;
-                    }
-                    if(last_cr_found)
-                    {
-                        
-                    }
-                    else
-                    {
-                        if
-                    }
-                }
-#endif
                 acqwrite_index_out = acqwrite_index_in;
             }
-#endif            
-//            fwrite("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 1, 120, acqfile);
-//            fwrite("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 1, 120, acqfile);
-
             if(close_acq_file)
             {
                 ESP_LOGI(TAG, "closing acq file");
@@ -157,6 +119,7 @@ void sdAcqWriteTask(void *pvParameter)
                 }
                 ESP_LOGI(TAG, "Closing file");
                 fclose(acqfile);
+                BsetExpander(3,0);
                 acqfile = 0;
                 acqwrite_index_in = 0;
                 acqwrite_index_out = 0;
@@ -196,6 +159,7 @@ int MountSD()
         {
             sd_mounted = true;
             sdmmc_card_print_info(stdout, card);
+            BsetExpander(2,1);
             return (true);
         }
         else
@@ -223,14 +187,14 @@ int UnmountSD()
         esp_vfs_fat_sdmmc_unmount();
         sd_mounted = false;
         ESP_LOGI(TAG, "Card unmounted");
+        BsetExpander(2,0);
     }
     return true;
 }
 
-
-//#define ACQ_FILE_DIGITS 3
 #define BLINK 13
 //gpio_set_level(BLINK, 1);
+
 int OpenNextAcqFile(void)
 {
     char path[64] = "/sdcard/data/data000.csv";
@@ -294,6 +258,7 @@ int OpenNextAcqFile(void)
                     return false;
                 }
                 ESP_LOGI(TAG, "file %s opened for writing", path);
+                BsetExpander(3,1);
                 break;
             }
         }
@@ -308,13 +273,6 @@ int OpenNextAcqFile(void)
 
 void CloseAcqFile(void)
 {
-#if 0
-    ESP_LOGI(TAG, "Closing file");
-    fclose(acqfile);
-    acqfile = 0;
-    close_acq_file = false;
-#endif
     close_acq_file = true;
-
 }
 

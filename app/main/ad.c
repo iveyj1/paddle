@@ -14,7 +14,6 @@
 #include "expander.h"
 
 static const char *TAG = "ad";
-
 static int acquire = 0;
 
 #define PORT_AD_MISO 14
@@ -26,7 +25,6 @@ static int acquire = 0;
 #define PORT_AD_CS3  32
 #define PORT_AD_BUSY 35
 #define NUM_AD 4
-
 #define AD_MSG_LEN 4
 #define LOOPTIME 20  // loop time in ms, minimum 10 (== tick time)
 const static int ad_cs_table[NUM_AD] = { PORT_AD_CS0, PORT_AD_CS1, PORT_AD_CS2, PORT_AD_CS3 };  // IO pins for a/d channel 0-3
@@ -68,7 +66,6 @@ void ADSetup(spi_device_handle_t spi)
         assert(ret == ESP_OK);                    
     }
 }
-
 
 void ADCmd(spi_device_handle_t spi, const uint8_t cmd)
 {
@@ -126,10 +123,8 @@ char writebuf[WRITE_BUF_LEN];
 
 void ADTask(void *pvParameter)
 {
-
     TickType_t previous_wake_time;
 
-#if 1
     esp_err_t ret;
     spi_device_handle_t spi;
 
@@ -159,18 +154,15 @@ void ADTask(void *pvParameter)
     }
     
     //Initialize the SPI bus
-
     ret=spi_bus_initialize(VSPI_HOST, &buscfg, 0); // HSPI is used by SD
     assert(ret==ESP_OK);
     ret=spi_bus_add_device(VSPI_HOST, &devcfg, &spi);
     assert(ret==ESP_OK);
     ESP_LOGI(TAG, "attached to VSPI for AD");
 
-    uint8_t ad_temp[AD_MSG_LEN];
-
     ADSetup(spi);
     
-#endif    
+    uint8_t ad_temp[AD_MSG_LEN];
     int32_t val;
     int print_nmea = false;
     int acq_in_progress = 0;
@@ -179,26 +171,26 @@ void ADTask(void *pvParameter)
     float offset = 0;
     int sample_count = 0;
     float filt_coef = 0.05;
-    static int64_t last_esp_time;
-    uint8_t blown_loop = false;
+    uint32_t blown_looptime = 0;
     previous_wake_time = xTaskGetTickCount();
     int64_t toptime, toptime_last, looptime;
     toptime_last = esp_timer_get_time();
+    
     while(1)
     {
         vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
+        uint64_t starttime = esp_timer_get_time();
         toptime = esp_timer_get_time();
         looptime = toptime - toptime_last;
         if(acquire)
         {
             if(acq_in_progress)
             {
-#if 1
-                blown_loop = false;
+                //ESP_LOGI(TAG, "Looptime: %lld", looptime);
                 if(looptime >= 20200 || looptime <= 19800)
                 {
-                    blown_loop = true;
-                    //ESP_LOGI(TAG, "Looptime: %lld", temptime);
+                    blown_looptime++;
+                    ESP_LOGI(TAG, "****************** Looptime out of range: %lld", looptime);
                 }
                 for(ad_current = 0; ad_current < NUM_AD; ad_current++)
                 {
@@ -210,46 +202,35 @@ void ADTask(void *pvParameter)
                     val = (int32_t)((ad_temp[1]<<24) + (ad_temp[2]<<16) + (ad_temp[3]<<8));  // assemble at left side of int so sign bit is correct
                     // first byte is empty
                     val >>= 8;  // right shift to get scale correct - sign will be extended
-                    adval[ad_current] = val;
+                    adval[ad_current] = val - offset;
                 }
                 print_nmea = GetLastNMEAMessage(nmeabuf, NMEA_BUF_LEN, false);
-                //strcpy(nmeabuf, "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfaasdfasdfasdfasdfsdfasdf");
-                //print_nmea = true;
                 
                 filtval = filtval * (1-filt_coef) + (float)(adval[0] - adval[1]) * filt_coef;
-#endif                
                 int64_t timenow =  esp_timer_get_time()/1000;
                 if(acqfile)
                 {
-                    BsetExpander(2,1);
-                    //int n = 0;
-                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12d,%12d,%12d,%12d,%12lld,%12lld,%12lld,%d,%2d,", timenow, adval[0], adval[1], adval[2], adval[3], looptime, toptime, toptime_last, previous_wake_time, (blown_loop?1:0));
-                    //acqQueue(writebuf, n);
+                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12d,%12d,%12d,%12d,%lld,%2d,", timenow, adval[0], adval[1], adval[2], adval[3], looptime, blown_looptime);
                     if(print_nmea)
                     {
                         n += snprintf(writebuf + n, WRITE_BUF_LEN - n, "%s", nmeabuf);
-                        //acqQueue(writebuf, n);
-                        //ESP_LOGI(TAG, "NMEA added to acq file: %s", nmeabuf);
                     }
-                    //ESP_LOGI(TAG, "n: %d, write: %s", n, writebuf);
                     n += snprintf(writebuf + n, WRITE_BUF_LEN - n, "\r\n");
                     acqQueue(writebuf, n);
-                    BsetExpander(2,0);
                 }
-#if 1
                 //ESP_LOGI(TAG, "%10lld,%12.0d,%12.0d,%12.0d,%12.0d,%12.0f", timenow, adval[0], adval[1], adval[2], adval[3], filtval - offset);
                 if(sample_count++ == 100)
                 {
                     offset = filtval;
                     filt_coef *= 10;
                 }
-#endif
             }
-            else  // is this logic working?
+            else
             {
                 ESP_LOGI(TAG, "starting acq");
                 if(OpenNextAcqFile())
                 {
+                    blown_looptime = 0;
                     previous_wake_time = xTaskGetTickCount();
                     acq_in_progress = true;
                     sample_count = 0;
@@ -271,17 +252,9 @@ void ADTask(void *pvParameter)
         }
         checkStack();
         toptime_last = toptime;
+        ESP_LOGI(TAG, "duration %lld", esp_timer_get_time() - starttime);
 
     }
 }
 
-#if 0
-        if(print_nmea)
-        {
-            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,%s", timenow, val, nmeabuf);
-        } else
-        {
-            ESP_LOGI(TAG, "%10lld,%12.0d,0,0,0,", timenow, val);
-        }
-#endif
 
