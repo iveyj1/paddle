@@ -16,6 +16,8 @@
 #include "esp_timer.h"
 #include "httpd_paddle.h"
 
+#include "driver/uart.h"
+
 #define BLINK 13
 static const char* TAG = "paddle";
 
@@ -26,6 +28,7 @@ static char tasklist_buf[1024];
 
 void app_main()
 {
+    uart_set_baudrate(UART_NUM_0, 460800);
     gpio_pad_select_gpio(BLINK);
     gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
     
@@ -49,7 +52,7 @@ void app_main()
     }
     
     xTaskCreate(PowerTask, "Power", 4096, NULL, 5, NULL);
-    //xTaskCreate(ServerTask, "Webserver", 32768, NULL, 6, NULL);
+    xTaskCreate(ServerTask, "Webserver", 32768, NULL, 6, NULL);
     xTaskCreate(GpsTask, "GPS", 4096, NULL, 7, NULL);
     xTaskCreate(sdAcqWriteTask, "acqwrite", 16384, NULL, 8, NULL);
     xTaskCreate(ADTask, "AD", 8192, NULL, 10, NULL);

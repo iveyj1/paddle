@@ -195,7 +195,7 @@ void ADTask(void *pvParameter)
             {
 #if 1
                 blown_loop = false;
-                if(looptime >= 20040 || looptime <= 19960)
+                if(looptime >= 20200 || looptime <= 19800)
                 {
                     blown_loop = true;
                     //ESP_LOGI(TAG, "Looptime: %lld", temptime);
