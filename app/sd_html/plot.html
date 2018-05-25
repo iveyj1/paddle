@@ -14,19 +14,26 @@
   </head>
   <body>
     <div id="container"></div>
-    <button type="button" onclick="loadDoc()">load</button>
-    <button type="button" onclick="processData(0)">Plot 0</button>
-    <button type="button" onclick="processData(1)">Plot 1</button>
-    <button type="button" onclick="processData(2)">Plot 2</button>
-    <button type="button" onclick="processData(3)">Plot 3</button>
-
-    <script src = "flotr2.js" >   </script>
-    <script type="text/javascript">
+    <div id="container1">
+      <!-- <button type="button" onclick="loadDoc()"> load</button>  -->
+        <button id="load0" type="button" onclick="processData(0)">Plot 0</button>
+        <button id="load1" type="button" onclick="processData(1)">Plot 1</button>
+        <button id="load2" type="button" onclick="processData(2)">Plot 2</button>
+        <button id="load3" type="button" onclick="processData(3)">Plot 3</button>
+    </div>
+<script src = "flotr2.js" >   </script>
+<script type="text/javascript">
 
 var text;
     
-function loadDoc() 
+window.onload = function loadDoc() 
 {
+    document.getElementById('load0').disabled=true;
+    document.getElementById('load1').disabled=true;
+    document.getElementById('load2').disabled=true;
+    document.getElementById('load3').disabled=true;
+    //alert(elements);
+    
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = 
         function() 
@@ -35,6 +42,11 @@ function loadDoc()
             {
                 //processData(this.responseText);
                 text = this.responseText;
+                document.getElementById('load0').disabled=false;
+                document.getElementById('load1').disabled=false;
+                document.getElementById('load2').disabled=false;
+                document.getElementById('load3').disabled=false;
+                processData(0);
             }
         };
     var paramsString = location.search;
@@ -42,6 +54,7 @@ function loadDoc()
     //alert(searchParams.get("url"));
     xhttp.open("GET", searchParams.get("url"), true);
     xhttp.send();
+    
 }
 
 function processData(channel) 
