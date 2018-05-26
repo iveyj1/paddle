@@ -137,27 +137,16 @@ HttpdBuiltInUrl builtInUrls[]={
 	//ROUTE_CGI_ARG("*", cgiRedirectApClientToHostname, "esp8266.nonet"),
 	//ROUTE_REDIRECT("/", "/index.tpl"),
 
-	ROUTE_TPL("/led.tpl", tplLed),
-	ROUTE_TPL("/index.tpl", tplCounter),
-	ROUTE_CGI("/led.cgi", cgiLed),
     ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/html/"),
-    //ROUTE_CGI("/plot", cgiPlot),
-
+//	ROUTE_REDIRECT("/", "/data/"),    
     ROUTE_CGI("/", cgiFatFsDirHook),
     ROUTE_CGI("/html", cgiFatFsDirHook),
     ROUTE_CGI("/html/", cgiFatFsDirHook),
     ROUTE_CGI("/data", cgiFatFsDirHook),
-    ROUTE_CGI("/data/", cgiFatFsDirHook),
-    ROUTE_CGI("/*", cgiFatFsHook),
-    
-    
- 	ROUTE_REDIRECT("/data/", "/data"),
-	ROUTE_REDIRECT("/html/", "/html"),
-    // ROUTE_CGI("/data/", cgiFatFsDirHook),
-    // ROUTE_CGI("/html/", cgiFatFsDirHook),
-    // ROUTE_CGI("/data/*", cgiFatFsHook),
-    // ROUTE_CGI("/html/*", cgiFatFsHook),
-    
+    ROUTE_CGI("/data/", cgiFatFsDirHook),   
+    ROUTE_CGI("/dir", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
+    ROUTE_CGI("/dir/", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
+   
 
 	//ROUTE_REDIRECT("/flash", "/flash/index.html"),
 	//ROUTE_REDIRECT("/flash/", "/flash/index.html"),

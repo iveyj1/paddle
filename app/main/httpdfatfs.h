@@ -6,5 +6,6 @@
 
 CgiStatus cgiFatFsHook(HttpdConnData *connData);
 CgiStatus cgiFatFsDirHook(HttpdConnData *connData);
+CgiStatus cgiFatFsDirJSONHook(HttpdConnData *connData);
 
 #endif

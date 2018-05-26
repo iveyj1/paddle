@@ -252,7 +252,7 @@ void ADTask(void *pvParameter)
         }
         checkStack();
         toptime_last = toptime;
-        ESP_LOGI(TAG, "duration %lld", esp_timer_get_time() - starttime);
+        //ESP_LOGI(TAG, "duration %lld", esp_timer_get_time() - starttime);
 
     }
 }
