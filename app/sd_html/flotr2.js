@@ -1631,7 +1631,7 @@ Flotr.defaultOptions = {
     mode: 'normal',        // => can be 'time' or 'normal'
     timeFormat: null,
     timeMode:'UTC',        // => For UTC time ('local' for local time).
-    timeUnit:'millisecond',// => Unit for time (millisecond, second, minute, hour, day, month, year)
+    timeUnit:'millisecond',// => Unit for time (millisecond, second, minute, hour, day, month, year)
     scaling: 'linear',     // => Scaling, can be 'linear' or 'logarithmic'
     base: Math.E,
     titleAlign: 'center',
@@ -2704,10 +2704,8 @@ Graph.prototype = {
     // @TODO Context menu?
     if(event.isRightClick()) {
       event.stop();
-
       var overlay = this.overlay;
       overlay.hide();
-
       function cancelContextMenu () {
         overlay.show();
         E.stopObserving(document, 'mousemove', cancelContextMenu);
@@ -7204,4 +7202,5 @@ Flotr.addPlugin('titles', {
     }
   }
 });
+
 })();

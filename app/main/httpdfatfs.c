@@ -29,11 +29,14 @@ static const char *TAG = "httpdfatfs";
 
 int str_append(char *buff, size_t buffsize, const char *in)
 {
-    int buff_str_len = strlen(buff);
+    int buff_str_len = strnlen(buff, buffsize);
     int in_str_len = strlen(in);
-    if((buff_str_len + in_str_len + 1) > buffsize) return -1;
+    if((buff_str_len + in_str_len + 1) > buffsize) 
+    {
+        return -1;
+    }
     memcpy(buff + buff_str_len, in, in_str_len);
-    *(buff + buff_str_len + in_str_len) = '\0';
+    buff[buff_str_len + in_str_len] = '\0';
     return(buff_str_len + in_str_len);
 }
 
@@ -43,7 +46,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
     char buff[512];
     char path[P_PATHBUFSIZE];
     //int needSlash;
-    ESP_LOGV(TAG, "In cgiFatFsDirJSONHook");
+    ESP_LOGI(TAG, "In cgiFatFsDirJSONHook");
     ESP_LOGV(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
     static char sep[4] = "";
 
@@ -61,7 +64,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
 
     path[0] = 0;
     str_append(path, sizeof(path), SD_PREFIX);
-    int len = httpdFindArg(connData->getArgs, "dirurl", buff, sizeof(buff));
+    int len = httpdFindArg(connData->getArgs, "path", buff, sizeof(buff));
     ESP_LOGI(TAG, "connData->getArgs %s, buff: %s, len: %d", connData->getArgs, buff, len);
     str_append(path, sizeof(path), buff);
     int strlen_path = strlen(path);
@@ -91,7 +94,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
         httpdEndHeaders(connData);
         sprintf(buff, "{ \"path\":\"%s\",\n    \"entries\":[\n", connData->url);
         httpdSend(connData, buff, -1);
-        sep[0] = '\0';
+        sep[0] = 0;
         return HTTPD_CGI_MORE;
     }
     else

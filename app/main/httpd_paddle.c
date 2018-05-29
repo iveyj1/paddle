@@ -142,8 +142,10 @@ HttpdBuiltInUrl builtInUrls[]={
     ROUTE_CGI("/", cgiFatFsDirHook),
     ROUTE_CGI("/html", cgiFatFsDirHook),
     ROUTE_CGI("/html/", cgiFatFsDirHook),
+    ROUTE_CGI("/html/*", cgiFatFsHook),
     ROUTE_CGI("/data", cgiFatFsDirHook),
     ROUTE_CGI("/data/", cgiFatFsDirHook),   
+    ROUTE_CGI("/data/*", cgiFatFsHook),   
     ROUTE_CGI("/dir", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
     ROUTE_CGI("/dir/", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
    
