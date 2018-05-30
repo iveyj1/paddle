@@ -33,6 +33,8 @@ the server, including WiFi connection management capabilities, some IO etc.
 #include "freertos/semphr.h"
 #include "freertos/queue.h"
 #include "freertos/event_groups.h"
+#include "cgideletesd.h"
+#include "cgiuploadsd.h"
 
 #include "esp_wifi.h"
 #include "esp_err.h"
@@ -147,7 +149,9 @@ HttpdBuiltInUrl builtInUrls[]={
     ROUTE_CGI("/data/", cgiFatFsDirHook),   
     ROUTE_CGI("/data/*", cgiFatFsHook),   
     ROUTE_CGI("/dir", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
-    ROUTE_CGI("/dir/", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
+    ROUTE_CGI("/dir/", cgiFatFsDirJSONHook),
+    ROUTE_CGI("/del", cgiDeleteSdFile),
+    ROUTE_CGI("/del/", cgiDeleteSdFile),
    
 
 	//ROUTE_REDIRECT("/flash", "/flash/index.html"),

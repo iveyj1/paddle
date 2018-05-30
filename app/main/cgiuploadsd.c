@@ -5,7 +5,7 @@
 #include <stdlib.h>
 //#include <unistd.h> access() appears not to be implemented for ESP32 attm
 
-const char TAG[] = "cgiuploadsd.c";
+static const char TAG[] = "cgiDeleteSD.c";
 
 #define min(x, y) ({                \
     typeof(x) _min1 = (x);          \
@@ -106,6 +106,9 @@ CgiStatus ICACHE_FLASH_ATTR cgiUploadSdFile(HttpdConnData *connData)
         //We're done! Format a response.
         httpdStartResponse(connData, 200);
         httpdHeader(connData, "Content-Type", "text/plain");
+        httpdHeader(connData, "Cache-Control", "no-cache, no-store, must-revalidate");
+        httpdHeader(connData, "Pragma", "no-cache");
+        httpdHeader(connData, "Expires", "0");    
         httpdEndHeaders(connData); // Getting an extra 0x0a in the body at the other end - why?
         ESP_LOGI(TAG, "Closing file");
         fclose(fs);

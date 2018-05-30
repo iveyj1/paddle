@@ -90,7 +90,10 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
         connData->cgiData = dp;  // store directory info for next round
         httpdStartResponse(connData, 200);
         httpdHeader(connData, "Content-Type", httpdGetMimetype(connData->url));
-        httpdHeader(connData, "Cache-Control", "max-age=3600, must-revalidate");
+        //httpdHeader(connData, "Cache-Control", "max-age=3600, must-revalidate");
+        httpdHeader(connData, "Cache-Control", "no-cache, no-store, must-revalidate");
+        httpdHeader(connData, "Pragma", "no-cache");
+        httpdHeader(connData, "Expires", "0");       
         httpdEndHeaders(connData);
         sprintf(buff, "{ \"path\":\"%s\",\n    \"entries\":[\n", connData->url);
         httpdSend(connData, buff, -1);

@@ -1,12 +1,15 @@
 <html>
 <head><title>Upgrade firmware</title>
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <link rel="stylesheet" type="text/css" href="style.css">
 <script type="text/javascript" src="M.JS"></script>
 <script type="text/javascript">
 
-
 var xhr=j();
-
  
 function setProgress(amt) {
 	$("#progressbarinner").style.width=String(amt*200)+"px";
@@ -37,7 +40,6 @@ function doUpload() {
 			setProgress(e.loaded / e.total);
 		} 
 	}
-    alert("f.name");
     xhr.setRequestHeader('X-FileName', f.name); // Pass the filename along
 	xhr.send(f);
 	return false;

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
     <title>Files</title>
     <link rel="stylesheet" type="text/css" href="style.css">
  
@@ -11,10 +15,15 @@
             border:solid 1px #333;
             padding:2px 4px;
             font:30px Verdana;
+            table-layout: auto;
+            width: 100%;    
         }
         th {
             font-weight:bold;
             text-align:left;
+        }
+        .fillcell{
+            style="width:100%;height:100%";
         }
     </style>
 
@@ -47,9 +56,21 @@ function loadDoc()
     xhttp.send(); 
 }
 
-function deleteFile(name)
+function deleteFile(path)
 {
-    alert("deleting: " + name)
+    if(confirm("Deleting: " + path + "\nDo you want to continue?"))
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() 
+        {
+            if (this.readyState == 4 && this.status == 200) 
+            {
+                location.reload(true);
+            }
+        };
+        xhttp.open("GET", "/del/?path=" + path + "&v=" + Date.now(), true);
+        xhttp.send();
+    }
 }
 
 function CreateTableFromJSON() 
@@ -103,9 +124,9 @@ function CreateTableFromJSON()
                 var tabCell = tr.insertCell(-1);
                 var a = document.createElement('button');
                 //var linktarg = "/html/delete?path=/data/" + dirobj.entries[i].name; // make link to plot file
-                // a.setAttribute('onclick', deletefile());
+                a.style = "width:100%;height:100%";
                 tabCell.appendChild(a);                
-                a.addEventListener('click', deleteFile.bind(this, dirobj.entries[i].name));
+                a.addEventListener('click', deleteFile.bind(this, "/data/" + dirobj.entries[i].name));
                 a.innerHTML = "delete";
             }
             else
