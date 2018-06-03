@@ -141,7 +141,8 @@ HttpdBuiltInUrl builtInUrls[]={
 
     ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/html/"),
 //	ROUTE_REDIRECT("/", "/data/"),    
-    ROUTE_CGI("/", cgiFatFsDirHook),
+	ROUTE_REDIRECT("/", "/html/dir.html"),    
+//    ROUTE_CGI("/", cgiFatFsDirHook),
     ROUTE_CGI("/html", cgiFatFsDirHook),
     ROUTE_CGI("/html/", cgiFatFsDirHook),
     ROUTE_CGI("/html/*", cgiFatFsHook),
@@ -222,7 +223,7 @@ static esp_err_t wifi_event_handler(void *ctx, system_event_t *event)
     }
         break;
     case SYSTEM_EVENT_AP_STACONNECTED:
-        ESP_LOGI(TAG, "station:" MACSTR" join,AID=%d\n",
+        ESP_LOGI(TAG, "station:" MACSTR" join,AID=%d",
                 MAC2STR(event->event_info.sta_connected.mac),
                 event->event_info.sta_connected.aid);
         xEventGroupSetBits(wifi_ap_event_group, CONNECTED_BIT);
@@ -262,8 +263,8 @@ void ICACHE_FLASH_ATTR init_wifi(bool modeAP) {
 		ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_AP) );
 
 		wifi_config_t ap_config;
-		strcpy((char*)(&ap_config.ap.ssid), "ESP");
-		ap_config.ap.ssid_len = 3;
+		strcpy((char*)(&ap_config.ap.ssid), "Paddle");
+		ap_config.ap.ssid_len = 6;
 		ap_config.ap.channel = 1;
 		ap_config.ap.authmode = WIFI_AUTH_OPEN;
 		ap_config.ap.ssid_hidden = 0;

@@ -23,8 +23,8 @@ extern int str_append(char *buff, size_t buffsize, const char *in);
 CgiStatus ICACHE_FLASH_ATTR cgiDeleteSdFile(HttpdConnData *connData) {
     char buff[MAXPATH];
     char path[MAXPATH];
-    ESP_LOGI(TAG, "In cgiDeleteSdFile");
-    ESP_LOGV(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+    ESP_LOGD(TAG, "In cgiDeleteSdFile");
+    ESP_LOGD(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
 
     if (connData->isConnectionClosed) 
     {
@@ -38,7 +38,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiDeleteSdFile(HttpdConnData *connData) {
     int len = httpdFindArg(connData->getArgs, "path", buff, sizeof(buff));
     //ESP_LOGI(TAG, "connData->getArgs %s, buff: %s, len: %d", connData->getArgs, buff, len);
     str_append(path, sizeof(path), buff);
-    ESP_LOGI(TAG, "delete %s, length: %d", path, strlen(path));
+    ESP_LOGD(TAG, "delete %s, length: %d", path, strlen(path));
     
     httpdStartResponse(connData, 200);
     httpdHeader(connData, "Content-Type", httpdGetMimetype(connData->url));
@@ -52,7 +52,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiDeleteSdFile(HttpdConnData *connData) {
     {
         if(unlink(path) == 0)
         {
-            ESP_LOGI("TAG", "%s deleted", path);
+            ESP_LOGI(TAG, "%s deleted", path);
             return HTTPD_CGI_DONE;
         }
     }

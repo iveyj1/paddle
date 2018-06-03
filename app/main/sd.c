@@ -159,7 +159,7 @@ int MountSD()
         {
             sd_mounted = true;
             sdmmc_card_print_info(stdout, card);
-            BsetExpander(2,1);
+            BsetExpander(2,0);
             return (true);
         }
         else
@@ -187,7 +187,7 @@ int UnmountSD()
         esp_vfs_fat_sdmmc_unmount();
         sd_mounted = false;
         ESP_LOGI(TAG, "Card unmounted");
-        BsetExpander(2,0);
+        BsetExpander(2,1);
     }
     return true;
 }

@@ -27,6 +27,7 @@ void app_main()
     gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
     
     SetupExpander();
+    BsetExpander(2,1); // indicate SD not mounted yet
     
     BsetExpander(GPS_ENABLE, 0);  // Turn on GPS
     vTaskDelay(10/portTICK_PERIOD_MS);
@@ -50,10 +51,8 @@ void app_main()
     xTaskCreatePinnedToCore(GpsTask, "GPS", 4096, NULL, 7, NULL,0);
     xTaskCreatePinnedToCore(sdAcqWriteTask, "acqwrite", 16384, NULL, 8, NULL,0);
     xTaskCreatePinnedToCore(ADTask, "AD", 8192, NULL, 24, NULL,1);
-    //ADStartAcquire();
     checkStack();
-    //acqQueue("0123456789abcdefgh", 18);
-    //acqQueue("0123456789abcdefgh", 18);
+
     while(1)
     {
         //vTaskList(tasklist_buf);

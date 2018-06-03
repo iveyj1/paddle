@@ -73,6 +73,11 @@ function deleteFile(path)
     }
 }
 
+function downloadAction(path)
+{
+    window.location = path;
+}
+
 function CreateTableFromJSON() 
 {
 
@@ -84,7 +89,7 @@ function CreateTableFromJSON()
                             if(a.date > b.date) return 1;
                             return 0;
                         });
-    var col = ["name", "size", "date", "delete"];
+    var col = ["name", "download", "size", "date", "delete"];
 
 
     
@@ -118,6 +123,16 @@ function CreateTableFromJSON()
             }
             else if(key1 == "type")
             {
+            }
+            else if(key1 == "download")
+            {
+                var tabCell = tr.insertCell(-1);
+                var a = document.createElement('button');
+                //var linktarg = "/html/delete?path=/data/" + dirobj.entries[i].name; // make link to plot file
+                a.style = "width:100%;height:100%";
+                tabCell.appendChild(a);                
+                a.addEventListener('click', downloadAction.bind(this, "/data/" + dirobj.entries[i].name));
+                a.innerHTML = "download";
             }
             else if(key1 == "delete")
             {

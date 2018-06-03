@@ -46,8 +46,8 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
     char buff[512];
     char path[P_PATHBUFSIZE];
     //int needSlash;
-    ESP_LOGI(TAG, "In cgiFatFsDirJSONHook");
-    ESP_LOGV(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+    ESP_LOGD(TAG, "In cgiFatFsDirJSONHook");
+    ESP_LOGD(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
     static char sep[4] = "";
 
     if (connData->isConnectionClosed) 
@@ -65,14 +65,14 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
     path[0] = 0;
     str_append(path, sizeof(path), SD_PREFIX);
     int len = httpdFindArg(connData->getArgs, "path", buff, sizeof(buff));
-    ESP_LOGI(TAG, "connData->getArgs %s, buff: %s, len: %d", connData->getArgs, buff, len);
+    ESP_LOGD(TAG, "connData->getArgs %s, buff: %s, len: %d", connData->getArgs, buff, len);
     str_append(path, sizeof(path), buff);
     int strlen_path = strlen(path);
     if (path[strlen_path-1]=='/') 
     {
         path[strlen_path -1] = '\0';         // need to check buffer length here
     }
-    ESP_LOGI(TAG, "dirurl %s, length: %d", path, strlen(path));
+    ESP_LOGD(TAG, "dirurl %s, length: %d", path, strlen(path));
     
     //First call to this cgi. Open the dir so we can read it.
     if (dp == NULL) 
@@ -110,19 +110,19 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
             str_append(filepath, sizeof(filepath), path);
             str_append(filepath, sizeof(filepath), "/");
             str_append(filepath, sizeof(filepath), ep->d_name);   
-            ESP_LOGI(TAG, "reading dir entry path: %s name: %s filepath: %s", path, ep->d_name, filepath);
+            ESP_LOGD(TAG, "reading dir entry path: %s name: %s filepath: %s", path, ep->d_name, filepath);
             
             struct stat     statbuf;
             struct tm      *tm;
             char            datestring[256];   
             if (stat(filepath, &statbuf) != -1)
             {
-                ESP_LOGI(TAG, "Size: %9jd", (intmax_t)statbuf.st_size);
+                ESP_LOGD(TAG, "Size: %9jd", (intmax_t)statbuf.st_size);
                 tm = localtime(&statbuf.st_mtime);
-                ESP_LOGI(TAG, "strftime returns: %d", strftime(datestring, sizeof(datestring), "%Y-%m-%d_%H:%M:%S", tm));
-                ESP_LOGI(TAG, "date: %s\n", datestring);
+                strftime(datestring, sizeof(datestring), "%Y-%m-%d_%H:%M:%S", tm);
+                ESP_LOGD(TAG, "date: %s\n", datestring);
                 int namelen = strlen(ep->d_name);
-                ESP_LOGI(TAG, "namelen: %d dname:%s", namelen, ep->d_name);
+                ESP_LOGD(TAG, "namelen: %d dname:%s", namelen, ep->d_name);
                 char entrytype[10] = "";
                 if(S_ISREG(statbuf.st_mode))
                 {
@@ -134,7 +134,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirJSONHook(HttpdConnData *connData) {
                 }
                 
                 sprintf(buff, "%s        {\"name\":\"%s\", \"type\":\"%s\", \"size\":\"%lld\", \"date\":\"%s\"}", sep, ep->d_name, entrytype, (intmax_t)statbuf.st_size, datestring);  
-                ESP_LOGI(TAG, "url:%s", buff);
+                ESP_LOGD(TAG, "Dir entry JSON:%s", buff);
                 httpdSend(connData, buff, -1);
                 sep[0] = '\0';
                 str_append(sep, 5, ",\n");
@@ -214,20 +214,20 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
             str_append(filepath, sizeof(filepath), "/");
             str_append(filepath, sizeof(filepath), ep->d_name);   
             
-            ESP_LOGI(TAG, "reading dir entry path: %s name: %s filepath: %s", path, ep->d_name, filepath);
+            ESP_LOGD(TAG, "reading dir entry path: %s name: %s filepath: %s", path, ep->d_name, filepath);
             
             struct stat     statbuf;
             struct tm      *tm;
             char            datestring[256];         
             if (stat(filepath, &statbuf) != -1)
             {
-                ESP_LOGI(TAG, "Size: %9jd", (intmax_t)statbuf.st_size);
+                ESP_LOGD(TAG, "Size: %9jd", (intmax_t)statbuf.st_size);
                 tm = localtime(&statbuf.st_mtime);
-                ESP_LOGI(TAG, "strftime returns: %d", strftime(datestring, sizeof(datestring), "%Y-%m-%d_%H:%M:%S", tm));
-                ESP_LOGI(TAG, "date: %s\n", datestring);
+                strftime(datestring, sizeof(datestring), "%Y-%m-%d_%H:%M:%S", tm);
+                ESP_LOGD(TAG, "date: %s\n", datestring);
                 int namelen = strlen(ep->d_name);
-                ESP_LOGI(TAG, "namelen: %d dname:%s", namelen, ep->d_name);
-                ESP_LOGI(TAG, "csv:%s", ep->d_name + namelen - 4);
+                ESP_LOGD(TAG, "namelen: %d dname:%s", namelen, ep->d_name);
+                ESP_LOGD(TAG, "csv:%s", ep->d_name + namelen - 4);
                 if(strcasecmp(ep->d_name + namelen - 4, ".csv") == 0) // plot .csv files
                 {
                     sprintf(buff, "<tr><td><a href=\"/html/plot.html?url=%s%s%s\">%s</a></td><td>%lld</td><td>%s</td></tr>\n", connData->url, needSlash?"/":"", ep->d_name, ep->d_name, (intmax_t)statbuf.st_size, datestring);
@@ -236,7 +236,7 @@ CgiStatus ICACHE_FLASH_ATTR cgiFatFsDirHook(HttpdConnData *connData) {
                 {
                     sprintf(buff, "<tr><td><a href=\"%s%s%s\">%s</a></td><td>%lld</td><td>%s</td></tr>\n", connData->url, needSlash?"/":"", ep->d_name, ep->d_name, (intmax_t)statbuf.st_size, datestring);  
                 } 
-                ESP_LOGI(TAG, "url:%s", buff);
+                ESP_LOGD(TAG, "dir entry html:%s", buff);
                 httpdSend(connData, buff, -1);
             }
             else

@@ -83,7 +83,7 @@ void PowerTask(void *pvParameter)
 {
     gpio_pad_select_gpio(KEEPALIVE);
     gpio_set_direction(KEEPALIVE, GPIO_MODE_OUTPUT);
-    gpio_set_level(KEEPALIVE, 1);
+    gpio_set_level(KEEPALIVE, 0);  // Not using hold-on anymore, relies on RC of 1 sec or so
 
     gpio_pad_select_gpio(POWER_SW);
     gpio_set_direction(POWER_SW, GPIO_MODE_INPUT);
