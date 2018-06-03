@@ -49,7 +49,7 @@ void app_main()
     xTaskCreatePinnedToCore(PowerTask, "Power", 4096, NULL, 5, NULL,0);
     xTaskCreatePinnedToCore(ServerTask, "Webserver", 32768, NULL, 6, NULL,0);
     xTaskCreatePinnedToCore(GpsTask, "GPS", 4096, NULL, 7, NULL,0);
-    xTaskCreatePinnedToCore(sdAcqWriteTask, "acqwrite", 16384, NULL, 8, NULL,0);
+    xTaskCreatePinnedToCore(sdAcqWriteTask, "acqwrite", 8192, NULL, 8, NULL,0);
     xTaskCreatePinnedToCore(ADTask, "AD", 8192, NULL, 24, NULL,1);
     checkStack();
 

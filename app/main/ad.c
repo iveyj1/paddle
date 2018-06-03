@@ -179,14 +179,14 @@ void ADTask(void *pvParameter)
     while(1)
     {
         vTaskDelayUntil(&previous_wake_time, LOOPTIME / portTICK_PERIOD_MS );
-        uint64_t starttime = esp_timer_get_time();
         toptime = esp_timer_get_time();
         looptime = toptime - toptime_last;
+        toptime_last = toptime;
         if(acquire)
         {
             if(acq_in_progress)
             {
-                //ESP_LOGI(TAG, "Looptime: %lld", looptime);
+                ESP_LOGD(TAG, "toptime: %lld", toptime);
                 if(looptime >= 20200 || looptime <= 19800)
                 {
                     blown_looptime++;
@@ -251,7 +251,6 @@ void ADTask(void *pvParameter)
             }
         }
         checkStack();
-        toptime_last = toptime;
         //ESP_LOGI(TAG, "duration %lld", esp_timer_get_time() - starttime);
 
     }
