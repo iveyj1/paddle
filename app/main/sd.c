@@ -23,6 +23,10 @@
 
 static const char *TAG = "sd";
 
+#define LED_WRITE 0
+#define LED_FILE_OPEN 3
+#define LED_SD_UNMOUNTED 2
+
 // Pin mapping when using SPI mode.
 
 #define PIN_NUM_MISO 19
@@ -86,9 +90,9 @@ void sdAcqWriteTask(void *pvParameter)
                 if(backlog > 0)
                 {
                     //ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d", backlog, (uint32_t) (write_start), acqwrite_index_out);
-                    BsetExpander(0,1);
+                    BsetExpander(LED_WRITE,1);
                     fwrite(write_start, 1, backlog, acqfile);
-                    BsetExpander(0,0);
+                    BsetExpander(LED_WRITE,0);
                 }
                 else // write buffer wrapped around
                 {
@@ -96,15 +100,15 @@ void sdAcqWriteTask(void *pvParameter)
                     //ESP_LOGI(TAG, "BUFLEN: %d, acqwrite_index_out: %d, write_bytes_to_end: %d", ACQWRITE_BUFFER_LEN, acqwrite_index_out, write_bytes_to_end);
                     // write bytes from current buffer out index through end of buffer
 //                    ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d, write_bytes_to_end %12d", backlog, (uint32_t) (write_start), acqwrite_index_out, write_bytes_to_end);
-                    BsetExpander(0,1);
+                    BsetExpander(LED_WRITE,1);
                     fwrite(write_start, 1, write_bytes_to_end, acqfile);
-                    BsetExpander(0,0);
+                    BsetExpander(LED_WRITE,0);
                     // write remaining bytes from beginning of buffer
                     backlog += ACQWRITE_BUFFER_LEN;
 //                    ESP_LOGI(TAG, "backlog: %12d buffer: %12x, acqwrite_index_out %12d, write_bytes_to_end %12d", backlog, (uint32_t) (acqwrite_buffer), acqwrite_index_out, write_bytes_to_end);
-                    BsetExpander(0,1);
+                    BsetExpander(LED_WRITE,1);
                     fwrite(acqwrite_buffer, 1, backlog - write_bytes_to_end, acqfile);
-                    BsetExpander(0,0);
+                    BsetExpander(LED_WRITE,0);
                 }
                 acqwrite_index_out = acqwrite_index_in;
             }
@@ -119,7 +123,7 @@ void sdAcqWriteTask(void *pvParameter)
                 }
                 ESP_LOGI(TAG, "Closing file");
                 fclose(acqfile);
-                BsetExpander(3,0);
+                BsetExpander(LED_FILE_OPEN,0);
                 acqfile = 0;
                 acqwrite_index_in = 0;
                 acqwrite_index_out = 0;
@@ -159,7 +163,7 @@ int MountSD()
         {
             sd_mounted = true;
             sdmmc_card_print_info(stdout, card);
-            BsetExpander(2,0);
+            BsetExpander(LED_SD_UNMOUNTED,0);
             return (true);
         }
         else
@@ -187,13 +191,11 @@ int UnmountSD()
         esp_vfs_fat_sdmmc_unmount();
         sd_mounted = false;
         ESP_LOGI(TAG, "Card unmounted");
-        BsetExpander(2,1);
+        BsetExpander(LED_SD_UNMOUNTED,1);
     }
     return true;
 }
 
-#define BLINK 13
-//gpio_set_level(BLINK, 1);
 
 int OpenNextAcqFile(void)
 {
@@ -258,7 +260,7 @@ int OpenNextAcqFile(void)
                     return false;
                 }
                 ESP_LOGI(TAG, "file %s opened for writing", path);
-                BsetExpander(3,1);
+                BsetExpander(LED_FILE_OPEN,1);
                 break;
             }
         }

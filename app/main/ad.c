@@ -6,10 +6,12 @@
 #include "esp_system.h"
 #include "driver/spi_master.h"
 #include "soc/gpio_struct.h"
+#include "driver/adc.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "esp_err.h"
 #include "sd.h"
+#include "ad.h"
 #include "gps.h"
 #include "expander.h"
 
@@ -65,6 +67,9 @@ void ADSetup(spi_device_handle_t spi)
         ret = spi_device_transmit(spi, &t);
         assert(ret == ESP_OK);                    
     }
+    adc1_config_width(ADC_WIDTH_12Bit); // set up battery monitoring
+    adc1_config_channel_atten(ADC1_CHANNEL_3,ADC_ATTEN_11db);
+
 }
 
 void ADCmd(spi_device_handle_t spi, const uint8_t cmd)
@@ -171,6 +176,7 @@ void ADTask(void *pvParameter)
     float offset = 0;
     int sample_count = 0;
     float filt_coef = 0.05;
+    int counts = 0;
     uint32_t blown_looptime = 0;
     previous_wake_time = xTaskGetTickCount();
     int64_t toptime, toptime_last, looptime;
@@ -210,7 +216,7 @@ void ADTask(void *pvParameter)
                 int64_t timenow =  esp_timer_get_time()/1000;
                 if(acqfile)
                 {
-                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12d,%12d,%12d,%12d,%lld,%2d,", timenow, adval[0], adval[1], adval[2], adval[3], looptime, blown_looptime);
+                    int n = snprintf(writebuf, WRITE_BUF_LEN, "%10lld,%12d,%12d,%12d,%12d,%lld,%2d,%6.3f,", timenow, adval[0], adval[1], adval[2], adval[3], looptime, blown_looptime, counts * ESP_AD_V_CONST);
                     if(print_nmea)
                     {
                         n += snprintf(writebuf + n, WRITE_BUF_LEN - n, "%s", nmeabuf);
@@ -251,6 +257,9 @@ void ADTask(void *pvParameter)
             }
         }
         checkStack();
+    	counts = adc1_get_voltage(ADC1_CHANNEL_3);
+        //ESP_LOGI(TAG, "voltage: %f", volts * ESP_AD_V_CONST);
+
         //ESP_LOGI(TAG, "duration %lld", esp_timer_get_time() - starttime);
 
     }
