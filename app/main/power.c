@@ -18,25 +18,26 @@ static const char TAG[]="Power";
 
 static char tasklist_buf[1024];
 
+static int lowv = 0;
+
 void CheckPowerSwitch()
 {
 
 	int val = adc1_get_raw(ADC1_CHANNEL_3);
-	float volts = val * ESP_AD_V_CONST;
+	float volts = 4.0;//val * ESP_AD_V_CONST;
     //ESP_LOGI(TAG, "counts: %d; voltage: %f", val, volts);
-    if(gpio_get_level(POWER_SW) == 0 || (volts < MIN_BATV))
+	lowv = (volts < MIN_BATV) ? lowv + 1 : 0;
+    if(gpio_get_level(POWER_SW) == 0 || lowv > 10)
     {
         ESP_LOGI(TAG, "switch: %d, voltage: %f", gpio_get_level(POWER_SW), volts);
         vTaskDelay(20/portTICK_PERIOD_MS);
-        val = adc1_get_raw(ADC1_CHANNEL_3);
-        volts = val * ESP_AD_V_CONST;
-        if(gpio_get_level(POWER_SW) == 0 || (volts < MIN_BATV))
+        if(gpio_get_level(POWER_SW) == 0 || lowv > 10)
         {
-            ESP_LOGI(TAG, "second switch: %d, voltage: %f", gpio_get_level(POWER_SW), volts);
+            ESP_LOGI(TAG, "switch: %d", gpio_get_level(POWER_SW));
             vTaskDelay(1);
-            vTaskList(tasklist_buf);
-            ESP_LOGI(TAG, "Tasks\n%s", tasklist_buf);
-            ESP_LOGI(TAG, "power switch off");
+            //vTaskList(tasklist_buf);
+            //ESP_LOGI(TAG, "Tasks\n%s", tasklist_buf);
+            ESP_LOGI(TAG, "shutting down");
             ADStopAcquire();
             while(acqfile)
             {
@@ -45,7 +46,7 @@ void CheckPowerSwitch()
             UnmountSD();
             vTaskDelay(500/portTICK_PERIOD_MS);
             gpio_set_level(KEEPALIVE, 0);
-            ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+            //ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
             vTaskList(tasklist_buf);
             ESP_LOGI(TAG, "Tasks:\n%s", tasklist_buf);
 
