@@ -85,7 +85,7 @@ void CheckAcqSwitch()
             if(gpio_get_level(PORT_ACQ_SW) == 0)
             {
                 ADStopAcquire(); 
-                ESP_LOGI(TAG, "acq switch on");
+                ESP_LOGI(TAG, "acq switch off");
             }
         }
     }   
@@ -97,7 +97,7 @@ void CheckAcqSwitch()
             if(gpio_get_level(PORT_ACQ_SW) == 1)
             {
                 ADStartAcquire(); 
-                ESP_LOGI(TAG, "acq switch off");
+                ESP_LOGI(TAG, "acq switch on");
             }
         }
     }   

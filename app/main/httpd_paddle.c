@@ -162,7 +162,7 @@ HttpdBuiltInUrl builtInUrls[]={
     ROUTE_CGI_ARG("/flash/upload", cgiUploadFirmware, &uploadParams),
     ROUTE_CGI("/flash/reboot", cgiRebootFirmware),
 
-   ROUTE_CGI("/upload", cgiUploadSdFile),
+   ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/html/"),
    ROUTE_CGI("/html", cgiFatFsDirHook),
    ROUTE_CGI("/html/", cgiFatFsDirHook),
    ROUTE_CGI("/html/*", cgiFatFsHook),
