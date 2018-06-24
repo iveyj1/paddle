@@ -3,6 +3,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
+#include "esp_heap_caps.h"
 #include "expander.h"
 #include "sd.h"
 #include "ad.h"
@@ -37,16 +38,26 @@ void CheckPowerSwitch()
             vTaskDelay(1);
             //vTaskList(tasklist_buf);
             //ESP_LOGI(TAG, "Tasks\n%s", tasklist_buf);
-            ESP_LOGI(TAG, "shutting down");
-            ADStopAcquire();
+            ESP_LOGI(TAG, "xPortGetFreeHeapSize: %u", xPortGetFreeHeapSize());
+            ESP_LOGI(TAG, "heap_caps_get_largest_free_block: %u", heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
+            if(acqfile)
+            {
+                ADStopAcquire();
+            }
             while(acqfile)
             {
                 vTaskDelay(1);
             }
+            ESP_LOGI(TAG, "xPortGetFreeHeapSize: %u", xPortGetFreeHeapSize());
+            ESP_LOGI(TAG, "heap_caps_get_largest_free_block: %u", heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
+            ESP_LOGI(TAG, "xPortGetFreeHeapSize: %u", xPortGetFreeHeapSize());
             UnmountSD();
             vTaskDelay(500/portTICK_PERIOD_MS);
             gpio_set_level(KEEPALIVE, 0);
             //ESP_LOGI(TAG, "Max stack: %d", uxTaskGetStackHighWaterMark(NULL));
+            //heap_caps_dump_all();
+            ESP_LOGI(TAG, "xPortGetFreeHeapSize: %u", xPortGetFreeHeapSize());
+            ESP_LOGI(TAG, "heap_caps_get_largest_free_block: %u", heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
             vTaskList(tasklist_buf);
             ESP_LOGI(TAG, "Tasks:\n%s", tasklist_buf);
 
@@ -92,8 +103,12 @@ void CheckAcqSwitch()
     }   
 }
 
+
 void PowerTask(void *pvParameter)
 {
+    unsigned int minheap = 99999999;
+    unsigned int minheapblk = 99999999;
+
     gpio_pad_select_gpio(KEEPALIVE);
     gpio_set_direction(KEEPALIVE, GPIO_MODE_OUTPUT);
     gpio_set_level(KEEPALIVE, 0);  // Not using hold-on anymore, relies on RC of 1 sec or so
@@ -108,9 +123,20 @@ void PowerTask(void *pvParameter)
 
     while(1)
     {
+
         CheckPowerSwitch();
         CheckAcqSwitch();
         checkStack();
+        if(xPortGetFreeHeapSize() < minheap)
+        {
+            minheap = xPortGetFreeHeapSize();
+            ESP_LOGW(TAG, "Min heap size: %u", minheap);
+        }
+        if(heap_caps_get_largest_free_block(MALLOC_CAP_8BIT) < minheapblk)
+        {
+            minheapblk = heap_caps_get_largest_free_block(MALLOC_CAP_8BIT);
+            ESP_LOGW(TAG, "Min heap contiguous block size: %u", minheapblk);
+        }
         vTaskDelay(1);
     }
 }

@@ -100,11 +100,13 @@ void ADData(spi_device_handle_t spi, uint8_t *data, int len)
 
 void ADStartAcquire()
 {
+    ESP_LOGI(TAG, "starting acquisition");
     acquire = true;
 }
 
 void ADStopAcquire()
 {
+    ESP_LOGI(TAG, "stopping acquisition");
     acquire = false;
 }
 
@@ -196,7 +198,7 @@ void ADTask(void *pvParameter)
                 if(looptime >= 20200 || looptime <= 19800)
                 {
                     blown_looptime++;
-                    ESP_LOGI(TAG, "****************** Looptime out of range: %lld", looptime);
+                    //ESP_LOGI(TAG, "****************** Looptime out of range: %lld", looptime);
                 }
                 for(ad_current = 0; ad_current < NUM_AD; ad_current++)
                 {
@@ -233,13 +235,13 @@ void ADTask(void *pvParameter)
             }
             else
             {
-                ESP_LOGI(TAG, "starting acq");
                 if(OpenNextAcqFile())
                 {
                     blown_looptime = 0;
                     previous_wake_time = xTaskGetTickCount();
                     acq_in_progress = true;
                     sample_count = 0;
+                    ESP_LOGI(TAG, "acquisition started");
                 }
                 else
                 {
@@ -251,9 +253,9 @@ void ADTask(void *pvParameter)
         {
             if(acq_in_progress)
             {
-                ESP_LOGI(TAG, "stopping acq");
                 CloseAcqFile();
                 acq_in_progress = false;
+                ESP_LOGI(TAG, "acquisition stopped");
             }
         }
         checkStack();

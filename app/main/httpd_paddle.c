@@ -24,105 +24,122 @@ the server, including WiFi connection management capabilities, some IO etc.
 #include "libesphttpd/captdns.h"
 #include "libesphttpd/webpages-espfs.h"
 #include "libesphttpd/cgiwebsocket.h"
-//#include "cgi-test.h"
-#include "libesphttpd/route.h"
 #include "libesphttpd/httpd-freertos.h"
+#include "libesphttpd/route.h"
+//#include "cgi-test.h"
+
+#include "esp_wifi.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
 #include "freertos/queue.h"
+
+#ifdef ESP32
 #include "freertos/event_groups.h"
+#include "esp_log.h"
+#include "esp_event_loop.h"
+#include "nvs_flash.h"
+#include "esp_event_loop.h"
+#include "tcpip_adapter.h"
+#include "httpdfatfs.h"
 #include "cgideletesd.h"
 #include "cgiuploadsd.h"
 
-#include "esp_wifi.h"
-#include "esp_err.h"
-#include "esp_log.h"
-#include "esp_log.h"
-#include "esp_event_loop.h"
 
-#include "nvs_flash.h"
-#include "tcpip_adapter.h"
 
-#include "httpdfatfs.h"
-#include "cgiuploadsd.h"
+#endif
 
-#define TAG "httpd_paddle"
+#define TAG "user_main"
 
-#include "checkstack.h"
+#define LISTEN_PORT     80u
+#define MAX_CONNECTIONS 32u
 
+static char connectionMemory[sizeof(RtosConnType) * MAX_CONNECTIONS];
+static HttpdFreertosInstance httpdFreertosInstance;
 
 #if 0
 //Function that tells the authentication system what users/passwords live on the system.
 //This is disabled in the default build; if you want to try it, enable the authBasic line in
 //the builtInUrls below.
 int myPassFn(HttpdConnData *connData, int no, char *user, int userLen, char *pass, int passLen) {
-	if (no==0) {
-		strcpy(user, "admin");
-		strcpy(pass, "s3cr3t");
-		return 1;
+    if (no==0) {
+        strcpy(user, "admin");
+        strcpy(pass, "s3cr3t");
+        return 1;
 //Add more users this way. Check against incrementing no for each user added.
-//	} else if (no==1) {
-//		strcpy(user, "user1");
-//		strcpy(pass, "something");
-//		return 1;
-	}
-	return 0;
+//  } else if (no==1) {
+//      strcpy(user, "user1");
+//      strcpy(pass, "something");
+//      return 1;
+    }
+    return 0;
 }
 
 
 //Broadcast the uptime in seconds every second over connected websockets
 static void websocketBcast(void *arg) {
-	static int ctr=0;
-	char buff[128];
-	while(1) {
-		ctr++;
-		sprintf(buff, "Up for %d minutes %d seconds!\n", ctr/60, ctr%60);
-		cgiWebsockBroadcast("/websocket/ws.cgi", buff, strlen(buff), WEBSOCK_FLAG_NONE);
-		vTaskDelay(1000/portTICK_RATE_MS);
-	}
+    static int ctr=0;
+    char buff[128];
+    while(1) {
+        ctr++;
+        sprintf(buff, "Up for %d minutes %d seconds!\n", ctr/60, ctr%60);
+        cgiWebsockBroadcast(&httpdFreertosInstance.httpdInstance,
+                            "/websocket/ws.cgi", buff, strlen(buff),
+                            WEBSOCK_FLAG_NONE);
+
+        vTaskDelay(1000/portTICK_RATE_MS);
+    }
 }
 
 //On reception of a message, send "You sent: " plus whatever the other side sent
 static void myWebsocketRecv(Websock *ws, char *data, int len, int flags) {
-	int i;
-	char buff[128];
-	sprintf(buff, "You sent: ");
-	for (i=0; i<len; i++) buff[i+10]=data[i];
-	buff[i+10]=0;
-	cgiWebsocketSend(ws, buff, strlen(buff), WEBSOCK_FLAG_NONE);
+    int i;
+    char buff[128];
+    sprintf(buff, "You sent: ");
+    for (i=0; i<len; i++) buff[i+10]=data[i];
+    buff[i+10]=0;
+    cgiWebsocketSend(&httpdFreertosInstance.httpdInstance,
+                     ws, buff, strlen(buff), WEBSOCK_FLAG_NONE);
 }
- 
+
 //Websocket connected. Install reception handler and send welcome message.
 static void myWebsocketConnect(Websock *ws) {
-	ws->recvCb=myWebsocketRecv;
-	cgiWebsocketSend(ws, "Hi, Websocket!", 14, WEBSOCK_FLAG_NONE);
+    ws->recvCb=myWebsocketRecv;
+    cgiWebsocketSend(&httpdFreertosInstance.httpdInstance,
+                     ws, "Hi, Websocket!", 14, WEBSOCK_FLAG_NONE);
 }
 
 //On reception of a message, echo it back verbatim
 void myEchoWebsocketRecv(Websock *ws, char *data, int len, int flags) {
-	printf("EchoWs: echo, len=%d\n", len);
-	cgiWebsocketSend(ws, data, len, flags);
+    printf("EchoWs: echo, len=%d\n", len);
+    cgiWebsocketSend(&httpdFreertosInstance.httpdInstance,
+                     ws, data, len, flags);
 }
 
 //Echo websocket connected. Install reception handler.
 void myEchoWebsocketConnect(Websock *ws) {
-	printf("EchoWs: connect\n");
-	ws->recvCb=myEchoWebsocketRecv;
+    printf("EchoWs: connect\n");
+    ws->recvCb=myEchoWebsocketRecv;
 }
+#endif
+//#define OTA_FLASH_SIZE_K 2048
 
-#define OTA_FLASH_SIZE_K 1024
+#define IMAGE_SIZE 0x150000
+#define FLASH_FACTORY_OFFSET 0x10000
 #define OTA_TAGNAME "generic"
 
+//    .fw1Pos=0x110000,
+//    .fw2Pos=((OTA_FLASH_SIZE_K*1024)/2)+0x110000,
+//    .fwSize=((OTA_FLASH_SIZE_K*1024)/2)-0x110000,
+
 CgiUploadFlashDef uploadParams={
-	.type=CGIFLASH_TYPE_FW,
-	.fw1Pos=0x1000,
-	.fw2Pos=((OTA_FLASH_SIZE_K*1024)/2)+0x1000,
-	.fwSize=((OTA_FLASH_SIZE_K*1024)/2)-0x1000,
-	.tagName=OTA_TAGNAME
+    .type=CGIFLASH_TYPE_FW,
+    .fw1Pos=FLASH_FACTORY_OFFSET + IMAGE_SIZE,
+    .fw2Pos=FLASH_FACTORY_OFFSET + 2*IMAGE_SIZE,
+    .fwSize=IMAGE_SIZE,
+    .tagName=OTA_TAGNAME
 };
-#endif
 
 
 /*
@@ -136,54 +153,53 @@ general ones. Authorization things (like authBasic) act as a 'barrier' and
 should be placed above the URLs they protect.
 */
 HttpdBuiltInUrl builtInUrls[]={
-	//ROUTE_CGI_ARG("*", cgiRedirectApClientToHostname, "esp8266.nonet"),
-	//ROUTE_REDIRECT("/", "/index.tpl"),
+    //ROUTE_CGI_ARG("*", cgiRedirectApClientToHostname, "esp8266.nonet"),
+    ROUTE_REDIRECT("/", "/html/dir.html"),
 
-    ROUTE_CGI_ARG("/upload", cgiUploadSdFile, "/sdcard/html/"),
-//	ROUTE_REDIRECT("/", "/data/"),    
-	ROUTE_REDIRECT("/", "/html/dir.html"),    
-//    ROUTE_CGI("/", cgiFatFsDirHook),
-    ROUTE_CGI("/html", cgiFatFsDirHook),
-    ROUTE_CGI("/html/", cgiFatFsDirHook),
-    ROUTE_CGI("/html/*", cgiFatFsHook),
-    ROUTE_CGI("/data", cgiFatFsDirHook),
-    ROUTE_CGI("/data/", cgiFatFsDirHook),   
-    ROUTE_CGI("/data/*", cgiFatFsHook),   
-    ROUTE_CGI("/dir", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
-    ROUTE_CGI("/dir/", cgiFatFsDirJSONHook),
-    ROUTE_CGI("/del", cgiDeleteSdFile),
-    ROUTE_CGI("/del/", cgiDeleteSdFile),
-   
+    ROUTE_REDIRECT("/flash", "/flash/index.html"),
+    ROUTE_REDIRECT("/flash/", "/flash/index.html"),
+    ROUTE_CGI_ARG("/flash/next", cgiGetFirmwareNext, &uploadParams),
+    ROUTE_CGI_ARG("/flash/upload", cgiUploadFirmware, &uploadParams),
+    ROUTE_CGI("/flash/reboot", cgiRebootFirmware),
 
-	//ROUTE_REDIRECT("/flash", "/flash/index.html"),
-	//ROUTE_REDIRECT("/flash/", "/flash/index.html"),
-	//ROUTE_CGI_ARG("/flash/next", cgiGetFirmwareNext, &uploadParams),
-	//ROUTE_CGI_ARG("/flash/upload", cgiUploadFirmware, &uploadParams),
-	//ROUTE_CGI("/flash/reboot", cgiRebootFirmware),
+   ROUTE_CGI("/upload", cgiUploadSdFile),
+   ROUTE_CGI("/html", cgiFatFsDirHook),
+   ROUTE_CGI("/html/", cgiFatFsDirHook),
+   ROUTE_CGI("/html/*", cgiFatFsHook),
+   ROUTE_CGI("/data", cgiFatFsDirHook),
+   ROUTE_CGI("/data/", cgiFatFsDirHook),
+   ROUTE_CGI("/data/*", cgiFatFsHook),
+   ROUTE_CGI("/dir", cgiFatFsDirJSONHook),          // If not a special case, just send file contents in http
+   ROUTE_CGI("/dir/", cgiFatFsDirJSONHook),
+   ROUTE_CGI("/del", cgiDeleteSdFile),
+   ROUTE_CGI("/del/", cgiDeleteSdFile),
+    //Routines to make the /wifi URL and everything beneath it work.
+//Enable the line below to protect the WiFi configuration with an username/password combo.
+//  {"/wifi/*", authBasic, myPassFn},
+#if 0
+    ROUTE_REDIRECT("/wifi", "/wifi/wifi.tpl"),
+    ROUTE_REDIRECT("/wifi/", "/wifi/wifi.tpl"),
+    ROUTE_CGI("/wifi/wifiscan.cgi", cgiWiFiScan),
+    ROUTE_TPL("/wifi/wifi.tpl", tplWlan),
+    ROUTE_CGI("/wifi/connect.cgi", cgiWiFiConnect),
+    ROUTE_CGI("/wifi/connstatus.cgi", cgiWiFiConnStatus),
+    ROUTE_CGI("/wifi/setmode.cgi", cgiWiFiSetMode),
 
-	//Routines to make the /wifi URL and everything beneath it work.
-    //Enable the line below to protect the WiFi configuration with an username/password combo.
-    //	{"/wifi/*", authBasic, myPassFn},
+    ROUTE_REDIRECT("/websocket", "/websocket/index.html"),
+    ROUTE_WS("/websocket/ws.cgi", myWebsocketConnect),
+    ROUTE_WS("/websocket/echo.cgi", myEchoWebsocketConnect),
 
-	//ROUTE_REDIRECT("/wifi", "/wifi/wifi.tpl"),
-	//ROUTE_REDIRECT("/wifi/", "/wifi/wifi.tpl"),
-	//ROUTE_CGI("/wifi/wifiscan.cgi", cgiWiFiScan),
-	//ROUTE_TPL("/wifi/wifi.tpl", tplWlan),
-	//ROUTE_CGI("/wifi/connect.cgi", cgiWiFiConnect),
-	//ROUTE_CGI("/wifi/connstatus.cgi", cgiWiFiConnStatus),
-	//ROUTE_CGI("/wifi/setmode.cgi", cgiWiFiSetMode),
+    ROUTE_REDIRECT("/test", "/test/index.html"),
+    ROUTE_REDIRECT("/test", "/test/index.html"),
+    ROUTE_CGI("/test/test.cgi", cgiTestbed),
+#endif
+    ROUTE_FILESYSTEM(),
 
-	//ROUTE_REDIRECT("/websocket", "/websocket/index.html"),
-	//ROUTE_WS("/websocket/ws.cgi", myWebsocketConnect),
-	//ROUTE_WS("/websocket/echo.cgi", myEchoWebsocketConnect),
-
-    //ROUTE_REDIRECT("/test", "/test/index.html"),
-    //ROUTE_CGI("/test/test.cgi", cgiTestbed),
-
-	ROUTE_FILESYSTEM(),
-	ROUTE_END()
+    ROUTE_END()
 };
 
+
+#ifdef ESP32
 
 static EventGroupHandle_t wifi_ap_event_group;
 static EventGroupHandle_t wifi_sta_event_group;
@@ -223,7 +239,7 @@ static esp_err_t wifi_event_handler(void *ctx, system_event_t *event)
     }
         break;
     case SYSTEM_EVENT_AP_STACONNECTED:
-        ESP_LOGI(TAG, "station:" MACSTR" join,AID=%d",
+        ESP_LOGI(TAG, "station:" MACSTR" join,AID=%d\n",
                 MAC2STR(event->event_info.sta_connected.mac),
                 event->event_info.sta_connected.aid);
         xEventGroupSetBits(wifi_ap_event_group, CONNECTED_BIT);
@@ -235,6 +251,7 @@ static esp_err_t wifi_event_handler(void *ctx, system_event_t *event)
         xEventGroupClearBits(wifi_ap_event_group, CONNECTED_BIT);
         break;
     case SYSTEM_EVENT_SCAN_DONE:
+        wifiScanDoneCb();
         break;
     default:
         break;
@@ -245,98 +262,83 @@ static esp_err_t wifi_event_handler(void *ctx, system_event_t *event)
 
 //Simple task to connect to an access point
 void ICACHE_FLASH_ATTR init_wifi(bool modeAP) {
-	nvs_flash_init();
+    nvs_flash_init();
 
-	wifi_sta_event_group = xEventGroupCreate();
-	wifi_ap_event_group = xEventGroupCreate();
+    wifi_sta_event_group = xEventGroupCreate();
+    wifi_ap_event_group = xEventGroupCreate();
 
-	ESP_ERROR_CHECK( esp_event_loop_init(wifi_event_handler, NULL) );
+    ESP_ERROR_CHECK( esp_event_loop_init(wifi_event_handler, NULL) );
 
-	wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-	ESP_ERROR_CHECK( esp_wifi_init(&cfg) );
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK( esp_wifi_init(&cfg) );
         ESP_ERROR_CHECK( esp_wifi_set_storage(WIFI_STORAGE_RAM) );
 
-	//Go to station mode
-	esp_wifi_disconnect();
+    //Go to station mode
+    esp_wifi_disconnect();
 
-	if(modeAP) {
-		ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_AP) );
+    if(modeAP) {
+        ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_AP) );
 
-		wifi_config_t ap_config;
-		strcpy((char*)(&ap_config.ap.ssid), "Paddle");
-		ap_config.ap.ssid_len = 6;
-		ap_config.ap.channel = 1;
-		ap_config.ap.authmode = WIFI_AUTH_OPEN;
-		ap_config.ap.ssid_hidden = 0;
-		ap_config.ap.max_connection = 1;
-		ap_config.ap.beacon_interval = 100;
+        wifi_config_t ap_config;
+        strcpy((char*)(&ap_config.ap.ssid), "ESP");
+        ap_config.ap.ssid_len = 3;
+        ap_config.ap.channel = 1;
+        ap_config.ap.authmode = WIFI_AUTH_OPEN;
+        ap_config.ap.ssid_hidden = 0;
+        ap_config.ap.max_connection = 1;
+        ap_config.ap.beacon_interval = 100;
 
-		esp_wifi_set_config(WIFI_IF_AP, &ap_config);
-	}
-	else {
-		esp_wifi_set_mode(WIFI_MODE_STA);
+        esp_wifi_set_config(WIFI_IF_AP, &ap_config);
+    }
+    else {
+        esp_wifi_set_mode(WIFI_MODE_STA);
 
-		//Connect to the defined access point.
-		wifi_config_t config;
-		memset(&config, 0, sizeof(config));
-		sprintf((char*)config.sta.ssid, "RouterSSID");			// @TODO: Changeme
-		sprintf((char*)config.sta.password, "RouterPassword"); 	// @TODO: Changeme
-		esp_wifi_set_config(WIFI_IF_STA, &config);
-		esp_wifi_connect();
-	}
+        //Connect to the defined access point.
+        wifi_config_t config;
+        memset(&config, 0, sizeof(config));
+        sprintf((char*)config.sta.ssid, "RouterSSID");          // @TODO: Changeme
+        sprintf((char*)config.sta.password, "RouterPassword");  // @TODO: Changeme
+        esp_wifi_set_config(WIFI_IF_STA, &config);
+        esp_wifi_connect();
+    }
 
-	ESP_ERROR_CHECK( esp_wifi_start() );
+    ESP_ERROR_CHECK( esp_wifi_start() );
 }
+#endif
 
-CgiStatus fooCgiCB(HttpdConnData *connData)
-{
-    return 1;
-}
+//Main routine. Initialize stdout, the I/O, filesystem and the webserver and we're done.
+#if ESP32
+//void app_main(void) {
+void ServerTask(void *dummy){
+#else
+void user_init(void) {
+#endif
 
+#ifndef ESP32
+    uart_div_modify(0, UART_CLK_FREQ / 115200);
+#endif
 
-
-void ServerTask(void *pvParameter)
-{
-    HttpdFreertosInstance server_instance;
-    RtosConnType connections[4];
-    
-    memset(&server_instance, 0, sizeof(server_instance));
-    // const char *url;
-	// cgiSendCallback cgiCb;
-	// const void *cgiArg;
-	// const void *cgiArg2;
-    //HttpdBuiltInUrl fixedUrls[] = {{"/foo", fooCgiCB, 0, 0}, {"", 0, 0, 0,} };
-
+    //ioInit();
 // FIXME: Re-enable this when capdns is fixed for esp32
-//	captdnsInit();
+//  captdnsInit();
 
-	espFsInit((void*)(webpages_espfs_start));
+    espFsInit((void*)(webpages_espfs_start));
 
-	tcpip_adapter_init();
-	//httpdInit(builtInUrls, 80, HTTPD_FLAG_NONE);
-    // httpdFreertosInit(&server_nstance,
-                       // const HttpdBuiltInUrl *fixedUrls,
-                                // int port,
-                                // void* connectionBuffer, 
-                                // int maxConnections,
-                                // HttpdFlags flags);
-                                
-    httpdFreertosInit(&server_instance,
+    tcpip_adapter_init();
+    httpdFreertosInit(&httpdFreertosInstance,
                       builtInUrls,
-                      80,
-                      connections,
-                      4,
+                      LISTEN_PORT,
+                      connectionMemory,
+                      MAX_CONNECTIONS,
                       HTTPD_FLAG_NONE);
-                      
 
-	init_wifi(true); // Supply false for STA mode
+    init_wifi(true); // Supply false for STA mode
 
-	//xTaskCreate(websocketBcast, "wsbcast", 3000, NULL, 3, NULL);
-    
+    //xTaskCreate(websocketBcast, "wsbcast", 3000, NULL, 3, NULL);
+
+    printf("\nReady\n");
     while(1)
     {
         vTaskDelay(10);
-        checkStack();
     }
-	
 }

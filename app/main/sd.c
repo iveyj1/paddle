@@ -187,10 +187,10 @@ int UnmountSD()
 {
     if(sd_mounted)
     {
-        ESP_LOGI(TAG, "Unmounting card");
+        ESP_LOGI(TAG, "Unmounting SD card");
         esp_vfs_fat_sdmmc_unmount();
         sd_mounted = false;
-        ESP_LOGI(TAG, "Card unmounted");
+        ESP_LOGI(TAG, "SD card unmounted");
         BsetExpander(LED_SD_UNMOUNTED,1);
     }
     return true;

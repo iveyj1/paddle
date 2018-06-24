@@ -131,7 +131,7 @@ void testFile()
 
 void app_main()
 {
-    uart_set_baudrate(UART_NUM_0, 115200);
+    //uart_set_baudrate(UART_NUM_0, 115200);
     gpio_pad_select_gpio(BLINK);
     gpio_set_direction(BLINK, GPIO_MODE_OUTPUT);
     gpio_set_level(BLINK, 1);  // power light on
@@ -167,10 +167,10 @@ void app_main()
     
 
     xTaskCreatePinnedToCore(PowerTask, "Power", 4096, NULL, 5, NULL,0);
-    xTaskCreatePinnedToCore(ServerTask, "Webserver", 32768, NULL, 6, NULL,0);
+    xTaskCreatePinnedToCore(ServerTask, "Webserver", 4096, NULL, 6, NULL,0);
     xTaskCreatePinnedToCore(GpsTask, "GPS", 4096, NULL, 7, NULL,0);
-    xTaskCreatePinnedToCore(sdAcqWriteTask, "acqwrite", 8192, NULL, 8, NULL,0);
-    xTaskCreatePinnedToCore(ADTask, "AD", 8192, NULL, 24, NULL,1);
+    xTaskCreatePinnedToCore(sdAcqWriteTask, "acqwrite", 4096, NULL, 8, NULL,0);
+    xTaskCreatePinnedToCore(ADTask, "AD", 4096, NULL, 24, NULL,1);
     checkStack();
 
     while(1)
