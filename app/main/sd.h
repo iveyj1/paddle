@@ -6,13 +6,18 @@
  */
 #ifndef MAIN_SD_H_
 #define MAIN_SD_H_
-extern FILE *acqfile;
 
+#define SD_PREFIX "/sdcard"
+
+extern FILE *acqfile;
+extern SemaphoreHandle_t acq_file_mutex;
 
 int MountSD();
-int UnMountSD();
+int UnmountSD();
 
 void CloseAcqFile(void);
 int OpenNextAcqFile(void);
+int acqQueue(const char* buf, int length);
+void sdAcqWriteTask(void *pvParameter);
 
 #endif

@@ -11,6 +11,10 @@
 // IO ports
 #define KEEPALIVE 4
 #define POWER_SW 34
+#define BLINK 13
+
+
+#define MIN_BATV 3.5f
 
 void SetupPower();
 void checkPowerSwitch();

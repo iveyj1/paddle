@@ -1,0 +1,11 @@
+
+https://dl.espressif.com/dl/esp32_win32_msys2_environment_and_toolchain-20180110.zip
+unzip to c:\
+run /msys/mingw32.exe
+
+in C:/msys32/etc/profile.d/export_idf_path.sh add:
+export IDF_PATH="C:/msys32/home/user-name/esp/esp-idf"
+
+cd ~/esp
+git clone --recursive https://github.com/espressif/esp-idf.git
+

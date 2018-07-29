@@ -10,3 +10,14 @@ environment/project/cdt.managedbuild.toolchain.gnu.cross.base.1439863725/PATH/op
 environment/project/cdt.managedbuild.toolchain.gnu.cross.base.1439863725/PATH/value=/bin\:/home/osboxes/bin\:/home/osboxes/.local/bin\:/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/usr/games\:/usr/local/games\:/home/osboxes/dev/esp/xtensa-esp32-elf/bin
 environment/project/cdt.managedbuild.toolchain.gnu.cross.base.1439863725/append=true
 environment/project/cdt.managedbuild.toolchain.gnu.cross.base.1439863725/appendContributed=true
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/BATCH_BUILD/delimiter=\:
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/BATCH_BUILD/operation=append
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/BATCH_BUILD/value=1
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/IDF_PATH/delimiter=\:
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/IDF_PATH/operation=append
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/IDF_PATH/value=/home/user1/esp/esp-idf
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/PATH/delimiter=\:
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/PATH/operation=replace
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/PATH/value=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games\:/usr/local/games\:/home/user1/esp/xtensa-esp32-elf/bin\:/home/user1/esp/xtensa-esp32-elf/bin
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/append=true
+environment/project/cdt.managedbuild.toolchain.gnu.cygwin.base.1640113616/appendContributed=true
